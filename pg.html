@@ -121,6 +121,33 @@
   .toast.error{border-color:var(--red);}
   .toast.info{border-color:var(--blue);}
 
+  /* PIX SELECTION MODE */
+  .pix-bar{display:none;background:#1a4f1a;color:#fff;padding:10px 18px;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;border-bottom:2px solid #2d7a2d;}
+  .pix-bar.active{display:flex;}
+  .pix-bar-left{display:flex;align-items:center;gap:10px;font-size:13px;}
+  .pix-bar span{font-weight:600;}
+  .pix-bar-btns{display:flex;gap:8px;}
+  .pbtn{padding:6px 14px;border-radius:7px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;border:none;transition:all .2s;}
+  .pbtn-cancel{background:rgba(255,255,255,.15);color:#fff;}
+  .pbtn-cancel:hover{background:rgba(255,255,255,.25);}
+  .pbtn-gerar{background:#fff;color:#1a4f1a;}
+  .pbtn-gerar:hover{background:#e8f5ee;}
+
+  /* checkbox col */
+  .cb-col{width:36px;}
+  input[type=checkbox].row-cb{width:16px;height:16px;cursor:pointer;accent-color:var(--green);}
+  tr.selected td{background:#f0faf4 !important;}
+  tr.selected td:first-child{border-left:3px solid var(--green);}
+
+  /* PIX MESSAGE MODAL */
+  .pix-msg-box{background:#f6fef6;border:2px solid var(--green);border-radius:10px;padding:16px;margin-bottom:14px;font-family:monospace;font-size:13px;line-height:1.7;color:#1a2e1a;white-space:pre-wrap;word-break:break-word;max-height:320px;overflow-y:auto;}
+  .pix-total-line{background:var(--green);color:#fff;border-radius:7px;padding:10px 14px;font-size:15px;font-weight:700;text-align:center;margin-bottom:14px;font-family:'DM Serif Display',serif;}
+  .bcopy{width:100%;background:var(--green);border:none;color:#fff;padding:11px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;transition:opacity .2s;}
+  .bcopy:hover{opacity:.87;}
+  .bcopy.copied{background:#1a4f1a;}
+  .hbtn-pix{background:#e8f5ee;border-color:#8cc8a8;color:var(--green);}
+  .hbtn-pix:hover{background:var(--green);color:#fff;border-color:var(--green);}
+
   @media(max-width:600px){
     td,th{padding:7px 7px;font-size:12px;}
     .container{padding:10px 8px 60px;}
@@ -136,10 +163,23 @@
   <h1>💸 Gestão de Contas</h1>
   <div class="hright">
     <span class="sync-status" id="syncStatus"></span>
+    <button class="hbtn hbtn-pix" onclick="togglePixMode()">💚 Pix pro Cesar</button>
     <button class="hbtn hbtn-prop" onclick="openPropModal()">📅 Propagar mês</button>
     <button class="hbtn hbtn-sync" onclick="syncAll()">⟳ Sincronizar</button>
   </div>
 </header>
+
+<div class="pix-bar" id="pixBar">
+  <div class="pix-bar-left">
+    <span>💚 Modo Pix:</span>
+    <span id="pixCount">0 selecionadas</span>
+    <span id="pixSum" style="opacity:.8"></span>
+  </div>
+  <div class="pix-bar-btns">
+    <button class="pbtn pbtn-cancel" onclick="togglePixMode()">✕ Cancelar</button>
+    <button class="pbtn pbtn-gerar" onclick="openPixMsg()">Gerar mensagem →</button>
+  </div>
+</div>
 
 <div class="container">
 
@@ -168,6 +208,7 @@
     <div style="overflow-x:auto">
       <table>
         <thead><tr>
+          <th class="cb-col pix-only" style="display:none"><input type="checkbox" id="cbAll" onchange="toggleAllCb(this)" title="Selecionar todas"></th>
           <th>Descrição</th>
           <th>Venc.</th>
           <th>Valor</th>
@@ -283,6 +324,19 @@
     <div class="mact">
       <button class="bcancel" onclick="closeModal('moProp')">Cancelar</button>
       <button class="bsave" onclick="runPropagate()" style="background:var(--blue);">Propagar agora</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PIX MENSAGEM -->
+<div class="mo" id="moPixMsg">
+  <div class="md" style="max-width:480px">
+    <h2>💚 Mensagem para o Cesar</h2>
+    <div class="pix-total-line" id="pixTotalLine"></div>
+    <div class="pix-msg-box" id="pixMsgBox"></div>
+    <button class="bcopy" id="copyBtn" onclick="copyPixMsg()">📋 Copiar mensagem</button>
+    <div class="mact" style="margin-top:10px">
+      <button class="bcancel" onclick="closeModal('moPixMsg')">Fechar</button>
     </div>
   </div>
 </div>
@@ -453,7 +507,8 @@ function renderTable(data){
       parcelaTag = `<span class="parcela-tag">${item.parcelaAtual}/${item.parcelaTotal}</span>`;
     }
 
-    return `<tr>
+    return `<tr data-id="${item.id}" class="${pixSelected.has(item.id)?'selected':''}">
+      ${pixMode ? `<td class="cb-col"><input type="checkbox" class="row-cb" data-id="${item.id}" ${pixSelected.has(item.id)?'checked':''} onchange="toggleCb('${item.id}',this.checked)"></td>` : ''}
       <td>
         <strong>${esc(item.desc)}</strong>${parcelaTag}
         ${item.obs?`<br><span style="color:var(--muted);font-size:11px">${esc(item.obs)}</span>`:''}
@@ -668,15 +723,115 @@ function runPropagate(){
   showToast(`${toAdd.length} contas propagadas para ${MONTHS_FULL[tm]} ${ty}!`,'success');
 }
 
+// ─── PIX MODE ─────────────────────────────────────────────────────────────
+let pixMode = false;
+let pixSelected = new Set();
+
+function togglePixMode(){
+  pixMode = !pixMode;
+  pixSelected.clear();
+  document.getElementById('pixBar').classList.toggle('active', pixMode);
+  // show/hide checkbox column
+  document.querySelectorAll('.pix-only').forEach(el => el.style.display = pixMode ? '' : 'none');
+  updatePixBar();
+  renderTable(loadData(currentYear, currentMonth));
+}
+
+function updatePixBar(){
+  const data = loadData(currentYear, currentMonth) || [];
+  const sel  = data.filter(i => pixSelected.has(i.id));
+  const total = sel.reduce((s,i) => s + getEff(i), 0);
+  document.getElementById('pixCount').textContent = `${sel.length} selecionada${sel.length!==1?'s':''}`;
+  document.getElementById('pixSum').textContent   = sel.length > 0 ? `· Total: ${fmt(total)}` : '';
+}
+
+function toggleCb(id, checked){
+  checked ? pixSelected.add(id) : pixSelected.delete(id);
+  // highlight row
+  const row = document.querySelector(`tr[data-id="${id}"]`);
+  if(row) row.classList.toggle('selected', checked);
+  // update "select all" state
+  const allCbs = document.querySelectorAll('.row-cb');
+  const allChecked = [...allCbs].every(c => c.checked);
+  document.getElementById('cbAll').checked = allChecked && allCbs.length > 0;
+  updatePixBar();
+}
+
+function toggleAllCb(master){
+  document.querySelectorAll('.row-cb').forEach(cb => {
+    cb.checked = master.checked;
+    const id = cb.dataset.id;
+    master.checked ? pixSelected.add(id) : pixSelected.delete(id);
+    const row = document.querySelector(`tr[data-id="${id}"]`);
+    if(row) row.classList.toggle('selected', master.checked);
+  });
+  updatePixBar();
+}
+
+function openPixMsg(){
+  const data = loadData(currentYear, currentMonth) || [];
+  const sel  = data.filter(i => pixSelected.has(i.id));
+  if(sel.length === 0){ showToast('Selecione ao menos uma conta!','error'); return; }
+
+  const total = sel.reduce((s,i) => s + getEff(i), 0);
+  const mes   = `${MONTHS_FULL[currentMonth]}/${currentYear}`;
+
+  // Build message
+  const linhas = sel
+    .sort((a,b) => a.dia - b.dia)
+    .map(i => {
+      const v = getEff(i);
+      const parc = i.recorrente==='parcela'&&i.parcelaAtual&&i.parcelaTotal ? ` (${i.parcelaAtual}/${i.parcelaTotal})` : '';
+      return `• ${i.desc}${parc} — ${fmt(v)}  (vence dia ${i.dia})`;
+    })
+    .join('\n');
+
+  const msg =
+`Oi Cesar! 😊 Segue as contas de ${mes} para me fazer o Pix:
+
+${linhas}
+
+━━━━━━━━━━━━━━━━━━
+💰 TOTAL: ${fmt(total)}
+━━━━━━━━━━━━━━━━━━
+
+Obrigada! 🙏`;
+
+  document.getElementById('pixTotalLine').textContent = `💰 Total: ${fmt(total)}`;
+  document.getElementById('pixMsgBox').textContent = msg;
+  document.getElementById('copyBtn').textContent = '📋 Copiar mensagem';
+  document.getElementById('copyBtn').classList.remove('copied');
+  document.getElementById('moPixMsg').classList.add('open');
+}
+
+function copyPixMsg(){
+  const msg = document.getElementById('pixMsgBox').textContent;
+  navigator.clipboard.writeText(msg).then(()=>{
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✓ Copiado!';
+    btn.classList.add('copied');
+    showToast('Mensagem copiada! Agora é só colar pro Cesar 😊','success');
+    setTimeout(()=>{ btn.textContent='📋 Copiar mensagem'; btn.classList.remove('copied'); }, 3000);
+  }).catch(()=>{
+    // fallback
+    const ta = document.createElement('textarea');
+    ta.value = msg; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('Copiado!','success');
+  });
+}
 // ─── MONTH NAV ────────────────────────────────────────────────────────────
 function changeMonth(d){
   currentMonth+=d;
   if(currentMonth<0){currentMonth=11;currentYear--;}
   if(currentMonth>11){currentMonth=0;currentYear++;}
+  if(pixMode){ pixMode=false; pixSelected.clear(); document.getElementById('pixBar').classList.remove('active'); }
   ensureMonth(currentYear,currentMonth); render();
 }
 function changeYear(d){
   currentYear+=d;
+  if(pixMode){ pixMode=false; pixSelected.clear(); document.getElementById('pixBar').classList.remove('active'); }
   seedFullYear(currentYear);
   render();
 }
