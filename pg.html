@@ -319,11 +319,17 @@
       </select>
     </div>
     <div style="background:var(--yellow-bg);border:1px solid #e8c86a;border-radius:7px;padding:10px 12px;font-size:12px;color:var(--yellow);margin-bottom:4px;">
-      ⚠️ Se o mês destino já tiver contas, elas <strong>não</strong> serão apagadas — as novas serão adicionadas.
+      ⚠️ Só serão adicionadas contas que <strong>ainda não existem</strong> no mês destino (mesmo nome + dia). Nada será duplicado.
     </div>
     <div class="mact">
       <button class="bcancel" onclick="closeModal('moProp')">Cancelar</button>
       <button class="bsave" onclick="runPropagate()" style="background:var(--blue);">Propagar agora</button>
+    </div>
+    <div style="border-top:1px solid var(--border);margin-top:16px;padding-top:14px;">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.6px;font-weight:600;">🧹 Limpeza</div>
+      <button id="cleanBtn" onclick="cleanDuplicates()" style="width:100%;background:var(--red-bg);border:1px solid #e8a8a8;color:var(--red);padding:8px;border-radius:7px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;">
+        🧹 Remover duplicatas do mês atual
+      </button>
     </div>
   </div>
 </div>
@@ -673,8 +679,10 @@ function saveItem(){
 }
 
 // ─── MODAL PROPAGAR ───────────────────────────────────────────────────────
+// Chave de unicidade: desc normalizada + dia
+const propKey = b => `${String(b.desc).trim().toLowerCase()}|${b.dia}`;
+
 function openPropModal(){
-  // Build month options (next 12 months)
   const sel = document.getElementById('fPropMes');
   sel.innerHTML='';
   for(let i=1; i<=12; i++){
@@ -685,42 +693,97 @@ function openPropModal(){
     opt.textContent=`${MONTHS_FULL[m]} ${y}`;
     sel.appendChild(opt);
   }
-  // Info
-  const data = loadData(currentYear,currentMonth)||[];
-  const rec  = data.filter(i=>i.recorrente==='sim').length;
-  document.getElementById('propInfo').innerHTML=
-    `Mês atual: <strong>${MONTHS_FULL[currentMonth]} ${currentYear}</strong><br>
-     Contas recorrentes: <strong>${rec}</strong> &nbsp;·&nbsp; Total: <strong>${data.length}</strong>`;
+  updatePropPreview();
+  sel.addEventListener('change', updatePropPreview);
+  document.getElementById('fPropTipo').addEventListener('change', updatePropPreview);
+  document.getElementById('cleanBtn').textContent = `🧹 Remover duplicatas de ${MONTHS_FULL[currentMonth]} ${currentYear}`;
   document.getElementById('moProp').classList.add('open');
 }
 
+function updatePropPreview(){
+  const val  = document.getElementById('fPropMes').value;
+  if(!val) return;
+  const [ty,tm]  = val.split('_').map(Number);
+  const tipo     = document.getElementById('fPropTipo').value;
+  const srcData  = loadData(currentYear,currentMonth)||[];
+  const source   = tipo==='todas' ? srcData : srcData.filter(i=>i.recorrente==='sim');
+  const destData = loadData(ty,tm)||[];
+  const destKeys = new Set(destData.map(propKey));
+
+  const novas    = source.filter(b => !destKeys.has(propKey(b)));
+  const ignoradas= source.filter(b =>  destKeys.has(propKey(b)));
+
+  document.getElementById('propInfo').innerHTML=
+    `<strong>Origem:</strong> ${MONTHS_FULL[currentMonth]} ${currentYear} &nbsp;→&nbsp;
+     <strong>Destino:</strong> ${MONTHS_FULL[tm]} ${ty}<br><br>
+     ✅ <strong>${novas.length}</strong> conta(s) <em>novas</em> serão adicionadas<br>
+     ⏭️ <strong>${ignoradas.length}</strong> conta(s) <em>já existem</em> no destino e serão ignoradas
+     ${ignoradas.length>0 ? `<br><span style="font-size:11px;opacity:.7">${ignoradas.map(b=>b.desc).join(', ')}</span>` : ''}`;
+}
+
 function runPropagate(){
-  const [ty,tm] = document.getElementById('fPropMes').value.split('_').map(Number);
-  const tipo    = document.getElementById('fPropTipo').value;
-  const srcData = loadData(currentYear,currentMonth)||[];
-  const source  = tipo==='todas' ? srcData : srcData.filter(i=>i.recorrente==='sim');
+  const [ty,tm]  = document.getElementById('fPropMes').value.split('_').map(Number);
+  const tipo     = document.getElementById('fPropTipo').value;
+  const srcData  = loadData(currentYear,currentMonth)||[];
+  const source   = tipo==='todas' ? srcData : srcData.filter(i=>i.recorrente==='sim');
+  const destData = loadData(ty,tm)||[];
 
-  const destData = loadData(ty,tm) || [];
+  // Só adiciona o que NÃO existe no destino (mesmo desc + dia)
+  const destKeys = new Set(destData.map(propKey));
+  const toAdd = source
+    .filter(b => !destKeys.has(propKey(b)))
+    .filter(b => !(b.recorrente==='parcela' && b.parcelaTotal && b.parcelaAtual >= b.parcelaTotal))
+    .map((b,i)=>({
+      ...b,
+      id:`prop_${ty}_${tm}_${i}_${Date.now()}`,
+      status:'pendente',
+      pixDate:'',
+      valorOverride: null,
+      parcelaAtual: b.recorrente==='parcela'&&b.parcelaAtual ? b.parcelaAtual+1 : b.parcelaAtual,
+    }));
 
-  // Advance parcela number for parceladas
-  const toAdd = source.map((b,i)=>({
-    ...b,
-    id:`prop_${ty}_${tm}_${i}_${Date.now()}`,
-    status:'pendente',
-    pixDate:'',
-    parcelaAtual: b.recorrente==='parcela'&&b.parcelaAtual ? b.parcelaAtual+1 : b.parcelaAtual,
-    valorOverride: null,
-  })).filter(b=>{
-    // skip parceladas that have reached the total
-    if(b.recorrente==='parcela'&&b.parcelaTotal&&b.parcelaAtual>b.parcelaTotal) return false;
-    return true;
-  });
+  if(toAdd.length===0){
+    showToast('Nenhuma conta nova para propagar — tudo já existe no destino.','info');
+    closeModal('moProp'); return;
+  }
 
   const merged = [...destData, ...toAdd];
   saveData(ty, tm, merged);
   pushToSheet(ty, tm, merged);
   closeModal('moProp');
-  showToast(`${toAdd.length} contas propagadas para ${MONTHS_FULL[tm]} ${ty}!`,'success');
+  showToast(`✅ ${toAdd.length} conta(s) nova(s) adicionada(s) em ${MONTHS_FULL[tm]} ${ty}!`,'success');
+}
+
+// ─── LIMPAR DUPLICATAS do mês atual ──────────────────────────────────────
+function cleanDuplicates(){
+  const data = loadData(currentYear, currentMonth);
+  if(!data){ showToast('Nenhum dado encontrado neste mês.','error'); return; }
+
+  const seen = new Map(); // propKey → primeira ocorrência
+  const clean = [];
+  let removed = 0;
+
+  data.forEach(item => {
+    const k = propKey(item);
+    if(!seen.has(k)){
+      seen.set(k, true);
+      clean.push(item);
+    } else {
+      removed++;
+    }
+  });
+
+  if(removed===0){
+    showToast('Nenhuma duplicata encontrada neste mês! ✨','success');
+    return;
+  }
+
+  if(!confirm(`Encontrei ${removed} duplicata(s) em ${MONTHS_FULL[currentMonth]} ${currentYear}.\n\nRemover agora? (a primeira ocorrência de cada conta será mantida)`)) return;
+
+  saveData(currentYear, currentMonth, clean);
+  render();
+  pushToSheet(currentYear, currentMonth, clean);
+  showToast(`🧹 ${removed} duplicata(s) removida(s)!`,'success');
 }
 
 // ─── PIX MODE ─────────────────────────────────────────────────────────────
