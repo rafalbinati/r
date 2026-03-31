@@ -6,200 +6,157 @@
 <title>Gestão de Contas · Rafa</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg:#f5f4f0;--surface:#fff;--surface2:#f0eeea;--border:#e0ddd6;
-    --accent:#7c5c2e;--accent-light:#f5ede0;
-    --green:#2a7a52;--green-bg:#eaf5ef;
-    --red:#c0392b;--red-bg:#fdf0ee;
-    --yellow:#9a6e00;--yellow-bg:#fdf6e3;
-    --blue:#1a5fa8;--blue-bg:#e8f0fb;
-    --text:#1a1814;--muted:#8a8278;--radius:12px;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;min-height:100vh;}
-
-  header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.06);}
-  header h1{font-family:'DM Serif Display',serif;font-size:20px;color:var(--accent);}
-  .hright{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-  .sync-status{font-size:11px;color:var(--muted);}
-  .hbtn{padding:6px 13px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;border:1px solid;transition:all .2s;}
-  .hbtn-sync{background:var(--accent-light);border-color:#d4b896;color:var(--accent);}
-  .hbtn-sync:hover{background:var(--accent);color:#fff;border-color:var(--accent);}
-  .hbtn-prop{background:var(--blue-bg);border-color:#a8c4e8;color:var(--blue);}
-  .hbtn-prop:hover{background:var(--blue);color:#fff;border-color:var(--blue);}
-
-  .container{max-width:1080px;margin:0 auto;padding:20px 18px 60px;}
-
-  .config-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;margin-bottom:18px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-  .config-bar label{font-size:12px;color:var(--muted);white-space:nowrap;}
-  .config-bar input{flex:1;min-width:180px;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:6px 10px;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:12px;outline:none;}
-  .config-bar input:focus{border-color:var(--accent);}
-  .cfg-save{background:var(--surface2);border:1px solid var(--border);color:var(--accent);padding:6px 12px;border-radius:7px;cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif;font-weight:500;transition:all .2s;}
-  .cfg-save:hover{background:var(--accent);color:#fff;border-color:var(--accent);}
-
-  .month-bar{display:flex;align-items:center;gap:5px;margin-bottom:18px;flex-wrap:wrap;}
-  .mnav{background:var(--surface);border:1px solid var(--border);color:var(--muted);cursor:pointer;font-size:15px;padding:5px 9px;border-radius:7px;line-height:1;transition:all .15s;}
-  .mnav:hover{color:var(--accent);border-color:var(--accent);}
-  .mbtn{background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:5px 13px;border-radius:18px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;transition:all .2s;}
-  .mbtn:hover{border-color:var(--accent);color:var(--accent);}
-  .mbtn.active{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600;}
-  .ylabel{color:var(--muted);font-size:13px;margin-left:2px;font-weight:500;}
-
-  .summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:20px;}
-  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.04);}
-  .card-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.9px;margin-bottom:6px;}
-  .card-value{font-family:'DM Serif Display',serif;font-size:22px;color:var(--text);line-height:1.1;}
-  .card-value.green{color:var(--green);}
-  .card-value.yellow{color:var(--yellow);}
-  .card-sub{font-size:11px;color:var(--muted);margin-top:4px;}
-  .prog-wrap{background:var(--surface2);border-radius:3px;height:4px;margin-top:7px;}
-  .prog-bar{height:4px;border-radius:3px;background:var(--green);transition:width .5s;}
-  .prog-bar.warn{background:#e6a817;}
-  .prog-bar.danger{background:var(--red);}
-
-  .table-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04);}
-  .table-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;background:var(--surface2);}
-  .table-title{font-family:'DM Serif Display',serif;font-size:16px;color:var(--accent);}
-  .add-btn{background:var(--accent);color:#fff;border:none;padding:6px 14px;border-radius:7px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;transition:opacity .2s;}
-  .add-btn:hover{opacity:.85;}
-
-  table{width:100%;border-collapse:collapse;}
-  th{padding:8px 12px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);border-bottom:1px solid var(--border);background:#faf9f7;white-space:nowrap;font-weight:600;}
-  td{padding:10px 12px;border-bottom:1px solid #f0ede8;vertical-align:middle;font-size:13px;}
-  tr:last-child td{border-bottom:none;}
-  tr:hover td{background:#fdf9f5;}
-
-  .badge{display:inline-block;padding:2px 9px;border-radius:18px;font-size:11px;font-weight:600;white-space:nowrap;}
-  .badge.pago{background:var(--green-bg);color:var(--green);}
-  .badge.pendente{background:var(--yellow-bg);color:var(--yellow);}
-  .badge.atrasado{background:var(--red-bg);color:var(--red);}
-
-  .conta-badge{display:inline-block;padding:2px 7px;border-radius:5px;font-size:11px;font-weight:500;}
-  .conta-cesar{background:#e8f0fb;color:#2a5fb0;}
-  .conta-nubank{background:#f0e8fb;color:#7c28c0;}
-  .conta-bbrafa{background:#e8f5ee;color:#1e7045;}
-  .conta-bbpablo{background:#fbe8e8;color:#b02828;}
-  .conta-outro{background:#f5f0e0;color:#7a6010;}
-
-  .dia-chip{background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:11px;color:var(--muted);font-weight:600;}
-  .dia-chip.hoje{border-color:#e6a817;color:var(--yellow);background:var(--yellow-bg);}
-  .dia-chip.urgente{border-color:var(--red);color:var(--red);background:var(--red-bg);}
-  .dia-chip.passou{border-color:#8cc8a8;color:var(--green);background:var(--green-bg);}
-
-  .parcela-tag{display:inline-block;background:var(--blue-bg);color:var(--blue);border-radius:4px;padding:1px 6px;font-size:10px;font-weight:600;margin-left:4px;}
-  .pix-date{color:var(--green);font-size:11px;font-weight:500;}
-  .no-pix{color:#ccc;font-size:11px;font-style:italic;}
-
-  .abtn{background:none;border:none;cursor:pointer;color:var(--muted);padding:3px 5px;border-radius:5px;font-size:13px;transition:all .15s;}
-  .abtn:hover{color:var(--text);background:var(--surface2);}
-  .abtn.del:hover{color:var(--red);background:var(--red-bg);}
-
-  /* MODAL */
-  .mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:500;align-items:center;justify-content:center;padding:16px;}
-  .mo.open{display:flex;}
-  .md{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px;width:100%;max-width:500px;max-height:92vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.12);}
-  .md h2{font-family:'DM Serif Display',serif;font-size:18px;color:var(--accent);margin-bottom:16px;}
-  .fr{margin-bottom:11px;}
-  .fr label{display:block;font-size:10px;color:var(--muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.6px;font-weight:600;}
-  .fr input,.fr select{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border-color .2s;}
-  .fr input:focus,.fr select:focus{border-color:var(--accent);}
-  .fr .hint{font-size:11px;color:var(--muted);margin-top:2px;}
-  .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-  .fgrid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
-  .mact{display:flex;gap:8px;margin-top:16px;}
-  .bcancel{flex:1;background:none;border:1px solid var(--border);color:var(--muted);padding:9px;border-radius:7px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;}
-  .bcancel:hover{background:var(--surface2);}
-  .bsave{flex:2;background:var(--accent);border:none;color:#fff;padding:9px;border-radius:7px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;}
-  .bsave:hover{opacity:.87;}
-
-  /* PROPAGATE MODAL */
-  .prop-info{background:var(--blue-bg);border:1px solid #a8c4e8;border-radius:8px;padding:12px 14px;font-size:13px;color:var(--blue);margin-bottom:14px;line-height:1.5;}
-
-  .toast{position:fixed;bottom:20px;right:20px;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px 16px;font-size:13px;color:var(--text);z-index:999;transform:translateY(60px);opacity:0;transition:all .3s;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.1);}
-  .toast.show{transform:translateY(0);opacity:1;}
-  .toast.success{border-color:var(--green);}
-  .toast.error{border-color:var(--red);}
-  .toast.info{border-color:var(--blue);}
-
-  /* PIX SELECTION MODE */
-  .pix-bar{display:none;background:#1a4f1a;color:#fff;padding:10px 18px;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;border-bottom:2px solid #2d7a2d;}
-  .pix-bar.active{display:flex;}
-  .pix-bar-left{display:flex;align-items:center;gap:10px;font-size:13px;}
-  .pix-bar span{font-weight:600;}
-  .pix-bar-btns{display:flex;gap:8px;}
-  .pbtn{padding:6px 14px;border-radius:7px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;border:none;transition:all .2s;}
-  .pbtn-cancel{background:rgba(255,255,255,.15);color:#fff;}
-  .pbtn-cancel:hover{background:rgba(255,255,255,.25);}
-  .pbtn-gerar{background:#fff;color:#1a4f1a;}
-  .pbtn-gerar:hover{background:#e8f5ee;}
-
-  /* checkbox col */
-  .cb-col{width:36px;}
-  input[type=checkbox].row-cb{width:16px;height:16px;cursor:pointer;accent-color:var(--green);}
-  tr.selected td{background:#f0faf4 !important;}
-  tr.selected td:first-child{border-left:3px solid var(--green);}
-
-  /* PIX MESSAGE MODAL */
-  .pix-msg-box{background:#f6fef6;border:2px solid var(--green);border-radius:10px;padding:16px;margin-bottom:14px;font-family:monospace;font-size:13px;line-height:1.7;color:#1a2e1a;white-space:pre-wrap;word-break:break-word;max-height:320px;overflow-y:auto;}
-  .pix-total-line{background:var(--green);color:#fff;border-radius:7px;padding:10px 14px;font-size:15px;font-weight:700;text-align:center;margin-bottom:14px;font-family:'DM Serif Display',serif;}
-  .bcopy{width:100%;background:var(--green);border:none;color:#fff;padding:11px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;transition:opacity .2s;}
-  .bcopy:hover{opacity:.87;}
-  .bcopy.copied{background:#1a4f1a;}
-  .hbtn-pix{background:#e8f5ee;border-color:#8cc8a8;color:var(--green);}
-  .hbtn-pix:hover{background:var(--green);color:#fff;border-color:var(--green);}
-
-  @media(max-width:600px){
-    td,th{padding:7px 7px;font-size:12px;}
-    .container{padding:10px 8px 60px;}
-    header{padding:10px 12px;}
-    .hide-mobile{display:none;}
-    .fgrid,.fgrid3{grid-template-columns:1fr;}
-  }
+:root{
+  --bg:#f5f4f0;--surface:#fff;--surface2:#f0eeea;--border:#e0ddd6;
+  --accent:#7c5c2e;--accent-light:#f5ede0;
+  --green:#2a7a52;--green-bg:#eaf5ef;
+  --red:#c0392b;--red-bg:#fdf0ee;
+  --yellow:#9a6e00;--yellow-bg:#fdf6e3;
+  --blue:#1a5fa8;--blue-bg:#e8f0fb;
+  --text:#1a1814;--muted:#8a8278;--radius:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;min-height:100vh;}
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+header h1{font-family:'DM Serif Display',serif;font-size:20px;color:var(--accent);}
+.hright{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.sync-status{font-size:11px;color:var(--muted);}
+.hbtn{padding:6px 13px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;border:1px solid;transition:all .2s;}
+.hbtn-sync{background:var(--accent-light);border-color:#d4b896;color:var(--accent);}
+.hbtn-sync:hover{background:var(--accent);color:#fff;}
+.hbtn-prop{background:var(--blue-bg);border-color:#a8c4e8;color:var(--blue);}
+.hbtn-prop:hover{background:var(--blue);color:#fff;}
+.hbtn-pix{background:var(--green-bg);border-color:#8cc8a8;color:var(--green);}
+.hbtn-pix:hover{background:var(--green);color:#fff;}
+.pix-bar{display:none;background:#1a4f1a;color:#fff;padding:10px 18px;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.pix-bar.active{display:flex;}
+.pix-bar-left{display:flex;align-items:center;gap:10px;font-size:13px;}
+.pbtn{padding:6px 14px;border-radius:7px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;border:none;}
+.pbtn-cancel{background:rgba(255,255,255,.15);color:#fff;}
+.pbtn-gerar{background:#fff;color:#1a4f1a;}
+.container{max-width:1080px;margin:0 auto;padding:20px 18px 60px;}
+.config-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;margin-bottom:18px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.config-bar label{font-size:12px;color:var(--muted);white-space:nowrap;}
+.config-bar input{flex:1;min-width:180px;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:6px 10px;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:12px;outline:none;}
+.config-bar input:focus{border-color:var(--accent);}
+.cfg-save{background:var(--surface2);border:1px solid var(--border);color:var(--accent);padding:6px 12px;border-radius:7px;cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif;font-weight:500;}
+.cfg-save:hover{background:var(--accent);color:#fff;}
+.month-bar{display:flex;align-items:center;gap:5px;margin-bottom:18px;flex-wrap:wrap;}
+.mnav{background:var(--surface);border:1px solid var(--border);color:var(--muted);cursor:pointer;font-size:15px;padding:5px 9px;border-radius:7px;line-height:1;}
+.mnav:hover{color:var(--accent);border-color:var(--accent);}
+.mbtn{background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:5px 13px;border-radius:18px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;}
+.mbtn:hover{border-color:var(--accent);color:var(--accent);}
+.mbtn.active{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600;}
+.ylabel{color:var(--muted);font-size:13px;margin-left:2px;font-weight:500;}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:20px;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+.card-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.9px;margin-bottom:6px;}
+.card-value{font-family:'DM Serif Display',serif;font-size:22px;color:var(--text);line-height:1.1;}
+.card-value.green{color:var(--green);}
+.card-value.yellow{color:var(--yellow);}
+.card-sub{font-size:11px;color:var(--muted);margin-top:4px;}
+.prog-wrap{background:var(--surface2);border-radius:3px;height:4px;margin-top:7px;}
+.prog-bar{height:4px;border-radius:3px;background:var(--green);transition:width .5s;}
+.prog-bar.warn{background:#e6a817;}
+.prog-bar.danger{background:var(--red);}
+.table-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+.table-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;background:var(--surface2);}
+.table-title{font-family:'DM Serif Display',serif;font-size:16px;color:var(--accent);}
+.add-btn{background:var(--accent);color:#fff;border:none;padding:6px 14px;border-radius:7px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;}
+.add-btn:hover{opacity:.85;}
+table{width:100%;border-collapse:collapse;}
+th{padding:8px 12px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);border-bottom:1px solid var(--border);background:#faf9f7;white-space:nowrap;font-weight:600;}
+td{padding:10px 12px;border-bottom:1px solid #f0ede8;vertical-align:middle;font-size:13px;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#fdf9f5;}
+tr.selected td{background:#f0faf4!important;}
+tr.selected td:first-child{border-left:3px solid var(--green);}
+.cb-col{width:36px;}
+input[type=checkbox].row-cb{width:16px;height:16px;cursor:pointer;accent-color:var(--green);}
+.badge{display:inline-block;padding:2px 9px;border-radius:18px;font-size:11px;font-weight:600;white-space:nowrap;}
+.badge.pago{background:var(--green-bg);color:var(--green);}
+.badge.pendente{background:var(--yellow-bg);color:var(--yellow);}
+.badge.atrasado{background:var(--red-bg);color:var(--red);}
+.conta-badge{display:inline-block;padding:2px 7px;border-radius:5px;font-size:11px;font-weight:500;}
+.conta-cesar{background:#e8f0fb;color:#2a5fb0;}
+.conta-nubank{background:#f0e8fb;color:#7c28c0;}
+.conta-bbrafa{background:#e8f5ee;color:#1e7045;}
+.conta-bbpablo{background:#fbe8e8;color:#b02828;}
+.conta-outro{background:#f5f0e0;color:#7a6010;}
+.dia-chip{background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:11px;color:var(--muted);font-weight:600;}
+.dia-chip.hoje{border-color:#e6a817;color:var(--yellow);background:var(--yellow-bg);}
+.dia-chip.urgente{border-color:var(--red);color:var(--red);background:var(--red-bg);}
+.dia-chip.passou{border-color:#8cc8a8;color:var(--green);background:var(--green-bg);}
+.rec-tag{display:inline-block;background:var(--blue-bg);color:var(--blue);border-radius:4px;padding:1px 6px;font-size:10px;font-weight:600;margin-left:4px;}
+.pix-date{color:var(--green);font-size:11px;font-weight:500;}
+.no-pix{color:#ccc;font-size:11px;font-style:italic;}
+.abtn{background:none;border:none;cursor:pointer;color:var(--muted);padding:3px 5px;border-radius:5px;font-size:13px;}
+.abtn:hover{color:var(--text);background:var(--surface2);}
+.abtn.del:hover{color:var(--red);background:var(--red-bg);}
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:500;align-items:center;justify-content:center;padding:16px;}
+.mo.open{display:flex;}
+.md{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px;width:100%;max-width:500px;max-height:92vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.12);}
+.md h2{font-family:'DM Serif Display',serif;font-size:18px;color:var(--accent);margin-bottom:16px;}
+.fr{margin-bottom:11px;}
+.fr label{display:block;font-size:10px;color:var(--muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.6px;font-weight:600;}
+.fr input,.fr select{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;}
+.fr input:focus,.fr select:focus{border-color:var(--accent);}
+.fr .hint{font-size:11px;color:var(--muted);margin-top:2px;}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.mact{display:flex;gap:8px;margin-top:16px;}
+.bcancel{flex:1;background:none;border:1px solid var(--border);color:var(--muted);padding:9px;border-radius:7px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;}
+.bcancel:hover{background:var(--surface2);}
+.bsave{flex:2;background:var(--accent);border:none;color:#fff;padding:9px;border-radius:7px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;}
+.bsave:hover{opacity:.87;}
+.pix-msg-box{background:#f6fef6;border:2px solid var(--green);border-radius:10px;padding:16px;margin-bottom:14px;font-family:monospace;font-size:13px;line-height:1.7;color:#1a2e1a;white-space:pre-wrap;word-break:break-word;max-height:300px;overflow-y:auto;}
+.pix-total-line{background:var(--green);color:#fff;border-radius:7px;padding:10px 14px;font-size:15px;font-weight:700;text-align:center;margin-bottom:14px;font-family:'DM Serif Display',serif;}
+.bcopy{width:100%;background:var(--green);border:none;color:#fff;padding:11px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;}
+.bcopy:hover{opacity:.87;}
+.prop-info{background:var(--blue-bg);border:1px solid #a8c4e8;border-radius:8px;padding:12px 14px;font-size:13px;color:var(--blue);margin-bottom:14px;line-height:1.6;}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px 16px;font-size:13px;color:var(--text);z-index:999;transform:translateY(60px);opacity:0;transition:all .3s;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.1);}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.success{border-color:var(--green);}
+.toast.error{border-color:var(--red);}
+.toast.info{border-color:var(--blue);}
+@media(max-width:600px){td,th{padding:7px;font-size:12px;}.container{padding:10px 8px 60px;}header{padding:10px 12px;}.hide-mobile{display:none;}.fgrid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
-
 <header>
-  <h1>💸 Gestão de Contas</h1>
+  <h1>&#x1F4B8; Gestão de Contas</h1>
   <div class="hright">
     <span class="sync-status" id="syncStatus"></span>
-    <button class="hbtn hbtn-pix" onclick="togglePixMode()">💚 Pix pro Cesar</button>
-    <button class="hbtn hbtn-prop" onclick="openPropModal()">📅 Propagar mês</button>
-    <button class="hbtn hbtn-sync" onclick="syncAll()">⟳ Sincronizar</button>
+    <button class="hbtn hbtn-pix"  onclick="togglePixMode()">&#x1F49A; Pix pro Cesar</button>
+    <button class="hbtn hbtn-prop" onclick="openPropModal()">&#x1F4C5; Propagar mês</button>
+    <button class="hbtn hbtn-sync" onclick="syncAll()">&#x27F3; Sincronizar</button>
   </div>
 </header>
-
 <div class="pix-bar" id="pixBar">
   <div class="pix-bar-left">
-    <span>💚 Modo Pix:</span>
+    <span>&#x1F49A; Modo Pix:</span>
     <span id="pixCount">0 selecionadas</span>
-    <span id="pixSum" style="opacity:.8"></span>
+    <span id="pixSum"></span>
   </div>
-  <div class="pix-bar-btns">
-    <button class="pbtn pbtn-cancel" onclick="togglePixMode()">✕ Cancelar</button>
-    <button class="pbtn pbtn-gerar" onclick="openPixMsg()">Gerar mensagem →</button>
+  <div style="display:flex;gap:8px;">
+    <button class="pbtn pbtn-cancel" onclick="togglePixMode()">&#x2715; Cancelar</button>
+    <button class="pbtn pbtn-gerar"  onclick="openPixMsg()">Gerar mensagem &#x2192;</button>
   </div>
 </div>
-
 <div class="container">
-
   <div class="config-bar">
-    <label>🔗 URL Apps Script:</label>
-    <input type="url" id="sheetUrl" placeholder="https://script.google.com/macros/s/.../exec" />
+    <label>&#x1F517; URL Apps Script:</label>
+    <input type="url" id="sheetUrl" placeholder="https://script.google.com/macros/s/.../exec"/>
     <button class="cfg-save" onclick="saveUrl()">Salvar URL</button>
   </div>
-
   <div class="month-bar">
-    <button class="mnav" onclick="changeYear(-1)">«</button>
-    <button class="mnav" onclick="changeMonth(-1)">‹</button>
+    <button class="mnav" onclick="changeYear(-1)">&laquo;</button>
+    <button class="mnav" onclick="changeMonth(-1)">&lsaquo;</button>
     <div id="monthBtns" style="display:flex;gap:4px;flex-wrap:wrap;"></div>
-    <button class="mnav" onclick="changeMonth(1)">›</button>
-    <button class="mnav" onclick="changeYear(1)">»</button>
+    <button class="mnav" onclick="changeMonth(1)">&rsaquo;</button>
+    <button class="mnav" onclick="changeYear(1)">&raquo;</button>
     <span class="ylabel" id="yearLabel"></span>
   </div>
-
   <div class="summary" id="summary"></div>
-
   <div class="table-section">
     <div class="table-header">
       <span class="table-title" id="tableTitle">Contas</span>
@@ -208,108 +165,74 @@
     <div style="overflow-x:auto">
       <table>
         <thead><tr>
-          <th class="cb-col pix-only" style="display:none"><input type="checkbox" id="cbAll" onchange="toggleAllCb(this)" title="Selecionar todas"></th>
-          <th>Descrição</th>
-          <th>Venc.</th>
-          <th>Valor</th>
-          <th class="hide-mobile">Conta Pag.</th>
-          <th>Status</th>
-          <th class="hide-mobile">Pix Cesar</th>
-          <th></th>
+          <th class="cb-col pix-only" style="display:none"><input type="checkbox" id="cbAll" onchange="toggleAllCb(this)"></th>
+          <th>Descrição</th><th>Venc.</th><th>Valor</th>
+          <th class="hide-mobile">Conta Pag.</th><th>Status</th>
+          <th class="hide-mobile">Pix Cesar</th><th></th>
         </tr></thead>
         <tbody id="tableBody"></tbody>
       </table>
     </div>
   </div>
-
 </div>
 
 <!-- MODAL CONTA -->
 <div class="mo" id="moItem">
   <div class="md">
     <h2 id="mdTitle">Nova Conta</h2>
-    <div class="fr">
-      <label>Descrição *</label>
-      <input type="text" id="fDesc" placeholder="ex: Aluguel, Cartão…"/>
-    </div>
+    <div class="fr"><label>Descrição *</label><input type="text" id="fDesc" placeholder="ex: Aluguel, Cartão…"/></div>
     <div class="fgrid">
-      <div class="fr">
-        <label>Dia Vencimento *</label>
-        <input type="number" id="fDia" min="1" max="31" placeholder="1"/>
-      </div>
-      <div class="fr">
-        <label>Valor (R$) *</label>
-        <input type="number" id="fValor" step="0.01" placeholder="0,00"/>
-      </div>
+      <div class="fr"><label>Dia Vencimento *</label><input type="number" id="fDia" min="1" max="31" placeholder="1"/></div>
+      <div class="fr"><label>Valor (R$) *</label><input type="number" id="fValor" step="0.01" placeholder="0,00"/></div>
     </div>
-    <div class="fr">
-      <label>Conta de Pagamento</label>
+    <div class="fr"><label>Conta de Pagamento</label>
       <select id="fConta">
         <option value="">— selecione —</option>
-        <option value="Cesar">Cesar</option>
-        <option value="Nubank">Nubank</option>
-        <option value="BB Rafa">BB Rafa</option>
-        <option value="BB Pablo">BB Pablo</option>
+        <option value="Cesar">Cesar</option><option value="Nubank">Nubank</option>
+        <option value="BB Rafa">BB Rafa</option><option value="BB Pablo">BB Pablo</option>
         <option value="Outro">Outro</option>
       </select>
     </div>
-    <div class="fr">
-      <label>Status</label>
+    <div class="fr"><label>Status</label>
       <select id="fStatus">
-        <option value="pendente">Pendente</option>
-        <option value="pago">Pago</option>
-        <option value="atrasado">Atrasado</option>
+        <option value="pendente">Pendente</option><option value="pago">Pago</option><option value="atrasado">Atrasado</option>
       </select>
     </div>
-
-    <!-- RECORRÊNCIA UNIFICADA -->
     <div style="background:var(--blue-bg);border:1px solid #a8c4e8;border-radius:8px;padding:12px 14px;margin-bottom:11px;">
-      <div style="font-size:11px;font-weight:600;color:var(--blue);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;">🔁 Recorrência</div>
+      <div style="font-size:11px;font-weight:600;color:var(--blue);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;">&#x1F501; Recorrência</div>
       <div class="fr" style="margin-bottom:8px">
         <label>Tipo</label>
-        <select id="fRecorrente" onchange="onRecTypeChange()">
-          <option value="sempre">♾️ Recorrente para sempre</option>
-          <option value="meses">📅 Recorrente por X meses</option>
-          <option value="parcela">📦 Parcelado (X de Y)</option>
-          <option value="nao">1️⃣ Só este mês</option>
+        <select id="fRecorrente" onchange="onRecChange()">
+          <option value="sempre">&#x267E;&#xFE0F; Recorrente para sempre</option>
+          <option value="meses">&#x1F4C5; Recorrente por X meses</option>
+          <option value="parcela">&#x1F4E6; Parcelado (X de Y)</option>
+          <option value="nao">1&#xFE0F;&#x20E3; Só este mês</option>
         </select>
       </div>
-      <!-- meses restantes -->
-      <div id="recMesesWrap" style="display:none">
+      <div id="wrapMeses" style="display:none">
         <div class="fr" style="margin:0">
           <label>Quantos meses no total?</label>
           <input type="number" id="fMesesTotal" min="1" placeholder="ex: 6" oninput="updateMesesHint()"/>
-          <div class="hint" id="recMesesHint"></div>
+          <div class="hint" id="mesesHint"></div>
         </div>
       </div>
-      <!-- parcela -->
-      <div id="recParcelaWrap" style="display:none">
+      <div id="wrapParcela" style="display:none">
         <div class="fgrid">
-          <div class="fr" style="margin:0">
-            <label>Parcela atual</label>
-            <input type="number" id="fParcelaAtual" min="1" placeholder="1"/>
-          </div>
-          <div class="fr" style="margin:0">
-            <label>Total de parcelas</label>
-            <input type="number" id="fParcelaTotal" min="1" placeholder="12"/>
-          </div>
+          <div class="fr" style="margin:0"><label>Parcela atual</label><input type="number" id="fParcelaAtual" min="1" placeholder="1"/></div>
+          <div class="fr" style="margin:0"><label>Total de parcelas</label><input type="number" id="fParcelaTotal" min="1" placeholder="12"/></div>
         </div>
-        <div class="hint" style="margin-top:4px">Ex: 3 de 10 → lança automaticamente até a última parcela</div>
+        <div class="hint" style="margin-top:4px">Ex: 3 de 10 — lança automaticamente até a última</div>
       </div>
     </div>
-
     <div class="fr">
       <label>Data do Pix do Cesar <span style="font-weight:400;color:#bbb;text-transform:none">(opcional)</span></label>
       <input type="date" id="fPixDate"/>
       <div class="hint">Preencha depois que o Cesar fizer o Pix</div>
     </div>
-    <div class="fr">
-      <label>Observação</label>
-      <input type="text" id="fObs" placeholder="opcional"/>
-    </div>
+    <div class="fr"><label>Observação</label><input type="text" id="fObs" placeholder="opcional"/></div>
     <div class="mact">
       <button class="bcancel" onclick="closeModal('moItem')">Cancelar</button>
-      <button class="bsave" onclick="saveItem()">Salvar</button>
+      <button class="bsave"   onclick="saveItem()">Salvar</button>
     </div>
   </div>
 </div>
@@ -317,46 +240,42 @@
 <!-- MODAL PROPAGAR -->
 <div class="mo" id="moProp">
   <div class="md">
-    <h2>📅 Propagar para próximo mês</h2>
+    <h2>&#x1F4C5; Propagar para próximo mês</h2>
     <div class="prop-info" id="propInfo"></div>
-    <div class="fr">
-      <label>Propagar para qual mês?</label>
-      <select id="fPropMes"></select>
-    </div>
-    <div class="fr">
-      <label>O que propagar?</label>
-      <select id="fPropTipo">
+    <div class="fr"><label>Propagar para qual mês?</label><select id="fPropMes" onchange="updatePropPreview()"></select></div>
+    <div class="fr"><label>O que propagar?</label>
+      <select id="fPropTipo" onchange="updatePropPreview()">
         <option value="recorrentes">Só contas recorrentes (padrão)</option>
         <option value="todas">Todas as contas do mês atual</option>
       </select>
     </div>
-    <div style="background:var(--yellow-bg);border:1px solid #e8c86a;border-radius:7px;padding:10px 12px;font-size:12px;color:var(--yellow);margin-bottom:4px;">
-      ⚠️ Só serão adicionadas contas que <strong>ainda não existem</strong> no mês destino (mesmo nome + dia). Nada será duplicado.
+    <div style="background:var(--yellow-bg);border:1px solid #e8c86a;border-radius:7px;padding:10px 12px;font-size:12px;color:var(--yellow);margin-bottom:12px;">
+      &#x26A0;&#xFE0F; Só serão adicionadas contas que <strong>ainda não existem</strong> no destino. Nada será duplicado.
     </div>
     <div class="mact">
       <button class="bcancel" onclick="closeModal('moProp')">Cancelar</button>
       <button class="bsave" onclick="runPropagate()" style="background:var(--blue);">Propagar agora</button>
     </div>
     <div style="border-top:1px solid var(--border);margin-top:16px;padding-top:14px;">
-      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.6px;font-weight:600;">🧹 Limpeza</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.6px;font-weight:600;">&#x1F9F9; Limpeza</div>
       <button id="cleanBtn" onclick="cleanDuplicates()" style="width:100%;background:var(--red-bg);border:1px solid #e8a8a8;color:var(--red);padding:8px;border-radius:7px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;">
-        🧹 Remover duplicatas do mês atual
+        &#x1F9F9; Remover duplicatas do mês atual
       </button>
     </div>
   </div>
 </div>
 
-<!-- MODAL PIX MENSAGEM -->
+<!-- MODAL PIX -->
 <div class="mo" id="moPixMsg">
   <div class="md" style="max-width:480px">
-    <h2>💚 Mensagem para o Cesar</h2>
+    <h2>&#x1F49A; Mensagem para o Cesar</h2>
     <div class="pix-total-line" id="pixTotalLine"></div>
     <div class="pix-msg-box" id="pixMsgBox"></div>
-    <button class="bcopy" id="copyBtn" onclick="copyPixMsg()">📋 Copiar mensagem</button>
+    <button class="bcopy" id="copyBtn" onclick="copyPixMsg()">&#x1F4CB; Copiar mensagem</button>
     <div style="border-top:1px solid var(--border);margin-top:14px;padding-top:14px;">
       <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Quando o Cesar fizer o Pix:</div>
-      <button id="confirmPixBtn" onclick="confirmPixCesar()" style="width:100%;background:var(--green);border:none;color:#fff;padding:11px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;">
-        ✅ Cesar fez o Pix — dar baixa agora
+      <button id="confirmPixBtn" onclick="confirmPixCesar()" style="width:100%;background:var(--green);border:none;color:#fff;padding:11px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;">
+        &#x2705; Cesar fez o Pix — registrar agora
       </button>
     </div>
     <div class="mact" style="margin-top:10px">
@@ -368,193 +287,137 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ─── CONSTANTS ────────────────────────────────────────────────────────────
-const MONTHS      = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-const MONTHS_FULL = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const MONTHS=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const MONTHS_FULL=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
-const DEFAULT_BILLS = [
-  { desc:"Faxineira",            dia:1,  valor:800.00,   conta:"",        recorrente:"sim" },
-  { desc:"Passadeira",           dia:1,  valor:240.00,   conta:"",        recorrente:"sim" },
-  { desc:"Aluguel",              dia:1,  valor:2600.00,  conta:"",        recorrente:"sim" },
-  { desc:"Cartão BB",            dia:1,  valor:3800.00,  conta:"BB Rafa", recorrente:"sim" },
-  { desc:"Pedagoga Mila",        dia:1,  valor:750.00,   conta:"",        recorrente:"sim" },
-  { desc:"Pós Graduação",        dia:5,  valor:597.00,   conta:"",        recorrente:"sim" },
-  { desc:"Escola Mila",          dia:8,  valor:1035.00,  conta:"",        recorrente:"sim" },
-  { desc:"Condomínio",           dia:10, valor:800.00,   conta:"",        recorrente:"sim" },
-  { desc:"Unimed",               dia:10, valor:1322.32,  conta:"",        recorrente:"sim" },
-  { desc:"Uso Unimed",           dia:10, valor:750.00,   conta:"",        recorrente:"sim" },
-  { desc:"Terapeuta Cris",       dia:10, valor:500.00,   conta:"",        recorrente:"sim" },
-  { desc:"Aluguel Sala",         dia:12, valor:600.00,   conta:"",        recorrente:"sim" },
-  { desc:"Psicólogo Pablo",      dia:15, valor:1350.00,  conta:"",        recorrente:"sim" },
-  { desc:"Cartão Sant",          dia:21, valor:2500.00,  conta:"",        recorrente:"sim" },
-  { desc:"Faxineira (quinzena)", dia:25, valor:800.00,   conta:"",        recorrente:"sim" },
-  { desc:"Psicóloga",            dia:25, valor:2600.00,  conta:"",        recorrente:"sim" },
-  { desc:"Psiquiatra",           dia:25, valor:2800.00,  conta:"",        recorrente:"sim" },
+const DEFAULT_BILLS=[
+  {desc:"Faxineira",            dia:1,  valor:800.00,   conta:"",        recorrente:"sempre"},
+  {desc:"Passadeira",           dia:1,  valor:240.00,   conta:"",        recorrente:"sempre"},
+  {desc:"Aluguel",              dia:1,  valor:2600.00,  conta:"",        recorrente:"sempre"},
+  {desc:"Cartão BB",            dia:1,  valor:3800.00,  conta:"BB Rafa", recorrente:"sempre"},
+  {desc:"Pedagoga Mila",        dia:1,  valor:750.00,   conta:"",        recorrente:"sempre"},
+  {desc:"Pós Graduação",        dia:5,  valor:597.00,   conta:"",        recorrente:"sempre"},
+  {desc:"Escola Mila",          dia:8,  valor:1035.00,  conta:"",        recorrente:"sempre"},
+  {desc:"Condomínio",           dia:10, valor:800.00,   conta:"",        recorrente:"sempre"},
+  {desc:"Unimed",               dia:10, valor:1322.32,  conta:"",        recorrente:"sempre"},
+  {desc:"Uso Unimed",           dia:10, valor:750.00,   conta:"",        recorrente:"sempre"},
+  {desc:"Terapeuta Cris",       dia:10, valor:500.00,   conta:"",        recorrente:"sempre"},
+  {desc:"Aluguel Sala",         dia:12, valor:600.00,   conta:"",        recorrente:"sempre"},
+  {desc:"Psicólogo Pablo",      dia:15, valor:1350.00,  conta:"",        recorrente:"sempre"},
+  {desc:"Cartão Sant",          dia:21, valor:2500.00,  conta:"",        recorrente:"sempre"},
+  {desc:"Faxineira (quinzena)", dia:25, valor:800.00,   conta:"",        recorrente:"sempre"},
+  {desc:"Psicóloga",            dia:25, valor:2600.00,  conta:"",        recorrente:"sempre"},
+  {desc:"Psiquiatra",           dia:25, valor:2800.00,  conta:"",        recorrente:"sempre"},
 ];
 
-// ─── STATE ────────────────────────────────────────────────────────────────
-const today      = new Date();
-let currentMonth = today.getMonth();
-let currentYear  = today.getFullYear();
-let editingId    = null;
+const today=new Date();
+let currentMonth=today.getMonth();
+let currentYear=today.getFullYear();
+let editingId=null;
+let pixMode=false;
+let pixSelected=new Set();
 
-// ─── STORAGE ──────────────────────────────────────────────────────────────
-const getKey = (y,m) => `contas_${y}_${m}`;
-const getUrl = ()    => localStorage.getItem('sheets_url')||'';
+const getKey=(y,m)=>`contas_${y}_${m}`;
+const getUrl=()=>localStorage.getItem('sheets_url')||'';
+function saveUrl(){localStorage.setItem('sheets_url',document.getElementById('sheetUrl').value.trim());showToast('URL salva!','success');}
+function loadData(y,m){const r=localStorage.getItem(getKey(y,m));return r?JSON.parse(r):null;}
+function saveData(y,m,d){localStorage.setItem(getKey(y,m),JSON.stringify(d));}
 
-function saveUrl(){
-  localStorage.setItem('sheets_url', document.getElementById('sheetUrl').value.trim());
-  showToast('URL salva!','success');
-}
+// Normaliza valor antigo 'sim' para 'sempre'
+function nRec(v){return(!v||v==='sim')?'sempre':v;}
 
-function loadData(y,m){
-  const raw = localStorage.getItem(getKey(y,m));
-  return raw ? JSON.parse(raw) : null;
-}
-function saveData(y,m,data){ localStorage.setItem(getKey(y,m), JSON.stringify(data)); }
-
-// Seed a month from defaults (or from recurring bills of a source month)
-function seedMonth(y, m, sourceBills){
-  const bills = sourceBills || DEFAULT_BILLS;
-  const seeded = bills.map((b,i)=>({
-    desc:        b.desc,
-    dia:         b.dia,
-    valor:       b.valor,
-    valorOverride: null,
-    conta:       b.conta||'',
-    obs:         b.obs||'',
-    recorrente:  b.recorrente||'sim',
-    parcelaAtual:  b.parcelaAtual||null,
-    parcelaTotal:  b.parcelaTotal||null,
-    id:          `${y}_${m}_${i}_${Date.now()}${Math.random().toString(36).slice(2,6)}`,
-    status:      'pendente',
-    pixDate:     '',
+function seedMonth(y,m,src){
+  const bills=src||DEFAULT_BILLS;
+  const s=bills.map((b,i)=>({
+    id:`${y}_${m}_${i}_${Date.now()}${Math.random().toString(36).slice(2,5)}`,
+    desc:b.desc, dia:b.dia, valor:b.valor, valorOverride:null,
+    conta:b.conta||'', obs:b.obs||'',
+    recorrente:nRec(b.recorrente),
+    mesesTotal:b.mesesTotal||null, mesesRestantes:b.mesesRestantes||null,
+    parcelaAtual:b.parcelaAtual||null, parcelaTotal:b.parcelaTotal||null,
+    status:'pendente', pixDate:'',
   }));
-  saveData(y, m, seeded);
-  return seeded;
+  saveData(y,m,s); return s;
 }
+function ensureMonth(y,m){const d=loadData(y,m);return d||seedMonth(y,m);}
+function seedFullYear(y){for(let m=0;m<12;m++)if(!loadData(y,m))seedMonth(y,m);}
 
-// Ensure a month exists; if not, seed it
-function ensureMonth(y, m){
-  if(loadData(y,m)) return loadData(y,m);
-  return seedMonth(y, m);
-}
-
-// On first load: seed ALL months of current year that don't exist yet
-function seedFullYear(y){
-  for(let m=0; m<12; m++){
-    if(!loadData(y,m)) seedMonth(y, m);
-  }
-}
-
-// ─── HELPERS ──────────────────────────────────────────────────────────────
-const fmt = v => 'R$\u00a0'+Number(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
-const fmtDate = d => { if(!d)return''; const[y,m,day]=d.split('-'); return`${day}/${m}/${y}`; };
-const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-const getEff = i => (i.valorOverride!==null&&i.valorOverride!==undefined) ? i.valorOverride : i.valor;
+const fmt=v=>'R$\u00a0'+Number(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtDate=d=>{if(!d)return'';const[y,mo,day]=d.split('-');return`${day}/${mo}/${y}`;};
+const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const getEff=i=>(i.valorOverride!==null&&i.valorOverride!==undefined)?i.valorOverride:i.valor;
+const propKey=b=>`${String(b.desc).trim().toLowerCase()}|${b.dia}`;
 
 function contaBadge(c){
-  if(!c) return '<span style="color:#ccc;font-size:11px">—</span>';
+  if(!c)return'<span style="color:#ccc;font-size:11px">—</span>';
   const cls={'Cesar':'conta-cesar','Nubank':'conta-nubank','BB Rafa':'conta-bbrafa','BB Pablo':'conta-bbpablo'}[c]||'conta-outro';
-  return `<span class="conta-badge ${cls}">${esc(c)}</span>`;
+  return`<span class="conta-badge ${cls}">${esc(c)}</span>`;
 }
-
-function showToast(msg, type=''){
-  const t = document.getElementById('toast');
-  t.textContent=msg; t.className=`toast ${type} show`;
+function showToast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className=`toast ${type} show`;
   setTimeout(()=>t.className='toast',3200);
 }
 
-// ─── RENDER ───────────────────────────────────────────────────────────────
 function renderMonths(){
-  document.getElementById('yearLabel').textContent = currentYear;
-  const cont  = document.getElementById('monthBtns');
-  cont.innerHTML = '';
-  // show all 12 months in a scrollable row
-  for(let m=0; m<12; m++){
-    const btn = document.createElement('button');
-    btn.className = 'mbtn'+(m===currentMonth?' active':'');
-    btn.textContent = MONTHS[m];
-    btn.onclick = ()=>{ currentMonth=m; render(); };
+  document.getElementById('yearLabel').textContent=currentYear;
+  const cont=document.getElementById('monthBtns');cont.innerHTML='';
+  for(let m=0;m<12;m++){
+    const btn=document.createElement('button');
+    btn.className='mbtn'+(m===currentMonth?' active':'');
+    btn.textContent=MONTHS[m];
+    btn.onclick=()=>{currentMonth=m;render();};
     cont.appendChild(btn);
   }
 }
 
 function renderSummary(data){
-  const total    = data.reduce((s,i)=>s+getEff(i),0);
-  const pago     = data.filter(i=>i.status==='pago').reduce((s,i)=>s+getEff(i),0);
-  const pendente = total-pago;
-  const pixTotal = data.filter(i=>i.pixDate).reduce((s,i)=>s+getEff(i),0);
-  const pct      = total>0?Math.round((pago/total)*100):0;
-  const barCls   = pct>=80?'':pct>=50?'warn':'danger';
+  const total=data.reduce((s,i)=>s+getEff(i),0);
+  const pago=data.filter(i=>i.status==='pago').reduce((s,i)=>s+getEff(i),0);
+  const pendente=total-pago;
+  const pixTotal=data.filter(i=>i.pixDate).reduce((s,i)=>s+getEff(i),0);
+  const pct=total>0?Math.round((pago/total)*100):0;
+  const barCls=pct>=80?'':pct>=50?'warn':'danger';
   document.getElementById('summary').innerHTML=`
-    <div class="card">
-      <div class="card-label">Total do Mês</div>
-      <div class="card-value">${fmt(total)}</div>
-      <div class="card-sub">${data.length} contas</div>
-    </div>
-    <div class="card">
-      <div class="card-label">Pagas</div>
-      <div class="card-value green">${fmt(pago)}</div>
-      <div class="prog-wrap"><div class="prog-bar ${barCls}" style="width:${pct}%"></div></div>
-      <div class="card-sub">${pct}% · ${data.filter(i=>i.status==='pago').length} contas</div>
-    </div>
-    <div class="card">
-      <div class="card-label">A Pagar</div>
-      <div class="card-value ${pendente>0?'yellow':''}">${fmt(pendente)}</div>
-      <div class="card-sub">${data.filter(i=>i.status!=='pago').length} pendentes</div>
-    </div>
-    <div class="card">
-      <div class="card-label">Pix do Cesar</div>
-      <div class="card-value ${pixTotal>0?'green':''}">${fmt(pixTotal)}</div>
-      <div class="card-sub">${data.filter(i=>i.pixDate).length} confirmados</div>
-    </div>`;
+    <div class="card"><div class="card-label">Total do Mês</div><div class="card-value">${fmt(total)}</div><div class="card-sub">${data.length} contas</div></div>
+    <div class="card"><div class="card-label">Pagas</div><div class="card-value green">${fmt(pago)}</div><div class="prog-wrap"><div class="prog-bar ${barCls}" style="width:${pct}%"></div></div><div class="card-sub">${pct}% · ${data.filter(i=>i.status==='pago').length} contas</div></div>
+    <div class="card"><div class="card-label">A Pagar</div><div class="card-value ${pendente>0?'yellow':''}">${fmt(pendente)}</div><div class="card-sub">${data.filter(i=>i.status!=='pago').length} pendentes</div></div>
+    <div class="card"><div class="card-label">Pix do Cesar</div><div class="card-value ${pixTotal>0?'green':''}">${fmt(pixTotal)}</div><div class="card-sub">${data.filter(i=>i.pixDate).length} confirmados</div></div>`;
 }
 
 function renderTable(data){
-  const sorted  = [...data].sort((a,b)=>a.dia-b.dia);
-  const todayDay = (currentYear===today.getFullYear()&&currentMonth===today.getMonth()) ? today.getDate() : -1;
-  document.getElementById('tableTitle').textContent = `${MONTHS_FULL[currentMonth]} ${currentYear}`;
-
-  document.getElementById('tableBody').innerHTML = sorted.map(item=>{
-    const val = getEff(item);
-    let dc = '';
+  const sorted=[...data].sort((a,b)=>a.dia-b.dia);
+  const todayDay=(currentYear===today.getFullYear()&&currentMonth===today.getMonth())?today.getDate():-1;
+  document.getElementById('tableTitle').textContent=`${MONTHS_FULL[currentMonth]} ${currentYear}`;
+  document.getElementById('tableBody').innerHTML=sorted.map(item=>{
+    const val=getEff(item);
+    let dc='';
     if(todayDay>0){
-      if(item.status==='pago') dc='passou';
-      else if(item.dia===todayDay) dc='hoje';
-      else if(item.dia<todayDay) dc='urgente';
+      if(item.status==='pago')dc='passou';
+      else if(item.dia===todayDay)dc='hoje';
+      else if(item.dia<todayDay)dc='urgente';
     }
-    const hasOv = item.valorOverride!==null&&item.valorOverride!==undefined;
-
-    let parcelaTag = '';
-    if(item.recorrente==='parcela' && item.parcelaAtual && item.parcelaTotal){
-      parcelaTag = `<span class="parcela-tag">${item.parcelaAtual}/${item.parcelaTotal}</span>`;
-    } else if(item.recorrente==='meses' && item.mesesRestantes !== null){
-      parcelaTag = `<span class="parcela-tag" title="Meses restantes">📅 ${item.mesesRestantes}m</span>`;
-    }
-
-    return `<tr data-id="${item.id}" class="${pixSelected.has(item.id)?'selected':''}">
-      ${pixMode ? `<td class="cb-col"><input type="checkbox" class="row-cb" data-id="${item.id}" ${pixSelected.has(item.id)?'checked':''} onchange="toggleCb('${item.id}',this.checked)"></td>` : ''}
-      <td>
-        <strong>${esc(item.desc)}</strong>${parcelaTag}
-        ${item.obs?`<br><span style="color:var(--muted);font-size:11px">${esc(item.obs)}</span>`:''}
-      </td>
+    const hasOv=item.valorOverride!==null&&item.valorOverride!==undefined;
+    const rec=nRec(item.recorrente);
+    let recTag='';
+    if(rec==='parcela'&&item.parcelaAtual&&item.parcelaTotal)
+      recTag=`<span class="rec-tag">${item.parcelaAtual}/${item.parcelaTotal}</span>`;
+    else if(rec==='meses'&&item.mesesRestantes!==null)
+      recTag=`<span class="rec-tag">&#x1F4C5;${item.mesesRestantes}m</span>`;
+    else if(rec==='nao')
+      recTag=`<span class="rec-tag" style="background:#f5f0e0;color:#7a6010">1x</span>`;
+    return`<tr data-id="${item.id}" class="${pixSelected.has(item.id)?'selected':''}">
+      ${pixMode?`<td class="cb-col"><input type="checkbox" class="row-cb" data-id="${item.id}" ${pixSelected.has(item.id)?'checked':''} onchange="toggleCb('${item.id}',this.checked)"></td>`:''}
+      <td><strong>${esc(item.desc)}</strong>${recTag}${item.obs?`<br><span style="color:var(--muted);font-size:11px">${esc(item.obs)}</span>`:''}</td>
       <td><span class="dia-chip ${dc}">dia&nbsp;${item.dia}</span></td>
-      <td>
-        <span style="font-weight:600">${fmt(val)}</span>
-        ${hasOv?`<br><span style="color:#ccc;font-size:10px;text-decoration:line-through">${fmt(item.valor)}</span>`:''}
-      </td>
+      <td><span style="font-weight:600">${fmt(val)}</span>${hasOv?`<br><span style="color:#ccc;font-size:10px;text-decoration:line-through">${fmt(item.valor)}</span>`:''}</td>
       <td class="hide-mobile">${contaBadge(item.conta)}</td>
       <td><span class="badge ${item.status}">${item.status}</span></td>
-      <td class="hide-mobile">
-        ${item.pixDate?`<span class="pix-date">✓ ${fmtDate(item.pixDate)}</span>`:`<span class="no-pix">aguardando</span>`}
-      </td>
+      <td class="hide-mobile">${item.pixDate?`<span class="pix-date">✓ ${fmtDate(item.pixDate)}</span>`:`<span class="no-pix">aguardando</span>`}</td>
       <td style="white-space:nowrap">
-        <button class="abtn" title="${item.status==='pago'?'Desfazer':'Marcar pago'}" onclick="toggleStatus('${item.id}')">
-          ${item.status==='pago'?'↩':'✓'}
-        </button>
-        <button class="abtn" title="Editar" onclick="openModal('${item.id}')">✏️</button>
-        <button class="abtn del" title="Excluir" onclick="deleteItem('${item.id}')">✕</button>
+        <button class="abtn" onclick="toggleStatus('${item.id}')">${item.status==='pago'?'↩':'✓'}</button>
+        <button class="abtn" onclick="openModal('${item.id}')">✏️</button>
+        <button class="abtn del" onclick="deleteItem('${item.id}')">✕</button>
       </td>
     </tr>`;
   }).join('');
@@ -562,61 +425,53 @@ function renderTable(data){
 
 function render(){
   renderMonths();
-  const data = ensureMonth(currentYear, currentMonth);
+  const data=ensureMonth(currentYear,currentMonth);
   renderSummary(data);
   renderTable(data);
-  document.getElementById('sheetUrl').value = getUrl();
+  document.getElementById('sheetUrl').value=getUrl();
 }
 
-// ─── ACTIONS ──────────────────────────────────────────────────────────────
 function toggleStatus(id){
-  const data = loadData(currentYear,currentMonth);
-  const item = data.find(i=>i.id===id); if(!item) return;
+  const data=loadData(currentYear,currentMonth);
+  const item=data.find(i=>i.id===id);if(!item)return;
   const c=['pendente','pago','atrasado'];
-  item.status = c[(c.indexOf(item.status)+1)%c.length];
-  saveData(currentYear,currentMonth,data); render();
-  pushToSheet(currentYear,currentMonth,data);
+  item.status=c[(c.indexOf(item.status)+1)%c.length];
+  saveData(currentYear,currentMonth,data);render();pushToSheet(currentYear,currentMonth,data);
 }
-
 function deleteItem(id){
-  if(!confirm('Excluir esta conta?')) return;
-  const data = loadData(currentYear,currentMonth).filter(i=>i.id!==id);
-  saveData(currentYear,currentMonth,data); render();
-  pushToSheet(currentYear,currentMonth,data);
+  if(!confirm('Excluir esta conta?'))return;
+  const data=loadData(currentYear,currentMonth).filter(i=>i.id!==id);
+  saveData(currentYear,currentMonth,data);render();pushToSheet(currentYear,currentMonth,data);
 }
 
-// ─── MODAL CONTA ──────────────────────────────────────────────────────────
-function onRecTypeChange(){
-  const v = document.getElementById('fRecorrente').value;
-  document.getElementById('recMesesWrap').style.display  = v==='meses'   ? '' : 'none';
-  document.getElementById('recParcelaWrap').style.display= v==='parcela' ? '' : 'none';
+function onRecChange(){
+  const v=document.getElementById('fRecorrente').value;
+  document.getElementById('wrapMeses').style.display=v==='meses'?'':'none';
+  document.getElementById('wrapParcela').style.display=v==='parcela'?'':'none';
   updateMesesHint();
 }
 function updateMesesHint(){
-  const total = parseInt(document.getElementById('fMesesTotal').value)||0;
-  document.getElementById('recMesesHint').textContent =
-    total>0 ? `Vai aparecer por ${total} meses a partir deste` : '';
+  const n=parseInt(document.getElementById('fMesesTotal').value)||0;
+  document.getElementById('mesesHint').textContent=n>0?`Vai aparecer por ${n} meses a partir deste`:'';
 }
 
 function openModal(id){
-  editingId = id||null;
+  editingId=id||null;
   if(id){
-    const item = loadData(currentYear,currentMonth).find(i=>i.id===id); if(!item) return;
+    const item=loadData(currentYear,currentMonth).find(i=>i.id===id);if(!item)return;
     document.getElementById('mdTitle').textContent='Editar Conta';
-    document.getElementById('fDesc').value    = item.desc;
-    document.getElementById('fDia').value     = item.dia;
-    document.getElementById('fValor').value   = (item.valorOverride!==null&&item.valorOverride!==undefined)?item.valorOverride:item.valor;
-    document.getElementById('fConta').value   = item.conta||'';
-    document.getElementById('fStatus').value  = item.status;
-    document.getElementById('fPixDate').value = item.pixDate||'';
-    document.getElementById('fObs').value     = item.obs||'';
-    // recorrência
-    const rec = item.recorrente||'sempre';
-    document.getElementById('fRecorrente').value   = rec;
-    document.getElementById('fMesesTotal').value   = item.mesesTotal||'';
-    document.getElementById('fParcelaAtual').value = item.parcelaAtual||'';
-    document.getElementById('fParcelaTotal').value = item.parcelaTotal||'';
-  } else {
+    document.getElementById('fDesc').value=item.desc;
+    document.getElementById('fDia').value=item.dia;
+    document.getElementById('fValor').value=getEff(item);
+    document.getElementById('fConta').value=item.conta||'';
+    document.getElementById('fStatus').value=item.status;
+    document.getElementById('fPixDate').value=item.pixDate||'';
+    document.getElementById('fObs').value=item.obs||'';
+    document.getElementById('fRecorrente').value=nRec(item.recorrente);
+    document.getElementById('fMesesTotal').value=item.mesesTotal||'';
+    document.getElementById('fParcelaAtual').value=item.parcelaAtual||'';
+    document.getElementById('fParcelaTotal').value=item.parcelaTotal||'';
+  }else{
     document.getElementById('mdTitle').textContent='Nova Conta';
     ['fDesc','fValor','fPixDate','fObs','fMesesTotal','fParcelaAtual','fParcelaTotal'].forEach(x=>document.getElementById(x).value='');
     document.getElementById('fDia').value='';
@@ -624,392 +479,243 @@ function openModal(id){
     document.getElementById('fStatus').value='pendente';
     document.getElementById('fRecorrente').value='sempre';
   }
-  onRecTypeChange();
+  onRecChange();
   document.getElementById('moItem').classList.add('open');
 }
-
-function closeModal(id){ document.getElementById(id).classList.remove('open'); editingId=null; }
-document.querySelectorAll('.mo').forEach(el=>{
-  el.addEventListener('click',e=>{ if(e.target===e.currentTarget) el.classList.remove('open'); });
-});
+function closeModal(id){document.getElementById(id).classList.remove('open');editingId=null;}
+document.querySelectorAll('.mo').forEach(el=>{el.addEventListener('click',e=>{if(e.target===e.currentTarget)el.classList.remove('open');});});
 
 function saveItem(){
-  const desc  = document.getElementById('fDesc').value.trim();
-  const dia   = parseInt(document.getElementById('fDia').value);
-  const valor = parseFloat(document.getElementById('fValor').value);
-  if(!desc||!dia||isNaN(valor)){ showToast('Preencha descrição, dia e valor!','error'); return; }
-
-  const recorrente    = document.getElementById('fRecorrente').value;
-  const mesesTotal    = recorrente==='meses'   ? parseInt(document.getElementById('fMesesTotal').value)||1   : null;
-  const mesesRestantes= recorrente==='meses'   ? mesesTotal : null;
-  const parcelaAtual  = recorrente==='parcela' ? parseInt(document.getElementById('fParcelaAtual').value)||1 : null;
-  const parcelaTotal  = recorrente==='parcela' ? parseInt(document.getElementById('fParcelaTotal').value)||1 : null;
-
-  const data = loadData(currentYear,currentMonth);
-
+  const desc=document.getElementById('fDesc').value.trim();
+  const dia=parseInt(document.getElementById('fDia').value);
+  const valor=parseFloat(document.getElementById('fValor').value);
+  if(!desc||!dia||isNaN(valor)){showToast('Preencha descrição, dia e valor!','error');return;}
+  const rec=document.getElementById('fRecorrente').value;
+  const mesesTotal=rec==='meses'?parseInt(document.getElementById('fMesesTotal').value)||1:null;
+  const parcelaAtual=rec==='parcela'?parseInt(document.getElementById('fParcelaAtual').value)||1:null;
+  const parcelaTotal=rec==='parcela'?parseInt(document.getElementById('fParcelaTotal').value)||1:null;
+  const data=loadData(currentYear,currentMonth);
   if(editingId){
-    const item = data.find(i=>i.id===editingId);
+    const item=data.find(i=>i.id===editingId);
     if(item){
-      item.desc           = desc;
-      item.dia            = dia;
-      item.valorOverride  = (valor!==item.valor)?valor:null;
-      item.conta          = document.getElementById('fConta').value;
-      item.status         = document.getElementById('fStatus').value;
-      item.pixDate        = document.getElementById('fPixDate').value;
-      item.obs            = document.getElementById('fObs').value.trim();
-      item.recorrente     = recorrente;
-      item.mesesTotal     = mesesTotal;
-      item.mesesRestantes = recorrente==='meses' ? (item.mesesRestantes||mesesTotal) : null;
-      item.parcelaAtual   = parcelaAtual;
-      item.parcelaTotal   = parcelaTotal;
+      item.desc=desc;item.dia=dia;
+      item.valorOverride=(valor!==item.valor)?valor:null;
+      item.conta=document.getElementById('fConta').value;
+      item.status=document.getElementById('fStatus').value;
+      item.pixDate=document.getElementById('fPixDate').value;
+      item.obs=document.getElementById('fObs').value.trim();
+      item.recorrente=rec;item.mesesTotal=mesesTotal;
+      item.mesesRestantes=rec==='meses'?(item.mesesRestantes||mesesTotal):null;
+      item.parcelaAtual=parcelaAtual;item.parcelaTotal=parcelaTotal;
     }
-    saveData(currentYear,currentMonth,data);
-    closeModal('moItem'); render();
-    showToast('Conta atualizada!','success');
-    pushToSheet(currentYear,currentMonth,data);
-    return;
+    saveData(currentYear,currentMonth,data);closeModal('moItem');render();
+    showToast('Conta atualizada!','success');pushToSheet(currentYear,currentMonth,data);return;
   }
-
-  // Nova conta
-  const newItem = {
-    id:`new_${Date.now()}`, desc, dia, valor, valorOverride:null,
+  const newItem={
+    id:`new_${Date.now()}`,desc,dia,valor,valorOverride:null,
     conta:document.getElementById('fConta').value,
     status:document.getElementById('fStatus').value,
     pixDate:document.getElementById('fPixDate').value,
     obs:document.getElementById('fObs').value.trim(),
-    recorrente, mesesTotal, mesesRestantes, parcelaAtual, parcelaTotal,
+    recorrente:rec,mesesTotal,mesesRestantes:mesesTotal,parcelaAtual,parcelaTotal,
   };
-  data.push(newItem);
-  saveData(currentYear,currentMonth,data);
-
-  // Parcelado: lança nos próximos meses com número de parcela crescente
-  if(recorrente==='parcela' && parcelaAtual && parcelaTotal && parcelaAtual < parcelaTotal){
-    const remaining = parcelaTotal - parcelaAtual;
-    for(let p=1; p<=remaining; p++){
-      let tm=currentMonth+p, ty=currentYear;
-      if(tm>11){ ty+=Math.floor(tm/12); tm=tm%12; }
+  data.push(newItem);saveData(currentYear,currentMonth,data);
+  if(rec==='parcela'&&parcelaAtual&&parcelaTotal&&parcelaAtual<parcelaTotal){
+    const rem=parcelaTotal-parcelaAtual;
+    for(let p=1;p<=rem;p++){
+      let tm=currentMonth+p,ty=currentYear;
+      if(tm>11){ty+=Math.floor(tm/12);tm=tm%12;}
       const fd=ensureMonth(ty,tm);
-      fd.push({...newItem, id:`parc_${ty}_${tm}_${Date.now()}_${p}`,
-        status:'pendente', pixDate:'', parcelaAtual:parcelaAtual+p});
-      saveData(ty,tm,fd); pushToSheet(ty,tm,fd);
+      fd.push({...newItem,id:`parc_${ty}_${tm}_${Date.now()}_${p}`,status:'pendente',pixDate:'',parcelaAtual:parcelaAtual+p});
+      saveData(ty,tm,fd);pushToSheet(ty,tm,fd);
     }
-    showToast(`📦 Lançado em ${remaining} mês(es) à frente!`,'info');
-  }
-  // Recorrente por X meses: lança nos próximos meses com contador regressivo
-  else if(recorrente==='meses' && mesesTotal > 1){
-    for(let p=1; p<mesesTotal; p++){
-      let tm=currentMonth+p, ty=currentYear;
-      if(tm>11){ ty+=Math.floor(tm/12); tm=tm%12; }
+    showToast(`Lançado em ${rem} mês(es) à frente!`,'info');
+  }else if(rec==='meses'&&mesesTotal>1){
+    for(let p=1;p<mesesTotal;p++){
+      let tm=currentMonth+p,ty=currentYear;
+      if(tm>11){ty+=Math.floor(tm/12);tm=tm%12;}
       const fd=ensureMonth(ty,tm);
-      fd.push({...newItem, id:`rec_${ty}_${tm}_${Date.now()}_${p}`,
-        status:'pendente', pixDate:'', mesesRestantes:mesesTotal-p});
-      saveData(ty,tm,fd); pushToSheet(ty,tm,fd);
+      fd.push({...newItem,id:`mes_${ty}_${tm}_${Date.now()}_${p}`,status:'pendente',pixDate:'',mesesRestantes:mesesTotal-p});
+      saveData(ty,tm,fd);pushToSheet(ty,tm,fd);
     }
-    showToast(`📅 Lançado nos próximos ${mesesTotal-1} mês(es)!`,'info');
-  } else {
-    showToast('Conta adicionada!','success');
-  }
-
-  closeModal('moItem'); render();
-  pushToSheet(currentYear,currentMonth,data);
+    showToast(`Lançado nos próximos ${mesesTotal-1} mês(es)!`,'info');
+  }else{showToast('Conta adicionada!','success');}
+  closeModal('moItem');render();pushToSheet(currentYear,currentMonth,data);
 }
-
-// ─── MODAL PROPAGAR ───────────────────────────────────────────────────────
-// Chave de unicidade: desc normalizada + dia
-const propKey = b => `${String(b.desc).trim().toLowerCase()}|${b.dia}`;
 
 function openPropModal(){
-  const sel = document.getElementById('fPropMes');
-  sel.innerHTML='';
-  for(let i=1; i<=12; i++){
-    let m=currentMonth+i, y=currentYear;
-    if(m>11){ y+=Math.floor(m/12); m=m%12; }
+  const sel=document.getElementById('fPropMes');sel.innerHTML='';
+  for(let i=1;i<=12;i++){
+    let m=currentMonth+i,y=currentYear;
+    if(m>11){y+=Math.floor(m/12);m=m%12;}
     const opt=document.createElement('option');
-    opt.value=`${y}_${m}`;
-    opt.textContent=`${MONTHS_FULL[m]} ${y}`;
+    opt.value=`${y}_${m}`;opt.textContent=`${MONTHS_FULL[m]} ${y}`;
     sel.appendChild(opt);
   }
+  document.getElementById('cleanBtn').textContent=`Remover duplicatas de ${MONTHS_FULL[currentMonth]} ${currentYear}`;
   updatePropPreview();
-  sel.addEventListener('change', updatePropPreview);
-  document.getElementById('fPropTipo').addEventListener('change', updatePropPreview);
-  document.getElementById('cleanBtn').textContent = `🧹 Remover duplicatas de ${MONTHS_FULL[currentMonth]} ${currentYear}`;
   document.getElementById('moProp').classList.add('open');
 }
-
 function updatePropPreview(){
-  const val  = document.getElementById('fPropMes').value;
-  if(!val) return;
-  const [ty,tm]  = val.split('_').map(Number);
-  const tipo     = document.getElementById('fPropTipo').value;
-  const srcData  = loadData(currentYear,currentMonth)||[];
-  const source   = tipo==='todas' ? srcData : srcData.filter(i=>i.recorrente==='sim');
-  const destData = loadData(ty,tm)||[];
-  const destKeys = new Set(destData.map(propKey));
-
-  const novas    = source.filter(b => !destKeys.has(propKey(b)));
-  const ignoradas= source.filter(b =>  destKeys.has(propKey(b)));
-
+  const val=document.getElementById('fPropMes').value;if(!val)return;
+  const[ty,tm]=val.split('_').map(Number);
+  const tipo=document.getElementById('fPropTipo').value;
+  const srcData=loadData(currentYear,currentMonth)||[];
+  const source=tipo==='todas'?srcData:srcData.filter(i=>nRec(i.recorrente)!=='nao');
+  const destData=loadData(ty,tm)||[];
+  const destKeys=new Set(destData.map(propKey));
+  const novas=source.filter(b=>!destKeys.has(propKey(b)));
+  const ignoradas=source.filter(b=>destKeys.has(propKey(b)));
   document.getElementById('propInfo').innerHTML=
-    `<strong>Origem:</strong> ${MONTHS_FULL[currentMonth]} ${currentYear} &nbsp;→&nbsp;
-     <strong>Destino:</strong> ${MONTHS_FULL[tm]} ${ty}<br><br>
-     ✅ <strong>${novas.length}</strong> conta(s) <em>novas</em> serão adicionadas<br>
-     ⏭️ <strong>${ignoradas.length}</strong> conta(s) <em>já existem</em> no destino e serão ignoradas
-     ${ignoradas.length>0 ? `<br><span style="font-size:11px;opacity:.7">${ignoradas.map(b=>b.desc).join(', ')}</span>` : ''}`;
+    `<strong>${MONTHS_FULL[currentMonth]} ${currentYear}</strong> → <strong>${MONTHS_FULL[tm]} ${ty}</strong><br><br>
+     ✅ <strong>${novas.length}</strong> conta(s) novas serão adicionadas<br>
+     ⏭️ <strong>${ignoradas.length}</strong> já existem e serão ignoradas
+     ${ignoradas.length>0?`<br><span style="font-size:11px;opacity:.7">${ignoradas.map(b=>b.desc).join(', ')}</span>`:''}`;
 }
-
 function runPropagate(){
-  const [ty,tm]  = document.getElementById('fPropMes').value.split('_').map(Number);
-  const tipo     = document.getElementById('fPropTipo').value;
-  const srcData  = loadData(currentYear,currentMonth)||[];
-  const source   = tipo==='todas' ? srcData : srcData.filter(i=>i.recorrente==='sim');
-  const destData = loadData(ty,tm)||[];
-
-  // Só adiciona o que NÃO existe no destino (mesmo desc + dia)
-  const destKeys = new Set(destData.map(propKey));
-  const toAdd = source
-    .filter(b => !destKeys.has(propKey(b)))
-    .filter(b => {
-      // skip parceladas que chegaram na última
-      if(b.recorrente==='parcela' && b.parcelaTotal && b.parcelaAtual >= b.parcelaTotal) return false;
-      // skip recorrentes por meses que chegaram a zero
-      if(b.recorrente==='meses' && b.mesesRestantes !== null && b.mesesRestantes <= 0) return false;
+  const[ty,tm]=document.getElementById('fPropMes').value.split('_').map(Number);
+  const tipo=document.getElementById('fPropTipo').value;
+  const srcData=loadData(currentYear,currentMonth)||[];
+  const source=tipo==='todas'?srcData:srcData.filter(i=>nRec(i.recorrente)!=='nao');
+  const destData=loadData(ty,tm)||[];
+  const destKeys=new Set(destData.map(propKey));
+  const toAdd=source
+    .filter(b=>!destKeys.has(propKey(b)))
+    .filter(b=>{
+      const r=nRec(b.recorrente);
+      if(r==='parcela'&&b.parcelaTotal&&b.parcelaAtual>=b.parcelaTotal)return false;
+      if(r==='meses'&&b.mesesRestantes!==null&&b.mesesRestantes<=0)return false;
       return true;
     })
     .map((b,i)=>({
       ...b,
       id:`prop_${ty}_${tm}_${i}_${Date.now()}`,
-      status:'pendente',
-      pixDate:'',
-      valorOverride: null,
-      parcelaAtual:    b.recorrente==='parcela' && b.parcelaAtual ? b.parcelaAtual+1 : b.parcelaAtual,
-      mesesRestantes:  b.recorrente==='meses'   && b.mesesRestantes ? b.mesesRestantes-1 : b.mesesRestantes,
+      status:'pendente',pixDate:'',valorOverride:null,
+      parcelaAtual:nRec(b.recorrente)==='parcela'&&b.parcelaAtual?b.parcelaAtual+1:b.parcelaAtual,
+      mesesRestantes:nRec(b.recorrente)==='meses'&&b.mesesRestantes?b.mesesRestantes-1:b.mesesRestantes,
     }));
-
-  if(toAdd.length===0){
-    showToast('Nenhuma conta nova para propagar — tudo já existe no destino.','info');
-    closeModal('moProp'); return;
-  }
-
-  const merged = [...destData, ...toAdd];
-  saveData(ty, tm, merged);
-  pushToSheet(ty, tm, merged);
-  closeModal('moProp');
-  showToast(`✅ ${toAdd.length} conta(s) nova(s) adicionada(s) em ${MONTHS_FULL[tm]} ${ty}!`,'success');
+  if(toAdd.length===0){showToast('Nada novo para propagar.','info');closeModal('moProp');return;}
+  const merged=[...destData,...toAdd];
+  saveData(ty,tm,merged);pushToSheet(ty,tm,merged);closeModal('moProp');
+  showToast(`✅ ${toAdd.length} conta(s) adicionada(s) em ${MONTHS_FULL[tm]} ${ty}!`,'success');
 }
-
-// ─── LIMPAR DUPLICATAS do mês atual ──────────────────────────────────────
 function cleanDuplicates(){
-  const data = loadData(currentYear, currentMonth);
-  if(!data){ showToast('Nenhum dado encontrado neste mês.','error'); return; }
-
-  const seen = new Map(); // propKey → primeira ocorrência
-  const clean = [];
-  let removed = 0;
-
-  data.forEach(item => {
-    const k = propKey(item);
-    if(!seen.has(k)){
-      seen.set(k, true);
-      clean.push(item);
-    } else {
-      removed++;
-    }
-  });
-
-  if(removed===0){
-    showToast('Nenhuma duplicata encontrada neste mês! ✨','success');
-    return;
-  }
-
-  if(!confirm(`Encontrei ${removed} duplicata(s) em ${MONTHS_FULL[currentMonth]} ${currentYear}.\n\nRemover agora? (a primeira ocorrência de cada conta será mantida)`)) return;
-
-  saveData(currentYear, currentMonth, clean);
-  render();
-  pushToSheet(currentYear, currentMonth, clean);
+  const data=loadData(currentYear,currentMonth);if(!data){showToast('Sem dados.','error');return;}
+  const seen=new Set();const clean=[];let removed=0;
+  data.forEach(item=>{const k=propKey(item);if(!seen.has(k)){seen.add(k);clean.push(item);}else removed++;});
+  if(removed===0){showToast('Nenhuma duplicata! ✨','success');return;}
+  if(!confirm(`Encontrei ${removed} duplicata(s). Remover agora?`))return;
+  saveData(currentYear,currentMonth,clean);render();pushToSheet(currentYear,currentMonth,clean);
   showToast(`🧹 ${removed} duplicata(s) removida(s)!`,'success');
 }
 
-// ─── PIX MODE ─────────────────────────────────────────────────────────────
-let pixMode = false;
-let pixSelected = new Set();
-
 function togglePixMode(){
-  pixMode = !pixMode;
-  pixSelected.clear();
-  document.getElementById('pixBar').classList.toggle('active', pixMode);
-  // show/hide checkbox column
-  document.querySelectorAll('.pix-only').forEach(el => el.style.display = pixMode ? '' : 'none');
-  updatePixBar();
-  renderTable(loadData(currentYear, currentMonth));
+  pixMode=!pixMode;pixSelected.clear();
+  document.getElementById('pixBar').classList.toggle('active',pixMode);
+  document.querySelectorAll('.pix-only').forEach(el=>el.style.display=pixMode?'':'none');
+  updatePixBar();renderTable(loadData(currentYear,currentMonth));
 }
-
 function updatePixBar(){
-  const data = loadData(currentYear, currentMonth) || [];
-  const sel  = data.filter(i => pixSelected.has(i.id));
-  const total = sel.reduce((s,i) => s + getEff(i), 0);
-  document.getElementById('pixCount').textContent = `${sel.length} selecionada${sel.length!==1?'s':''}`;
-  document.getElementById('pixSum').textContent   = sel.length > 0 ? `· Total: ${fmt(total)}` : '';
+  const data=loadData(currentYear,currentMonth)||[];
+  const sel=data.filter(i=>pixSelected.has(i.id));
+  const total=sel.reduce((s,i)=>s+getEff(i),0);
+  document.getElementById('pixCount').textContent=`${sel.length} selecionada${sel.length!==1?'s':''}`;
+  document.getElementById('pixSum').textContent=sel.length>0?`· Total: ${fmt(total)}`:'';
 }
-
-function toggleCb(id, checked){
-  checked ? pixSelected.add(id) : pixSelected.delete(id);
-  // highlight row
-  const row = document.querySelector(`tr[data-id="${id}"]`);
-  if(row) row.classList.toggle('selected', checked);
-  // update "select all" state
-  const allCbs = document.querySelectorAll('.row-cb');
-  const allChecked = [...allCbs].every(c => c.checked);
-  document.getElementById('cbAll').checked = allChecked && allCbs.length > 0;
+function toggleCb(id,checked){
+  checked?pixSelected.add(id):pixSelected.delete(id);
+  const row=document.querySelector(`tr[data-id="${id}"]`);
+  if(row)row.classList.toggle('selected',checked);
+  const allCbs=document.querySelectorAll('.row-cb');
+  document.getElementById('cbAll').checked=[...allCbs].every(c=>c.checked)&&allCbs.length>0;
   updatePixBar();
 }
-
 function toggleAllCb(master){
-  document.querySelectorAll('.row-cb').forEach(cb => {
-    cb.checked = master.checked;
-    const id = cb.dataset.id;
-    master.checked ? pixSelected.add(id) : pixSelected.delete(id);
-    const row = document.querySelector(`tr[data-id="${id}"]`);
-    if(row) row.classList.toggle('selected', master.checked);
+  document.querySelectorAll('.row-cb').forEach(cb=>{
+    cb.checked=master.checked;
+    master.checked?pixSelected.add(cb.dataset.id):pixSelected.delete(cb.dataset.id);
+    const row=document.querySelector(`tr[data-id="${cb.dataset.id}"]`);
+    if(row)row.classList.toggle('selected',master.checked);
   });
   updatePixBar();
 }
-
 function openPixMsg(){
-  const data = loadData(currentYear, currentMonth) || [];
-  const sel  = data.filter(i => pixSelected.has(i.id));
-  if(sel.length === 0){ showToast('Selecione ao menos uma conta!','error'); return; }
-
-  const total = sel.reduce((s,i) => s + getEff(i), 0);
-  const mes   = `${MONTHS_FULL[currentMonth]}/${currentYear}`;
-
-  // Build message
-  const linhas = sel
-    .sort((a,b) => a.dia - b.dia)
-    .map(i => {
-      const v = getEff(i);
-      const parc = i.recorrente==='parcela'&&i.parcelaAtual&&i.parcelaTotal ? ` (${i.parcelaAtual}/${i.parcelaTotal})` : '';
-      return `• ${i.desc}${parc} — ${fmt(v)}`;
-    })
-    .join('\n');
-
-  const msg =
-`Oi amor, segue as contas para hoje:
-
-${linhas}
-
-━━━━━━━━━━━━━━━━━━
-💰 TOTAL: ${fmt(total)}
-━━━━━━━━━━━━━━━━━━
-
-Obrigada ❤️
-Meu Pix: rafalbinati@gmail.com`;
-
-  document.getElementById('pixTotalLine').textContent = `💰 Total: ${fmt(total)}`;
-  document.getElementById('pixMsgBox').textContent = msg;
-  document.getElementById('copyBtn').textContent = '📋 Copiar mensagem';
-  document.getElementById('copyBtn').classList.remove('copied');
-  // reset confirm button
-  const confirmBtn = document.getElementById('confirmPixBtn');
-  confirmBtn.textContent = '✅ Cesar fez o Pix — dar baixa agora';
-  confirmBtn.style.background = 'var(--green)';
-  confirmBtn.disabled = false;
+  const data=loadData(currentYear,currentMonth)||[];
+  const sel=data.filter(i=>pixSelected.has(i.id));
+  if(sel.length===0){showToast('Selecione ao menos uma conta!','error');return;}
+  const total=sel.reduce((s,i)=>s+getEff(i),0);
+  const linhas=sel.sort((a,b)=>a.dia-b.dia).map(i=>{
+    const r=nRec(i.recorrente);
+    const parc=r==='parcela'&&i.parcelaAtual&&i.parcelaTotal?` (${i.parcelaAtual}/${i.parcelaTotal})`:'';
+    return`• ${i.desc}${parc} — ${fmt(getEff(i))}`;
+  }).join('\n');
+  const msg=`Oi amor, segue as contas para hoje:\n\n${linhas}\n\n━━━━━━━━━━━━━━━━━━\n💰 TOTAL: ${fmt(total)}\n━━━━━━━━━━━━━━━━━━\n\nObrigada ❤️\nMeu Pix: rafalbinati@gmail.com`;
+  document.getElementById('pixTotalLine').textContent=`💰 Total: ${fmt(total)}`;
+  document.getElementById('pixMsgBox').textContent=msg;
+  document.getElementById('copyBtn').textContent='📋 Copiar mensagem';
+  const cb=document.getElementById('confirmPixBtn');
+  cb.textContent='✅ Cesar fez o Pix — registrar agora';
+  cb.style.background='var(--green)';cb.disabled=false;
   document.getElementById('moPixMsg').classList.add('open');
 }
-
 function copyPixMsg(){
-  const msg = document.getElementById('pixMsgBox').textContent;
+  const msg=document.getElementById('pixMsgBox').textContent;
   navigator.clipboard.writeText(msg).then(()=>{
-    const btn = document.getElementById('copyBtn');
-    btn.textContent = '✓ Copiado!';
-    btn.classList.add('copied');
-    showToast('Mensagem copiada! Agora é só colar pro Cesar 😊','success');
-    setTimeout(()=>{ btn.textContent='📋 Copiar mensagem'; btn.classList.remove('copied'); }, 3000);
+    document.getElementById('copyBtn').textContent='✓ Copiado!';
+    showToast('Copiado! Só colar pro Cesar 😊','success');
+    setTimeout(()=>document.getElementById('copyBtn').textContent='📋 Copiar mensagem',3000);
   }).catch(()=>{
-    // fallback
-    const ta = document.createElement('textarea');
-    ta.value = msg; document.body.appendChild(ta);
-    ta.select(); document.execCommand('copy');
-    document.body.removeChild(ta);
+    const ta=document.createElement('textarea');ta.value=msg;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
     showToast('Copiado!','success');
   });
 }
 function confirmPixCesar(){
-  const data     = loadData(currentYear, currentMonth);
-  const todayStr = new Date().toISOString().split('T')[0];
-  let   count    = 0;
-
-  data.forEach(item => {
-    if(!pixSelected.has(item.id)) return;
-    item.pixDate = todayStr;
-    count++;
-  });
-
-  saveData(currentYear, currentMonth, data);
-  pushToSheet(currentYear, currentMonth, data);
-
-  const btn = document.getElementById('confirmPixBtn');
-  btn.textContent = '✓ Pix registrado!';
-  btn.style.background = '#1a4f1a';
-  btn.disabled = true;
-
-  showToast(`💚 Pix do Cesar confirmado em ${count} conta(s)!`, 'success');
-
+  const data=loadData(currentYear,currentMonth);
+  const ds=new Date().toISOString().split('T')[0];
+  let count=0;
+  data.forEach(item=>{if(pixSelected.has(item.id)){item.pixDate=ds;count++;}});
+  saveData(currentYear,currentMonth,data);pushToSheet(currentYear,currentMonth,data);
+  const btn=document.getElementById('confirmPixBtn');
+  btn.textContent='✓ Pix registrado!';btn.style.background='#1a4f1a';btn.disabled=true;
+  showToast(`💚 Pix registrado em ${count} conta(s)!`,'success');
   setTimeout(()=>{
-    closeModal('moPixMsg');
-    pixMode = false;
-    pixSelected.clear();
+    closeModal('moPixMsg');pixMode=false;pixSelected.clear();
     document.getElementById('pixBar').classList.remove('active');
-    document.querySelectorAll('.pix-only').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.pix-only').forEach(el=>el.style.display='none');
     render();
-  }, 1500);
+  },1500);
 }
 
-// ─── MONTH NAV ────────────────────────────────────────────────────────────
+function exitPix(){if(!pixMode)return;pixMode=false;pixSelected.clear();document.getElementById('pixBar').classList.remove('active');}
+function changeMonth(d){
   currentMonth+=d;
   if(currentMonth<0){currentMonth=11;currentYear--;}
   if(currentMonth>11){currentMonth=0;currentYear++;}
-  if(pixMode){ pixMode=false; pixSelected.clear(); document.getElementById('pixBar').classList.remove('active'); }
-  ensureMonth(currentYear,currentMonth); render();
+  exitPix();ensureMonth(currentYear,currentMonth);render();
 }
-function changeYear(d){
-  currentYear+=d;
-  if(pixMode){ pixMode=false; pixSelected.clear(); document.getElementById('pixBar').classList.remove('active'); }
-  seedFullYear(currentYear);
-  render();
-}
+function changeYear(d){currentYear+=d;exitPix();seedFullYear(currentYear);render();}
 
-// ─── SHEETS SYNC ──────────────────────────────────────────────────────────
 async function pushToSheet(y,m,data){
-  const url=getUrl(); if(!url) return;
+  const url=getUrl();if(!url)return;
   try{
-    await fetch(url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({action:'write',year:y,month:m,data})});
+    await fetch(url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'write',year:y,month:m,data})});
     document.getElementById('syncStatus').textContent='✓ '+new Date().toLocaleTimeString('pt-BR');
-  }catch{ document.getElementById('syncStatus').textContent='⚠ erro'; }
+  }catch{document.getElementById('syncStatus').textContent='⚠ erro';}
 }
-
 async function syncAll(){
   const url=getUrl();
-  if(!url){showToast('Configure a URL do Apps Script primeiro!','error');return;}
+  if(!url){showToast('Configure a URL do Apps Script!','error');return;}
   document.getElementById('syncStatus').textContent='⟳ sincronizando…';
   try{
     const res=await fetch(`${url}?action=read&year=${currentYear}&month=${currentMonth}`);
     const json=await res.json();
-    if(json&&json.data&&json.data.length>0){
-      saveData(currentYear,currentMonth,json.data); render();
-      showToast('Dados carregados do Google Sheets!','success');
-    } else {
-      showToast('Sheets sem dados para este mês.','');
-    }
+    if(json&&json.data&&json.data.length>0){saveData(currentYear,currentMonth,json.data);render();showToast('Dados carregados!','success');}
+    else showToast('Sheets sem dados para este mês.','');
     document.getElementById('syncStatus').textContent='✓ '+new Date().toLocaleTimeString('pt-BR');
-  }catch{
-    showToast('Erro ao conectar. Verifique a URL.','error');
-    document.getElementById('syncStatus').textContent='⚠ erro';
-  }
+  }catch{showToast('Erro ao conectar.','error');document.getElementById('syncStatus').textContent='⚠ erro';}
 }
 
-// ─── INIT ─────────────────────────────────────────────────────────────────
-seedFullYear(currentYear);  // seed all 12 months on first open
+seedFullYear(currentYear);
 render();
 </script>
 </body>
