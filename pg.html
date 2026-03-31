@@ -262,28 +262,40 @@
       </select>
     </div>
 
-    <!-- PARCELAS -->
+    <!-- RECORRÊNCIA UNIFICADA -->
     <div style="background:var(--blue-bg);border:1px solid #a8c4e8;border-radius:8px;padding:12px 14px;margin-bottom:11px;">
-      <div style="font-size:11px;font-weight:600;color:var(--blue);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;">📦 Parcelas / Recorrência</div>
-      <div class="fgrid3">
+      <div style="font-size:11px;font-weight:600;color:var(--blue);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;">🔁 Recorrência</div>
+      <div class="fr" style="margin-bottom:8px">
+        <label>Tipo</label>
+        <select id="fRecorrente" onchange="onRecTypeChange()">
+          <option value="sempre">♾️ Recorrente para sempre</option>
+          <option value="meses">📅 Recorrente por X meses</option>
+          <option value="parcela">📦 Parcelado (X de Y)</option>
+          <option value="nao">1️⃣ Só este mês</option>
+        </select>
+      </div>
+      <!-- meses restantes -->
+      <div id="recMesesWrap" style="display:none">
         <div class="fr" style="margin:0">
-          <label>Tipo</label>
-          <select id="fRecorrente" onchange="toggleParcelaField()">
-            <option value="sim">Recorrente (todo mês)</option>
-            <option value="nao">Só este mês</option>
-            <option value="parcela">Parcelado</option>
-          </select>
-        </div>
-        <div class="fr" style="margin:0" id="parcelaAtualWrap">
-          <label>Parcela atual</label>
-          <input type="number" id="fParcelaAtual" min="1" placeholder="1"/>
-        </div>
-        <div class="fr" style="margin:0" id="parcelaTotalWrap">
-          <label>Total de parcelas</label>
-          <input type="number" id="fParcelaTotal" min="1" placeholder="12"/>
+          <label>Quantos meses no total?</label>
+          <input type="number" id="fMesesTotal" min="1" placeholder="ex: 6" oninput="updateMesesHint()"/>
+          <div class="hint" id="recMesesHint"></div>
         </div>
       </div>
-      <div class="hint" style="margin-top:6px;" id="parcelaHint">Ex: parcela 3 de 10 → vai lançar nos próximos meses automaticamente</div>
+      <!-- parcela -->
+      <div id="recParcelaWrap" style="display:none">
+        <div class="fgrid">
+          <div class="fr" style="margin:0">
+            <label>Parcela atual</label>
+            <input type="number" id="fParcelaAtual" min="1" placeholder="1"/>
+          </div>
+          <div class="fr" style="margin:0">
+            <label>Total de parcelas</label>
+            <input type="number" id="fParcelaTotal" min="1" placeholder="12"/>
+          </div>
+        </div>
+        <div class="hint" style="margin-top:4px">Ex: 3 de 10 → lança automaticamente até a última parcela</div>
+      </div>
     </div>
 
     <div class="fr">
@@ -515,8 +527,10 @@ function renderTable(data){
     const hasOv = item.valorOverride!==null&&item.valorOverride!==undefined;
 
     let parcelaTag = '';
-    if(item.recorrente==='parcela'&&item.parcelaAtual&&item.parcelaTotal){
+    if(item.recorrente==='parcela' && item.parcelaAtual && item.parcelaTotal){
       parcelaTag = `<span class="parcela-tag">${item.parcelaAtual}/${item.parcelaTotal}</span>`;
+    } else if(item.recorrente==='meses' && item.mesesRestantes !== null){
+      parcelaTag = `<span class="parcela-tag" title="Meses restantes">📅 ${item.mesesRestantes}m</span>`;
     }
 
     return `<tr data-id="${item.id}" class="${pixSelected.has(item.id)?'selected':''}">
@@ -572,14 +586,16 @@ function deleteItem(id){
 }
 
 // ─── MODAL CONTA ──────────────────────────────────────────────────────────
-function toggleParcelaField(){
+function onRecTypeChange(){
   const v = document.getElementById('fRecorrente').value;
-  const show = v==='parcela';
-  document.getElementById('parcelaAtualWrap').style.opacity = show?'1':'0.3';
-  document.getElementById('parcelaTotalWrap').style.opacity = show?'1':'0.3';
-  document.getElementById('parcelaHint').style.display = show?'block':'none';
-  document.getElementById('fParcelaAtual').disabled = !show;
-  document.getElementById('fParcelaTotal').disabled = !show;
+  document.getElementById('recMesesWrap').style.display  = v==='meses'   ? '' : 'none';
+  document.getElementById('recParcelaWrap').style.display= v==='parcela' ? '' : 'none';
+  updateMesesHint();
+}
+function updateMesesHint(){
+  const total = parseInt(document.getElementById('fMesesTotal').value)||0;
+  document.getElementById('recMesesHint').textContent =
+    total>0 ? `Vai aparecer por ${total} meses a partir deste` : '';
 }
 
 function openModal(id){
@@ -587,25 +603,28 @@ function openModal(id){
   if(id){
     const item = loadData(currentYear,currentMonth).find(i=>i.id===id); if(!item) return;
     document.getElementById('mdTitle').textContent='Editar Conta';
-    document.getElementById('fDesc').value   = item.desc;
-    document.getElementById('fDia').value    = item.dia;
-    document.getElementById('fValor').value  = (item.valorOverride!==null&&item.valorOverride!==undefined)?item.valorOverride:item.valor;
-    document.getElementById('fConta').value  = item.conta||'';
-    document.getElementById('fStatus').value = item.status;
-    document.getElementById('fPixDate').value= item.pixDate||'';
-    document.getElementById('fObs').value    = item.obs||'';
-    document.getElementById('fRecorrente').value = item.recorrente||'sim';
+    document.getElementById('fDesc').value    = item.desc;
+    document.getElementById('fDia').value     = item.dia;
+    document.getElementById('fValor').value   = (item.valorOverride!==null&&item.valorOverride!==undefined)?item.valorOverride:item.valor;
+    document.getElementById('fConta').value   = item.conta||'';
+    document.getElementById('fStatus').value  = item.status;
+    document.getElementById('fPixDate').value = item.pixDate||'';
+    document.getElementById('fObs').value     = item.obs||'';
+    // recorrência
+    const rec = item.recorrente||'sempre';
+    document.getElementById('fRecorrente').value   = rec;
+    document.getElementById('fMesesTotal').value   = item.mesesTotal||'';
     document.getElementById('fParcelaAtual').value = item.parcelaAtual||'';
     document.getElementById('fParcelaTotal').value = item.parcelaTotal||'';
   } else {
     document.getElementById('mdTitle').textContent='Nova Conta';
-    ['fDesc','fValor','fPixDate','fObs','fParcelaAtual','fParcelaTotal'].forEach(x=>document.getElementById(x).value='');
+    ['fDesc','fValor','fPixDate','fObs','fMesesTotal','fParcelaAtual','fParcelaTotal'].forEach(x=>document.getElementById(x).value='');
     document.getElementById('fDia').value='';
     document.getElementById('fConta').value='';
     document.getElementById('fStatus').value='pendente';
-    document.getElementById('fRecorrente').value='sim';
+    document.getElementById('fRecorrente').value='sempre';
   }
-  toggleParcelaField();
+  onRecTypeChange();
   document.getElementById('moItem').classList.add('open');
 }
 
@@ -620,68 +639,79 @@ function saveItem(){
   const valor = parseFloat(document.getElementById('fValor').value);
   if(!desc||!dia||isNaN(valor)){ showToast('Preencha descrição, dia e valor!','error'); return; }
 
-  const recorrente   = document.getElementById('fRecorrente').value;
-  const parcelaAtual = recorrente==='parcela' ? parseInt(document.getElementById('fParcelaAtual').value)||1 : null;
-  const parcelaTotal = recorrente==='parcela' ? parseInt(document.getElementById('fParcelaTotal').value)||1 : null;
+  const recorrente    = document.getElementById('fRecorrente').value;
+  const mesesTotal    = recorrente==='meses'   ? parseInt(document.getElementById('fMesesTotal').value)||1   : null;
+  const mesesRestantes= recorrente==='meses'   ? mesesTotal : null;
+  const parcelaAtual  = recorrente==='parcela' ? parseInt(document.getElementById('fParcelaAtual').value)||1 : null;
+  const parcelaTotal  = recorrente==='parcela' ? parseInt(document.getElementById('fParcelaTotal').value)||1 : null;
 
   const data = loadData(currentYear,currentMonth);
 
   if(editingId){
     const item = data.find(i=>i.id===editingId);
     if(item){
-      item.desc        = desc;
-      item.dia         = dia;
-      item.valorOverride = (valor!==item.valor)?valor:null;
-      item.conta       = document.getElementById('fConta').value;
-      item.status      = document.getElementById('fStatus').value;
-      item.pixDate     = document.getElementById('fPixDate').value;
-      item.obs         = document.getElementById('fObs').value.trim();
-      item.recorrente  = recorrente;
-      item.parcelaAtual= parcelaAtual;
-      item.parcelaTotal= parcelaTotal;
+      item.desc           = desc;
+      item.dia            = dia;
+      item.valorOverride  = (valor!==item.valor)?valor:null;
+      item.conta          = document.getElementById('fConta').value;
+      item.status         = document.getElementById('fStatus').value;
+      item.pixDate        = document.getElementById('fPixDate').value;
+      item.obs            = document.getElementById('fObs').value.trim();
+      item.recorrente     = recorrente;
+      item.mesesTotal     = mesesTotal;
+      item.mesesRestantes = recorrente==='meses' ? (item.mesesRestantes||mesesTotal) : null;
+      item.parcelaAtual   = parcelaAtual;
+      item.parcelaTotal   = parcelaTotal;
     }
     saveData(currentYear,currentMonth,data);
     closeModal('moItem'); render();
     showToast('Conta atualizada!','success');
     pushToSheet(currentYear,currentMonth,data);
-  } else {
-    // Nova conta — se parcelada, lança nos próximos meses também
-    const newItem = {
-      id:`new_${Date.now()}`, desc, dia, valor, valorOverride:null,
-      conta:document.getElementById('fConta').value,
-      status:document.getElementById('fStatus').value,
-      pixDate:document.getElementById('fPixDate').value,
-      obs:document.getElementById('fObs').value.trim(),
-      recorrente, parcelaAtual, parcelaTotal,
-    };
-    data.push(newItem);
-    saveData(currentYear,currentMonth,data);
-
-    // Se parcelada, lança automaticamente nos meses seguintes
-    if(recorrente==='parcela' && parcelaAtual && parcelaTotal && parcelaAtual < parcelaTotal){
-      const remaining = parcelaTotal - parcelaAtual;
-      for(let p=1; p<=remaining; p++){
-        let tm = currentMonth+p, ty = currentYear;
-        if(tm>11){ ty += Math.floor(tm/12); tm = tm%12; }
-        const futureData = ensureMonth(ty, tm);
-        futureData.push({
-          ...newItem,
-          id:`parc_${ty}_${tm}_${Date.now()}_${p}`,
-          status:'pendente',
-          pixDate:'',
-          parcelaAtual: parcelaAtual+p,
-        });
-        saveData(ty, tm, futureData);
-        pushToSheet(ty, tm, futureData);
-      }
-      showToast(`Lançado em ${remaining} mês(es) à frente! 📦`,'info');
-    } else {
-      showToast('Conta adicionada!','success');
-    }
-
-    closeModal('moItem'); render();
-    pushToSheet(currentYear,currentMonth,data);
+    return;
   }
+
+  // Nova conta
+  const newItem = {
+    id:`new_${Date.now()}`, desc, dia, valor, valorOverride:null,
+    conta:document.getElementById('fConta').value,
+    status:document.getElementById('fStatus').value,
+    pixDate:document.getElementById('fPixDate').value,
+    obs:document.getElementById('fObs').value.trim(),
+    recorrente, mesesTotal, mesesRestantes, parcelaAtual, parcelaTotal,
+  };
+  data.push(newItem);
+  saveData(currentYear,currentMonth,data);
+
+  // Parcelado: lança nos próximos meses com número de parcela crescente
+  if(recorrente==='parcela' && parcelaAtual && parcelaTotal && parcelaAtual < parcelaTotal){
+    const remaining = parcelaTotal - parcelaAtual;
+    for(let p=1; p<=remaining; p++){
+      let tm=currentMonth+p, ty=currentYear;
+      if(tm>11){ ty+=Math.floor(tm/12); tm=tm%12; }
+      const fd=ensureMonth(ty,tm);
+      fd.push({...newItem, id:`parc_${ty}_${tm}_${Date.now()}_${p}`,
+        status:'pendente', pixDate:'', parcelaAtual:parcelaAtual+p});
+      saveData(ty,tm,fd); pushToSheet(ty,tm,fd);
+    }
+    showToast(`📦 Lançado em ${remaining} mês(es) à frente!`,'info');
+  }
+  // Recorrente por X meses: lança nos próximos meses com contador regressivo
+  else if(recorrente==='meses' && mesesTotal > 1){
+    for(let p=1; p<mesesTotal; p++){
+      let tm=currentMonth+p, ty=currentYear;
+      if(tm>11){ ty+=Math.floor(tm/12); tm=tm%12; }
+      const fd=ensureMonth(ty,tm);
+      fd.push({...newItem, id:`rec_${ty}_${tm}_${Date.now()}_${p}`,
+        status:'pendente', pixDate:'', mesesRestantes:mesesTotal-p});
+      saveData(ty,tm,fd); pushToSheet(ty,tm,fd);
+    }
+    showToast(`📅 Lançado nos próximos ${mesesTotal-1} mês(es)!`,'info');
+  } else {
+    showToast('Conta adicionada!','success');
+  }
+
+  closeModal('moItem'); render();
+  pushToSheet(currentYear,currentMonth,data);
 }
 
 // ─── MODAL PROPAGAR ───────────────────────────────────────────────────────
@@ -738,14 +768,21 @@ function runPropagate(){
   const destKeys = new Set(destData.map(propKey));
   const toAdd = source
     .filter(b => !destKeys.has(propKey(b)))
-    .filter(b => !(b.recorrente==='parcela' && b.parcelaTotal && b.parcelaAtual >= b.parcelaTotal))
+    .filter(b => {
+      // skip parceladas que chegaram na última
+      if(b.recorrente==='parcela' && b.parcelaTotal && b.parcelaAtual >= b.parcelaTotal) return false;
+      // skip recorrentes por meses que chegaram a zero
+      if(b.recorrente==='meses' && b.mesesRestantes !== null && b.mesesRestantes <= 0) return false;
+      return true;
+    })
     .map((b,i)=>({
       ...b,
       id:`prop_${ty}_${tm}_${i}_${Date.now()}`,
       status:'pendente',
       pixDate:'',
       valorOverride: null,
-      parcelaAtual: b.recorrente==='parcela'&&b.parcelaAtual ? b.parcelaAtual+1 : b.parcelaAtual,
+      parcelaAtual:    b.recorrente==='parcela' && b.parcelaAtual ? b.parcelaAtual+1 : b.parcelaAtual,
+      mesesRestantes:  b.recorrente==='meses'   && b.mesesRestantes ? b.mesesRestantes-1 : b.mesesRestantes,
     }));
 
   if(toAdd.length===0){
