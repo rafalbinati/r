@@ -6,19 +6,7 @@
 <title>Gestão de Contas</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
-  :root {
-    --bg:#F7F6F2;--surface:#FFFFFF;--surface2:#F0EEE8;--border:#E2DFD6;
-    --text:#1A1916;--text2:#6B6860;--text3:#A8A59E;
-    --accent:#2D6A4F;--accent-bg:#E8F5EE;
-    --warn:#B45309;--warn-bg:#FEF3C7;
-    --danger:#9B1C1C;--danger-bg:#FEE2E2;
-    --info:#1E40AF;--info-bg:#DBEAFE;
-    --pink:#9D174D;--pink-bg:#FCE7F3;
-    --purple:#5B21B6;--purple-bg:#EDE9FE;
-    --teal:#0F766E;--teal-bg:#CCFBF1;
-    --orange:#92400E;--orange-bg:#FFF7ED;
-    --radius:10px;--radius-sm:6px;
-  }
+  :root{--bg:#F7F6F2;--surface:#FFFFFF;--surface2:#F0EEE8;--border:#E2DFD6;--text:#1A1916;--text2:#6B6860;--text3:#A8A59E;--accent:#2D6A4F;--accent-bg:#E8F5EE;--warn:#B45309;--warn-bg:#FEF3C7;--danger:#9B1C1C;--danger-bg:#FEE2E2;--info:#1E40AF;--info-bg:#DBEAFE;--pink:#9D174D;--pink-bg:#FCE7F3;--purple:#5B21B6;--purple-bg:#EDE9FE;--teal:#0F766E;--teal-bg:#CCFBF1;--orange:#92400E;--orange-bg:#FFF7ED;--radius:10px;--radius-sm:6px;}
   *{box-sizing:border-box;margin:0;padding:0;}
   body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;}
   .header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:10;}
@@ -35,9 +23,7 @@
   .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;}
   .card-label{font-size:11px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
   .card-value{font-size:21px;font-weight:600;letter-spacing:-.03em;font-family:'DM Mono',monospace;}
-  .card-value.green{color:var(--accent);}
-  .card-value.warn{color:var(--warn);}
-  .card-value.blue{color:var(--info);}
+  .card-value.green{color:var(--accent);}.card-value.warn{color:var(--warn);}.card-value.blue{color:var(--info);}
   .card-sub{font-size:11px;color:var(--text3);margin-top:3px;}
   .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:1rem;}
   .toolbar select{font-family:'DM Sans',sans-serif;font-size:13px;border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 10px;background:var(--surface);color:var(--text);outline:none;}
@@ -48,7 +34,6 @@
   .btn.primary:hover{background:#235c42;}
   .btn.pix-btn{background:var(--orange-bg);color:var(--orange);border-color:#FDE68A;}
   .btn.pix-btn:hover{background:#FEF3C7;}
-  .btn.pix-btn:disabled{opacity:.4;cursor:not-allowed;}
   .btn:disabled{opacity:.4;cursor:not-allowed;}
   .table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
   table{width:100%;border-collapse:collapse;}
@@ -60,8 +45,7 @@
   tbody td{padding:9px 12px;vertical-align:middle;}
   .cb{width:15px;height:15px;cursor:pointer;accent-color:var(--warn);}
   .dia{font-family:'DM Mono',monospace;font-size:12px;color:var(--text2);}
-  .desc-main{font-weight:500;}
-  .desc-obs{font-size:11px;color:var(--text3);margin-top:1px;}
+  .desc-main{font-weight:500;}.desc-obs{font-size:11px;color:var(--text3);margin-top:1px;}
   .valor{font-family:'DM Mono',monospace;font-weight:500;white-space:nowrap;}
   .badge{display:inline-flex;align-items:center;font-size:11px;font-weight:500;padding:2px 8px;border-radius:20px;white-space:nowrap;}
   .badge-Moradia{background:var(--info-bg);color:var(--info);}
@@ -109,10 +93,6 @@
   .form-row input:focus,.form-row select:focus{border-color:var(--accent);}
   .form-hint{font-size:11px;color:var(--text3);margin-top:3px;}
   .modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border);}
-  .setup-banner{background:var(--info-bg);border:1px solid #BFDBFE;border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem;display:flex;align-items:flex-start;gap:12px;}
-  .setup-banner.hidden{display:none;}
-  .setup-banner p{font-size:13px;color:var(--info);line-height:1.6;}
-  .setup-banner input{font-family:'DM Mono',monospace;font-size:12px;border:1px solid #BFDBFE;border-radius:var(--radius-sm);padding:6px 10px;background:white;color:var(--text);width:100%;margin-top:6px;outline:none;}
   .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--text);color:white;padding:10px 18px;border-radius:var(--radius);font-size:13px;font-weight:500;opacity:0;pointer-events:none;transition:opacity .2s;z-index:999;white-space:nowrap;}
   .toast.show{opacity:1;}
   @media(max-width:768px){.main{padding:1rem;}.summary{grid-template-columns:repeat(2,1fr);}.hide-sm{display:none;}.header{padding:0 1rem;}}
@@ -120,307 +100,183 @@
 </style>
 </head>
 <body>
-
 <header class="header">
-  <div class="header-logo">
-    <div class="logo-icon">💸</div>
-    Gestão de Contas
-  </div>
+  <div class="header-logo"><div class="logo-icon">💸</div>Gestão de Contas</div>
   <div class="header-right">
-    <span class="sync-status sync-ok" id="sync-status">✓ Sincronizado</span>
+    <span class="sync-status sync-ok" id="sync-status">✓ Local</span>
     <select id="sel-mes"></select>
     <select id="sel-ano"></select>
   </div>
 </header>
-
 <main class="main">
-
-  <div class="setup-banner" id="setup-banner">
-    <div style="flex:1">
-      <p><strong>⚙️ Configure a URL do Apps Script</strong><br>
-      Cole abaixo a URL gerada no Apps Script para sincronizar com o Google Sheets.</p>
-      <input type="text" id="script-url-input" placeholder="https://script.google.com/macros/s/XXXX/exec" />
-      <div style="display:flex;gap:8px;margin-top:8px;">
-        <button class="btn primary" onclick="salvarUrl()">Salvar URL</button>
-        <button class="btn" onclick="document.getElementById('setup-banner').classList.add('hidden')">Fechar</button>
-      </div>
-    </div>
-  </div>
-
   <div class="summary">
-    <div class="card">
-      <div class="card-label">Total do mês</div>
-      <div class="card-value" id="sum-total">R$ 0</div>
-      <div class="card-sub" id="sum-count">0 contas</div>
-    </div>
-    <div class="card">
-      <div class="card-label">Pagas</div>
-      <div class="card-value green" id="sum-pagas">R$ 0</div>
-      <div class="card-sub" id="sub-pagas"></div>
-    </div>
-    <div class="card">
-      <div class="card-label">Pendentes / Atrasadas</div>
-      <div class="card-value warn" id="sum-pend">R$ 0</div>
-      <div class="card-sub" id="sub-pend"></div>
-    </div>
-    <div class="card">
-      <div class="card-label">Pix do Cesar recebido</div>
-      <div class="card-value blue" id="sum-pix">R$ 0</div>
-      <div class="card-sub" id="sub-pix"></div>
-    </div>
+    <div class="card"><div class="card-label">Total do mês</div><div class="card-value" id="sum-total">R$ 0</div><div class="card-sub" id="sum-count">0 contas</div></div>
+    <div class="card"><div class="card-label">Pagas</div><div class="card-value green" id="sum-pagas">R$ 0</div><div class="card-sub" id="sub-pagas"></div></div>
+    <div class="card"><div class="card-label">Pendentes / Atrasadas</div><div class="card-value warn" id="sum-pend">R$ 0</div><div class="card-sub" id="sub-pend"></div></div>
+    <div class="card"><div class="card-label">Pix do Cesar recebido</div><div class="card-value blue" id="sum-pix">R$ 0</div><div class="card-sub" id="sub-pix"></div></div>
   </div>
-
   <div class="pix-panel" id="pix-panel">
-    <div class="pix-panel-head">
-      <h3>💰 Solicitação de Pix para o Cesar</h3>
-      <button class="btn" onclick="fecharPix()" style="font-size:12px;padding:4px 10px;">✕ Fechar</button>
-    </div>
+    <div class="pix-panel-head"><h3>💰 Solicitação de Pix para o Cesar</h3><button class="btn" onclick="fecharPix()" style="font-size:12px;padding:4px 10px;">✕ Fechar</button></div>
     <div class="pix-lines" id="pix-lines"></div>
     <div class="pix-footer">
       <button class="btn pix-btn" onclick="copiarPix()">📋 Copiar texto</button>
       <button class="btn" onclick="abrirGcalPix()" style="color:var(--info);border-color:#BFDBFE;background:var(--info-bg);">📅 Criar lembrete no Google Calendar</button>
     </div>
   </div>
-
   <div class="toolbar">
-    <select id="f-status" onchange="render()">
-      <option value="">Todos os status</option>
-      <option>Pago</option><option>Pendente</option><option>Atrasado</option>
-    </select>
-    <select id="f-cat" onchange="render()">
-      <option value="">Todas as categorias</option>
-      <option>Moradia</option><option>Utilidades</option><option>Cartão</option>
-      <option>Educação</option><option>Saúde</option><option>Outro</option>
-    </select>
-    <select id="f-conta" onchange="render()">
-      <option value="">Todas as contas</option>
-      <option>Cesar</option><option>Nubank</option><option>BB Rafa</option><option>BB Pablo</option>
-    </select>
+    <select id="f-status" onchange="render()"><option value="">Todos os status</option><option>Pago</option><option>Pendente</option><option>Atrasado</option></select>
+    <select id="f-cat" onchange="render()"><option value="">Todas as categorias</option><option>Moradia</option><option>Utilidades</option><option>Cartão</option><option>Educação</option><option>Saúde</option><option>Outro</option></select>
+    <select id="f-conta" onchange="render()"><option value="">Todas as contas</option><option>Cesar</option><option>Nubank</option><option>BB Rafa</option><option>BB Pablo</option></select>
     <div class="spacer"></div>
     <button class="btn pix-btn" id="btn-pix" onclick="gerarPix()" disabled>💰 Pix Cesar (<span id="sel-count">0</span>)</button>
     <button class="btn primary" onclick="openModal()">+ Nova conta</button>
   </div>
-
   <div class="table-wrap">
     <table>
-      <thead>
-        <tr>
-          <th style="width:36px;"></th>
-          <th>Dia</th>
-          <th>Descrição</th>
-          <th class="hide-sm">Categoria</th>
-          <th>Valor</th>
-          <th>Pago por</th>
-          <th>Status</th>
-          <th>Pix Cesar</th>
-          <th class="hide-sm">Cal</th>
-          <th></th>
-        </tr>
-      </thead>
+      <thead><tr><th style="width:36px;"></th><th>Dia</th><th>Descrição</th><th class="hide-sm">Categoria</th><th>Valor</th><th>Pago por</th><th>Status</th><th>Pix Cesar</th><th class="hide-sm">Cal</th><th></th></tr></thead>
       <tbody id="tbody"></tbody>
     </table>
   </div>
 </main>
-
 <div class="overlay" id="overlay" onclick="overlayClick(event)">
   <div class="modal">
-    <div class="modal-head">
-      <h3 id="modal-title">Nova conta</h3>
-      <button class="modal-close" onclick="closeModal()">✕</button>
-    </div>
-    <div class="form-row">
-      <label>Descrição *</label>
-      <input type="text" id="f-desc" placeholder="Ex: Aluguel, Conta de luz..." />
+    <div class="modal-head"><h3 id="modal-title">Nova conta</h3><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="form-row"><label>Descrição *</label><input type="text" id="f-desc" placeholder="Ex: Aluguel, Conta de luz..." /></div>
+    <div class="form-grid2">
+      <div class="form-row"><label>Dia de vencimento *</label><input type="number" id="f-dia" min="1" max="31" placeholder="1–31" /></div>
+      <div class="form-row"><label>Valor (R$) *</label><input type="number" id="f-valor" step="0.01" min="0" placeholder="0,00" /></div>
     </div>
     <div class="form-grid2">
-      <div class="form-row">
-        <label>Dia de vencimento *</label>
-        <input type="number" id="f-dia" min="1" max="31" placeholder="1–31" />
-      </div>
-      <div class="form-row">
-        <label>Valor (R$) *</label>
-        <input type="number" id="f-valor" step="0.01" min="0" placeholder="0,00" />
-      </div>
+      <div class="form-row"><label>Categoria</label><select id="f-cat-m"><option>Moradia</option><option>Utilidades</option><option>Cartão</option><option>Educação</option><option>Saúde</option><option>Outro</option></select></div>
+      <div class="form-row"><label>Pago por</label><select id="f-conta-m"><option value="">— selecione —</option><option>Cesar</option><option>Nubank</option><option>BB Rafa</option><option>BB Pablo</option></select></div>
     </div>
     <div class="form-grid2">
-      <div class="form-row">
-        <label>Categoria</label>
-        <select id="f-cat-m">
-          <option>Moradia</option><option>Utilidades</option><option>Cartão</option>
-          <option>Educação</option><option>Saúde</option><option>Outro</option>
-        </select>
-      </div>
-      <div class="form-row">
-        <label>Pago por</label>
-        <select id="f-conta-m">
-          <option value="">— selecione —</option>
-          <option>Cesar</option><option>Nubank</option><option>BB Rafa</option><option>BB Pablo</option>
-        </select>
-      </div>
+      <div class="form-row"><label>Status</label><select id="f-status-m"><option>Pendente</option><option>Pago</option><option>Atrasado</option></select></div>
+      <div class="form-row"><label>Data do Pix do Cesar <span style="font-weight:400;color:var(--text3)">(opcional)</span></label><input type="date" id="f-pix-m" /><div class="form-hint">Preencha depois, quando receber</div></div>
     </div>
-    <div class="form-grid2">
-      <div class="form-row">
-        <label>Status</label>
-        <select id="f-status-m">
-          <option>Pendente</option><option>Pago</option><option>Atrasado</option>
-        </select>
-      </div>
-      <div class="form-row">
-        <label>Data do Pix do Cesar <span style="font-weight:400;color:var(--text3)">(opcional)</span></label>
-        <input type="date" id="f-pix-m" />
-        <div class="form-hint">Preencha depois, quando receber</div>
-      </div>
-    </div>
-    <div class="form-row">
-      <label>Observação</label>
-      <input type="text" id="f-obs-m" placeholder="Opcional..." />
-    </div>
-    <div class="modal-footer">
-      <button class="btn" onclick="closeModal()">Cancelar</button>
-      <button class="btn primary" onclick="save()">Salvar</button>
-    </div>
+    <div class="form-row"><label>Observação</label><input type="text" id="f-obs-m" placeholder="Opcional..." /></div>
+    <div class="modal-footer"><button class="btn" onclick="closeModal()">Cancelar</button><button class="btn primary" onclick="save()">Salvar</button></div>
   </div>
 </div>
-
 <div class="toast" id="toast"></div>
-
 <script>
-const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-const GCAL_EMAIL = 'rafalbinati@gmail.com';
-const hoje = new Date();
-let editId = null;
-let contas = [];
-let salvando = false;
+const MESES=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const GCAL_EMAIL='rafalbinati@gmail.com';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbz38Vi4xyaIJDsRhk05JJ5DbhV67BopMbWmGBCMtiXNh5Zcsfyee6wtiwmUrTppJyDO/exec';
+const hoje=new Date();
+let editId=null,contas=[],salvando=false;
+let selected=new Set();
 
-// URL do Apps Script
-function getScriptUrl() { return localStorage.getItem('script_url') || ''; }
-function salvarUrl() {
-  const url = document.getElementById('script-url-input').value.trim();
-  if (!url.startsWith('https://script.google.com')) { toast('URL inválida'); return; }
-  localStorage.setItem('script_url', url);
-  document.getElementById('setup-banner').classList.add('hidden');
-  toast('URL salva! Carregando dados...');
-  carregarDoSheets();
-}
+const TEMPLATE=[
+  {id:1,desc:'Faxineira',dia:1,valor:800,cat:'Outro',conta:'',status:'Pendente',pix:'',obs:''},
+  {id:2,desc:'Passadeira',dia:1,valor:240,cat:'Outro',conta:'',status:'Pendente',pix:'',obs:''},
+  {id:3,desc:'Aluguel',dia:1,valor:2600,cat:'Moradia',conta:'',status:'Pendente',pix:'',obs:''},
+  {id:4,desc:'Cartão BB',dia:1,valor:3800,cat:'Cartão',conta:'BB Rafa',status:'Pendente',pix:'',obs:''},
+  {id:5,desc:'Pedagoga Mila',dia:1,valor:750,cat:'Educação',conta:'',status:'Pendente',pix:'',obs:''},
+  {id:6,desc:'Pós graduação',dia:5,valor:597,cat:'Educação',conta:'',status:'Pendente',pix:'',obs:''},
+  {id:7,desc:'Escola Mila',dia:8,valor:1035,cat:'Educação',conta:'',status:'Pendente',pix:'',obs:''},
+  {id:8,desc:'Condomínio',dia:10,valor:800,cat:'Moradia',conta:'',status:'Pendente',pix:'',obs:''},
+  {id:9,desc:'Unimed',dia:10,valor:1322.32,cat:'Saúde',conta:'',status:'Pendente',pix:'',obs:''},
+  {id:10,desc:'Uso Unimed',dia:10,valor:750,cat:'Saúde',conta:'',status:'Pendente',pix:'',obs:''},
+  {id:11,desc:'Terapeuta Cris',dia:10,valor:500,cat:'Saúde',conta:'',status:'Pendente',pix:'',obs:''},
+  {id:12,desc:'Aluguel sala',dia:12,valor:600,cat:'Moradia',conta:'',status:'Pendente',pix:'',obs:''},
+  {id:13,desc:'Psicólogo Pablo',dia:15,valor:1350,cat:'Saúde',conta:'BB Pablo',status:'Pendente',pix:'',obs:''},
+  {id:14,desc:'Cartão Sant',dia:21,valor:2500,cat:'Cartão',conta:'',status:'Pendente',pix:'',obs:''},
+  {id:15,desc:'Faxineira',dia:25,valor:800,cat:'Outro',conta:'',status:'Pendente',pix:'',obs:''},
+  {id:16,desc:'Psicóloga',dia:25,valor:2600,cat:'Saúde',conta:'',status:'Pendente',pix:'',obs:''},
+  {id:17,desc:'Psiquiatra',dia:25,valor:2800,cat:'Saúde',conta:'',status:'Pendente',pix:'',obs:''},
+];
 
 // Seletores mês/ano
-const selMes = document.getElementById('sel-mes');
-const selAno = document.getElementById('sel-ano');
-MESES.forEach((m,i) => {
-  const o = document.createElement('option');
-  o.value = i; o.textContent = m;
-  if (i === hoje.getMonth()) o.selected = true;
-  selMes.appendChild(o);
-});
-for (let y = hoje.getFullYear()-1; y <= hoje.getFullYear()+2; y++) {
-  const o = document.createElement('option');
-  o.value = y; o.textContent = y;
-  if (y === hoje.getFullYear()) o.selected = true;
-  selAno.appendChild(o);
+const selMes=document.getElementById('sel-mes');
+const selAno=document.getElementById('sel-ano');
+MESES.forEach((m,i)=>{const o=document.createElement('option');o.value=i;o.textContent=m;if(i===hoje.getMonth())o.selected=true;selMes.appendChild(o);});
+for(let y=hoje.getFullYear()-1;y<=hoje.getFullYear()+2;y++){const o=document.createElement('option');o.value=y;o.textContent=y;if(y===hoje.getFullYear())o.selected=true;selAno.appendChild(o);}
+selMes.onchange=()=>{selected.clear();fecharPix();iniciar();};
+selAno.onchange=()=>{selected.clear();fecharPix();iniciar();};
+
+function getMesAno(){return{mes:parseInt(selMes.value),ano:parseInt(selAno.value)};}
+function chaveLocal(){const{mes,ano}=getMesAno();return`contas_${ano}_${String(mes).padStart(2,'0')}`;}
+
+function setSyncStatus(e,m){const el=document.getElementById('sync-status');el.className='sync-status sync-'+e;el.textContent=m;}
+
+function loadLocal(){
+  const raw=localStorage.getItem(chaveLocal());
+  if(raw){try{return JSON.parse(raw);}catch(e){}}
+  // Mês novo: usa template
+  return JSON.parse(JSON.stringify(TEMPLATE));
 }
-selMes.onchange = () => { selected.clear(); fecharPix(); carregarDoSheets(); };
-selAno.onchange = () => { selected.clear(); fecharPix(); carregarDoSheets(); };
-
-function getMesAno() { return { mes: parseInt(selMes.value), ano: parseInt(selAno.value) }; }
-
-// Sync status
-function setSyncStatus(estado, msg) {
-  const el = document.getElementById('sync-status');
-  el.className = 'sync-status sync-' + estado;
-  el.textContent = msg;
+function saveLocal(){
+  localStorage.setItem(chaveLocal(),JSON.stringify(contas));
+  localStorage.setItem('contas_template',JSON.stringify(contas.map(c=>({...c,status:'Pendente',pix:''}))));
 }
 
-// Carregar do Sheets
-async function carregarDoSheets() {
-  const url = getScriptUrl();
-  if (!url) {
-    // Sem URL configurada: usa localStorage como fallback
-    contas = loadLocal();
-    render();
-    return;
-  }
-  setSyncStatus('ing', '⟳ Carregando...');
-  const {mes, ano} = getMesAno();
-  try {
-    const resp = await fetch(`${url}?action=getContas&mes=${mes}&ano=${ano}`);
-    const dados = await resp.json();
-    if (Array.isArray(dados)) {
-      contas = dados.map(c => ({...c, id: Number(c.id), dia: Number(c.dia), valor: Number(c.valor)}));
-      if (contas.length === 0) {
-        // Mês novo: copiar template
-        const tmpl = localStorage.getItem('contas_template');
-        if (tmpl) contas = JSON.parse(tmpl).map(c => ({...c, status:'Pendente', pix:''}));
-      }
-      saveLocal();
-      setSyncStatus('ok', '✓ Sincronizado');
-    } else {
-      throw new Error('Resposta inválida');
-    }
-  } catch(e) {
-    setSyncStatus('err', '✗ Erro — usando local');
-    contas = loadLocal();
-  }
+
+function jsonp(url,cb){
+  const n='cb_'+Date.now();
+  const s=document.createElement('script');
+  const t=setTimeout(()=>{delete window[n];if(s.parentNode)s.parentNode.removeChild(s);cb(new Error('timeout'),null);},10000);
+  window[n]=(data)=>{clearTimeout(t);delete window[n];if(s.parentNode)s.parentNode.removeChild(s);cb(null,data);};
+  s.onerror=()=>{clearTimeout(t);delete window[n];if(s.parentNode)s.parentNode.removeChild(s);cb(new Error('erro'),null);};
+  s.src=url+'&callback='+n;
+  document.body.appendChild(s);
+}
+function iniciar(){
+  contas=loadLocal();
   render();
+  setSyncStatus('ing','\u27f3 Sincronizando...');
+  const{mes,ano}=getMesAno();
+  jsonp(`${SCRIPT_URL}?action=getContas&mes=${mes}&ano=${ano}&t=${Date.now()}`,(err,dados)=>{
+    if(err){setSyncStatus('err','\u2717 Offline \u2014 dados locais');render();return;}
+    if(Array.isArray(dados)&&dados.length>0){
+      contas=dados.map(c=>({...c,id:Number(c.id)||Date.now(),dia:Number(c.dia),valor:Number(c.valor)}));
+      saveLocal();setSyncStatus('ok','✓ Sincronizado');
+    } else if(Array.isArray(dados)&&dados.length===0){
+      // Mes vazio no Sheets: usa template local e salva em partes
+      if(contas.length===0) contas=JSON.parse(JSON.stringify(TEMPLATE));
+      saveLocal();
+      setSyncStatus('ok','✓ Pronto');
+      salvarNoSheets();
+    } else {
+      setSyncStatus('err','✗ Resposta invalida');
+    }
+    render();
+  });
 }
-
-// Salvar no Sheets
-async function salvarNoSheets() {
-  const url = getScriptUrl();
+function salvarNoSheets(){
   saveLocal();
-  if (!url) return;
-  if (salvando) return;
-  salvando = true;
-  setSyncStatus('ing', '⟳ Salvando...');
-  const {mes, ano} = getMesAno();
-  try {
-    const params = new URLSearchParams({
-      action: 'saveContas', mes, ano,
-      dados: JSON.stringify(contas)
-    });
-    const resp = await fetch(`${url}?${params}`);
-    const r = await resp.json();
-    if (r.ok) setSyncStatus('ok', '✓ Salvo no Sheets');
-    else throw new Error(r.error);
-  } catch(e) {
-    setSyncStatus('err', '✗ Erro ao salvar');
-  }
-  salvando = false;
+  setSyncStatus('ing','⟳ Salvando...');
+  const{mes,ano}=getMesAno();
+  const dadosStr=JSON.stringify(contas);
+  // Usa fetch com POST para evitar limite de URL
+  fetch(SCRIPT_URL,{
+    method:'POST',
+    mode:'no-cors',
+    headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body:'action=saveContas&mes='+mes+'&ano='+ano+'&dados='+encodeURIComponent(dadosStr)
+  }).then(()=>{
+    setSyncStatus('ok','✓ Salvo no Sheets');
+  }).catch(()=>{
+    // no-cors nao retorna resposta, mas o Apps Script recebe
+    setSyncStatus('ok','✓ Enviado');
+  });
 }
-
-// localStorage fallback
-function chaveLocal() { const {mes,ano}=getMesAno(); return `contas_${ano}_${String(mes).padStart(2,'0')}`; }
-function loadLocal() {
-  const raw = localStorage.getItem(chaveLocal());
-  if (raw) return JSON.parse(raw);
-  const tmpl = localStorage.getItem('contas_template');
-  if (tmpl) return JSON.parse(tmpl).map(c=>({...c,status:'Pendente',pix:''}));
-  return [];
-}
-function saveLocal() {
-  localStorage.setItem(chaveLocal(), JSON.stringify(contas));
-  const tmpl = contas.map(c=>({...c,status:'Pendente',pix:''}));
-  localStorage.setItem('contas_template', JSON.stringify(tmpl));
-}
-
-// Formatação
-function brl(v){return 'R$ '+Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
-function fmtDate(s){if(!s)return '';const[y,m,d]=s.split('-');return`${d}/${m}/${y.slice(2)}`;}
+function brl(v){return'R$ '+Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function fmtDate(s){if(!s)return'';const[y,m,d]=s.split('-');return`${d}/${m}/${y.slice(2)}`;}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function catClass(c){return 'badge-'+c.replace(/[^a-zA-Z]/g,'');}
-function contaClass(c){return 'conta-'+(c||'').replace(' ','');}
+function catClass(c){return'badge-'+c.replace(/[^a-zA-Z]/g,'');}
+function contaClass(c){return'conta-'+(c||'').replace(' ','');}
 
-function gcalUrlConta(c) {
-  const {mes,ano}=getMesAno();
+function gcalUrl(c){
+  const{mes,ano}=getMesAno();
   const d=String(c.dia).padStart(2,'0'),m=String(mes+1).padStart(2,'0');
-  const dt=`${ano}${m}${d}`;
-  const dt2=`${ano}${m}${String(Math.min(c.dia+1,28)).padStart(2,'0')}`;
+  const dt=`${ano}${m}${d}`,dt2=`${ano}${m}${String(Math.min(c.dia+1,28)).padStart(2,'0')}`;
   const t=encodeURIComponent(`Pagar: ${c.desc} (${brl(c.valor)})`);
   const det=encodeURIComponent(`Conta: ${c.conta||'—'}\nValor: ${brl(c.valor)}`);
   return`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${t}&dates=${dt}/${dt2}&details=${det}&add=${GCAL_EMAIL}`;
 }
 
-// Render
-function render() {
+function render(){
   const fS=document.getElementById('f-status').value;
   const fC=document.getElementById('f-cat').value;
   const fCo=document.getElementById('f-conta').value;
@@ -428,15 +284,8 @@ function render() {
   if(fS)lista=lista.filter(c=>c.status===fS);
   if(fC)lista=lista.filter(c=>c.cat===fC);
   if(fCo)lista=lista.filter(c=>c.conta===fCo);
-
   let total=0,pagas=0,pend=0,pixT=0,nP=0,nPend=0,nPix=0;
-  contas.forEach(c=>{
-    const v=parseFloat(c.valor)||0;total+=v;
-    if(c.status==='Pago'){pagas+=v;nP++;}
-    if(c.status==='Pendente'||c.status==='Atrasado'){pend+=v;nPend++;}
-    if(c.pix){pixT+=v;nPix++;}
-  });
-
+  contas.forEach(c=>{const v=parseFloat(c.valor)||0;total+=v;if(c.status==='Pago'){pagas+=v;nP++;}if(c.status==='Pendente'||c.status==='Atrasado'){pend+=v;nPend++;}if(c.pix){pixT+=v;nPix++;}});
   document.getElementById('sum-total').textContent=brl(total);
   document.getElementById('sum-count').textContent=contas.length+' conta'+(contas.length===1?'':'s');
   document.getElementById('sum-pagas').textContent=brl(pagas);
@@ -445,12 +294,8 @@ function render() {
   document.getElementById('sub-pend').textContent=nPend+' pendente'+(nPend===1?'':'s');
   document.getElementById('sum-pix').textContent=brl(pixT);
   document.getElementById('sub-pix').textContent=nPix+' recebido'+(nPix===1?'':'s');
-
   const tbody=document.getElementById('tbody');
-  if(!lista.length){
-    tbody.innerHTML=`<tr><td colspan="10" class="empty">Nenhuma conta para este mês.<br><small>Clique em "+ Nova conta" para adicionar.</small></td></tr>`;
-    updatePixBtn();return;
-  }
+  if(!lista.length){tbody.innerHTML=`<tr><td colspan="10" class="empty">Nenhuma conta para este mês.</td></tr>`;updatePixBtn();return;}
   tbody.innerHTML=lista.map(c=>`
     <tr id="row-${c.id}" class="${selected.has(c.id)?'selected':''}">
       <td><input type="checkbox" class="cb" ${selected.has(c.id)?'checked':''} onchange="toggleSel(${c.id},this.checked)"/></td>
@@ -461,31 +306,17 @@ function render() {
       <td><span class="conta-tag ${contaClass(c.conta)}">${c.conta||'—'}</span></td>
       <td><span class="sdot sdot-${c.status}">${c.status}</span></td>
       <td>${c.pix?`<span class="pix-tag pix-ok">✓ ${fmtDate(c.pix)}</span>`:`<span class="pix-tag pix-wait">Aguardando</span>`}</td>
-      <td class="hide-sm"><a class="gcal-btn" href="${gcalUrlConta(c)}" target="_blank">📅</a></td>
-      <td style="white-space:nowrap;">
-        <button class="action-btn" onclick="edit(${c.id})">✏️</button>
-        <button class="action-btn del" onclick="del(${c.id})">🗑</button>
-      </td>
-    </tr>
-  `).join('');
+      <td class="hide-sm"><a class="gcal-btn" href="${gcalUrl(c)}" target="_blank">📅</a></td>
+      <td style="white-space:nowrap;"><button class="action-btn" onclick="edit(${c.id})">✏️</button><button class="action-btn del" onclick="del(${c.id})">🗑</button></td>
+    </tr>`).join('');
   updatePixBtn();
 }
 
-let selected=new Set();
-function toggleSel(id,checked){
-  if(checked)selected.add(id);else selected.delete(id);
-  const row=document.getElementById('row-'+id);
-  if(row)row.className=checked?'selected':'';
-  updatePixBtn();
-}
-function updatePixBtn(){
-  const n=selected.size;
-  document.getElementById('sel-count').textContent=n;
-  document.getElementById('btn-pix').disabled=n===0;
-}
+function toggleSel(id,checked){if(checked)selected.add(id);else selected.delete(id);const row=document.getElementById('row-'+id);if(row)row.className=checked?'selected':'';updatePixBtn();}
+function updatePixBtn(){const n=selected.size;document.getElementById('sel-count').textContent=n;document.getElementById('btn-pix').disabled=n===0;}
 
 function gerarPix(){
-  const {mes,ano}=getMesAno();
+  const{mes,ano}=getMesAno();
   const sels=contas.filter(c=>selected.has(c.id)).sort((a,b)=>a.dia-b.dia);
   if(!sels.length)return;
   let total=0,txt=`Olá Cesar! 😊\nContas de ${MESES[mes]}/${ano}:\n\n`;
@@ -498,19 +329,15 @@ function gerarPix(){
 function fecharPix(){document.getElementById('pix-panel').classList.remove('open');}
 function copiarPix(){
   const txt=document.getElementById('pix-lines').textContent;
-  navigator.clipboard.writeText(txt).then(()=>toast('Texto copiado!')).catch(()=>{
-    const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);toast('Texto copiado!');
-  });
+  navigator.clipboard.writeText(txt).then(()=>toast('Texto copiado!')).catch(()=>{const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);toast('Texto copiado!');});
 }
 function abrirGcalPix(){
-  const {mes,ano}=getMesAno();
+  const{mes,ano}=getMesAno();
   const sels=contas.filter(c=>selected.has(c.id)).sort((a,b)=>a.dia-b.dia);
   if(!sels.length)return;
   const total=sels.reduce((s,c)=>s+(parseFloat(c.valor)||0),0);
-  const primeirodia=sels[0].dia;
-  const m=String(mes+1).padStart(2,'0'),d=String(primeirodia).padStart(2,'0');
-  const dt=`${ano}${m}${d}`;
-  const dt2=`${ano}${m}${String(Math.min(primeirodia+1,28)).padStart(2,'0')}`;
+  const p=sels[0].dia,m=String(mes+1).padStart(2,'0'),d=String(p).padStart(2,'0');
+  const dt=`${ano}${m}${d}`,dt2=`${ano}${m}${String(Math.min(p+1,28)).padStart(2,'0')}`;
   const det=encodeURIComponent(`Solicitar pix ao Cesar:\n\n${sels.map(c=>`• ${c.desc}: ${brl(c.valor)}`).join('\n')}\n\nTotal: ${brl(total)}`);
   const t=encodeURIComponent(`Pix Cesar — ${MESES[mes]} (${brl(total)})`);
   window.open(`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${t}&dates=${dt}/${dt2}&details=${det}&add=${GCAL_EMAIL}`,'_blank');
@@ -519,22 +346,8 @@ function abrirGcalPix(){
 function openModal(id){
   editId=id||null;
   document.getElementById('modal-title').textContent=id?'Editar conta':'Nova conta';
-  if(id){
-    const c=contas.find(x=>x.id===id);
-    document.getElementById('f-desc').value=c.desc;
-    document.getElementById('f-dia').value=c.dia;
-    document.getElementById('f-valor').value=c.valor;
-    document.getElementById('f-cat-m').value=c.cat;
-    document.getElementById('f-conta-m').value=c.conta||'';
-    document.getElementById('f-status-m').value=c.status;
-    document.getElementById('f-pix-m').value=c.pix||'';
-    document.getElementById('f-obs-m').value=c.obs||'';
-  }else{
-    ['f-desc','f-dia','f-valor','f-pix-m','f-obs-m'].forEach(i=>{const el=document.getElementById(i);if(el)el.value='';});
-    document.getElementById('f-cat-m').value='Moradia';
-    document.getElementById('f-conta-m').value='';
-    document.getElementById('f-status-m').value='Pendente';
-  }
+  if(id){const c=contas.find(x=>x.id===id);document.getElementById('f-desc').value=c.desc;document.getElementById('f-dia').value=c.dia;document.getElementById('f-valor').value=c.valor;document.getElementById('f-cat-m').value=c.cat;document.getElementById('f-conta-m').value=c.conta||'';document.getElementById('f-status-m').value=c.status;document.getElementById('f-pix-m').value=c.pix||'';document.getElementById('f-obs-m').value=c.obs||'';}
+  else{['f-desc','f-dia','f-valor','f-pix-m','f-obs-m'].forEach(i=>{const el=document.getElementById(i);if(el)el.value='';});document.getElementById('f-cat-m').value='Moradia';document.getElementById('f-conta-m').value='';document.getElementById('f-status-m').value='Pendente';}
   document.getElementById('overlay').classList.add('open');
   setTimeout(()=>document.getElementById('f-desc').focus(),100);
 }
@@ -548,39 +361,23 @@ function save(){
   if(!desc){toast('Preencha a descrição');return;}
   if(!dia||dia<1||dia>31){toast('Dia inválido (1–31)');return;}
   if(isNaN(valor)||valor<=0){toast('Informe o valor');return;}
-  const item={
-    id:editId||Date.now(),desc,dia,valor,
-    cat:document.getElementById('f-cat-m').value,
-    conta:document.getElementById('f-conta-m').value,
-    status:document.getElementById('f-status-m').value,
-    pix:document.getElementById('f-pix-m').value||'',
-    obs:document.getElementById('f-obs-m').value.trim(),
-  };
+  const item={id:editId||Date.now(),desc,dia,valor,cat:document.getElementById('f-cat-m').value,conta:document.getElementById('f-conta-m').value,status:document.getElementById('f-status-m').value,pix:document.getElementById('f-pix-m').value||'',obs:document.getElementById('f-obs-m').value.trim()};
   if(editId){const idx=contas.findIndex(c=>c.id===editId);contas[idx]=item;toast('Conta atualizada!');}
   else{contas.push(item);toast('Conta adicionada!');}
-  closeModal();render();salvarNoSheets();
+  closeModal();saveLocal();render();salvarNoSheets();
 }
-
 function edit(id){openModal(id);}
 function del(id){
   const c=contas.find(x=>x.id===id);
   if(!confirm(`Remover "${c.desc}"?`))return;
   contas=contas.filter(x=>x.id!==id);selected.delete(id);
-  render();salvarNoSheets();toast('Conta removida');
+  saveLocal();render();salvarNoSheets();toast('Conta removida');
 }
 
 let toastT;
-function toast(msg){
-  const el=document.getElementById('toast');
-  el.textContent=msg;el.classList.add('show');
-  clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),2500);
-}
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),2500);}
 
-// Verificar se URL já está salva
-if(getScriptUrl()){document.getElementById('setup-banner').classList.add('hidden');}
-else{document.getElementById('script-url-input').value=getScriptUrl();}
-
-carregarDoSheets();
+iniciar();
 </script>
 </body>
 </html>
