@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Gestão de Contas</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #F7F6F2;
+    --surface: #FFFFFF;
+    --surface2: #F0EEE8;
+    --border: #E2DFD6;
+    --text: #1A1916;
+    --text2: #6B6860;
+    --text3: #A8A59E;
+    --accent: #2D6A4F;
+    --accent-bg: #E8F5EE;
+    --warn: #B45309;
+    --warn-bg: #FEF3C7;
+    --danger: #9B1C1C;
+    --danger-bg: #FEE2E2;
+    --info: #1E40AF;
+    --info-bg: #DBEAFE;
+    --pink: #9D174D;
+    --pink-bg: #FCE7F3;
+    --purple: #5B21B6;
+    --purple-bg: #EDE9FE;
+    --teal: #0F766E;
+    --teal-bg: #CCFBF1;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* Layout */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .header-logo {
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .header-logo span {
+    display: inline-block;
+    width: 28px; height: 28px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    font-size: 14px;
+  }
+  .header-mes {
+    font-size: 13px;
+    color: var(--text2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .header-mes select {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 4px 8px;
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  .main { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+
+  /* Summary cards */
+  .summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 2rem; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+  }
+  .card-label { font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+  .card-value { font-size: 22px; font-weight: 600; letter-spacing: -0.03em; font-family: 'DM Mono', monospace; }
+  .card-value.green { color: var(--accent); }
+  .card-value.warn { color: var(--warn); }
+  .card-value.pix { color: var(--info); }
+  .card-sub { font-size: 11px; color: var(--text3); margin-top: 4px; }
+
+  /* Toolbar */
+  .toolbar {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+  .toolbar select, .toolbar input[type="text"] {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 7px 10px;
+    background: var(--surface);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .toolbar select:focus, .toolbar input[type="text"]:focus { border-color: var(--accent); }
+  .spacer { flex: 1; }
+  .btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 7px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    white-space: nowrap;
+  }
+  .btn:hover { background: var(--surface2); }
+  .btn.primary {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  .btn.primary:hover { background: #235c42; }
+  .btn.danger { color: var(--danger); }
+  .btn.danger:hover { background: var(--danger-bg); border-color: var(--danger); }
+
+  /* Table */
+  .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 10px 14px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--bg); }
+  tbody td { padding: 10px 14px; vertical-align: middle; }
+  .dia { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--text2); white-space: nowrap; }
+  .desc-main { font-weight: 500; font-size: 14px; }
+  .desc-obs { font-size: 11px; color: var(--text3); margin-top: 2px; }
+  .valor { font-family: 'DM Mono', monospace; font-weight: 500; white-space: nowrap; }
+
+  /* Badges */
+  .badge {
+    display: inline-flex; align-items: center;
+    font-size: 11px; font-weight: 500;
+    padding: 3px 8px; border-radius: 20px;
+    white-space: nowrap;
+  }
+  .badge-Moradia { background: var(--info-bg); color: var(--info); }
+  .badge-Utilidades { background: var(--teal-bg); color: var(--teal); }
+  .badge-Cartão { background: var(--pink-bg); color: var(--pink); }
+  .badge-Educação { background: var(--purple-bg); color: var(--purple); }
+  .badge-Saúde { background: var(--accent-bg); color: var(--accent); }
+  .badge-Outro { background: var(--surface2); color: var(--text2); }
+
+  .conta-tag {
+    display: inline-flex; align-items: center;
+    font-size: 12px; font-weight: 500;
+    padding: 3px 9px; border-radius: 20px;
+    border: 1px solid var(--border);
+    color: var(--text2); background: var(--surface2);
+    white-space: nowrap;
+  }
+  .conta-Cesar { background: #FFF7ED; color: #92400E; border-color: #FDE68A; }
+  .conta-Nubank { background: #F5F3FF; color: #5B21B6; border-color: #DDD6FE; }
+  .conta-BBRafa { background: #EFF6FF; color: #1E40AF; border-color: #BFDBFE; }
+  .conta-BBPablo { background: #F0FDF4; color: #166534; border-color: #BBF7D0; }
+
+  .status-dot {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; font-weight: 500;
+  }
+  .status-dot::before {
+    content: ''; display: inline-block;
+    width: 7px; height: 7px; border-radius: 50%;
+  }
+  .status-Pago { color: var(--accent); }
+  .status-Pago::before { background: var(--accent); }
+  .status-Pendente { color: var(--warn); }
+  .status-Pendente::before { background: var(--warn); }
+  .status-Atrasado { color: var(--danger); }
+  .status-Atrasado::before { background: var(--danger); }
+
+  .pix-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; font-weight: 500;
+    padding: 3px 8px; border-radius: 20px;
+  }
+  .pix-ok { background: var(--accent-bg); color: var(--accent); }
+  .pix-wait { background: var(--surface2); color: var(--text3); }
+
+  .gcal-btn {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; color: var(--info);
+    text-decoration: none; padding: 3px 7px;
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .gcal-btn:hover { background: var(--info-bg); border-color: #BFDBFE; }
+
+  .action-btn {
+    background: none; border: none; cursor: pointer;
+    padding: 4px 6px; border-radius: var(--radius-sm);
+    color: var(--text3); font-size: 13px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .action-btn:hover { background: var(--surface2); color: var(--text); }
+  .action-btn.del:hover { background: var(--danger-bg); color: var(--danger); }
+
+  .empty { text-align: center; padding: 3rem; color: var(--text3); font-size: 14px; }
+
+  /* Modal */
+  .overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(20,18,14,0.5);
+    z-index: 100; align-items: center; justify-content: center;
+    padding: 1rem;
+  }
+  .overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    width: 100%; max-width: 500px;
+    max-height: 90vh; overflow-y: auto;
+  }
+  .modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+  .modal-head h3 { font-size: 16px; font-weight: 600; }
+  .modal-close { background: none; border: none; cursor: pointer; font-size: 18px; color: var(--text3); line-height: 1; padding: 2px; }
+  .modal-close:hover { color: var(--text); }
+
+  .form-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-row { margin-bottom: 12px; }
+  .form-row label { display: block; font-size: 12px; font-weight: 500; color: var(--text2); margin-bottom: 5px; }
+  .form-row input, .form-row select, .form-row textarea {
+    width: 100%;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .form-row input:focus, .form-row select:focus { border-color: var(--accent); }
+  .form-hint { font-size: 11px; color: var(--text3); margin-top: 3px; }
+  .modal-footer { display: flex; gap: 8px; justify-content: flex-end; margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+    background: var(--text); color: white;
+    padding: 10px 18px; border-radius: var(--radius);
+    font-size: 13px; font-weight: 500;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 999;
+    white-space: nowrap;
+  }
+  .toast.show { opacity: 1; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .main { padding: 1rem; }
+    .summary { grid-template-columns: repeat(2, 1fr); }
+    .hide-sm { display: none; }
+    .header { padding: 0 1rem; }
+    .card-value { font-size: 18px; }
+  }
+  @media (max-width: 480px) {
+    .summary { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .form-grid2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-logo">
+    <span>💸</span>
+    Gestão de Contas
+  </div>
+  <div class="header-mes">
+    <select id="sel-mes"></select>
+    <select id="sel-ano"></select>
+  </div>
+</header>
+
+<main class="main">
+  <div class="summary">
+    <div class="card">
+      <div class="card-label">Total do mês</div>
+      <div class="card-value" id="sum-total">R$ 0</div>
+      <div class="card-sub" id="sum-count">0 contas</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Pagas</div>
+      <div class="card-value green" id="sum-pagas">R$ 0</div>
+      <div class="card-sub" id="sum-pagas-count"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Pendentes / Atrasadas</div>
+      <div class="card-value warn" id="sum-pend">R$ 0</div>
+      <div class="card-sub" id="sum-pend-count"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Pix do Cesar recebido</div>
+      <div class="card-value pix" id="sum-pix">R$ 0</div>
+      <div class="card-sub" id="sum-pix-count"></div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <select id="f-status" onchange="render()">
+      <option value="">Todos os status</option>
+      <option>Pago</option>
+      <option>Pendente</option>
+      <option>Atrasado</option>
+    </select>
+    <select id="f-cat" onchange="render()">
+      <option value="">Todas as categorias</option>
+      <option>Moradia</option>
+      <option>Utilidades</option>
+      <option>Cartão</option>
+      <option>Educação</option>
+      <option>Saúde</option>
+      <option>Outro</option>
+    </select>
+    <select id="f-conta" onchange="render()">
+      <option value="">Todas as contas</option>
+      <option>Cesar</option>
+      <option>Nubank</option>
+      <option>BB Rafa</option>
+      <option>BB Pablo</option>
+    </select>
+    <div class="spacer"></div>
+    <button class="btn primary" onclick="openModal()">+ Nova conta</button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Dia</th>
+          <th>Descrição</th>
+          <th class="hide-sm">Categoria</th>
+          <th>Valor</th>
+          <th>Pago por</th>
+          <th>Status</th>
+          <th>Pix Cesar</th>
+          <th class="hide-sm">Cal</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</main>
+
+<!-- Modal -->
+<div class="overlay" id="overlay" onclick="overlayClick(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="modal-title">Nova conta</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+
+    <div class="form-row">
+      <label>Descrição *</label>
+      <input type="text" id="f-desc" placeholder="Ex: Aluguel, Conta de luz..." />
+    </div>
+
+    <div class="form-grid2">
+      <div class="form-row">
+        <label>Dia de vencimento *</label>
+        <input type="number" id="f-dia" min="1" max="31" placeholder="1–31" />
+      </div>
+      <div class="form-row">
+        <label>Valor (R$) *</label>
+        <input type="number" id="f-valor" step="0.01" min="0" placeholder="0,00" />
+      </div>
+    </div>
+
+    <div class="form-grid2">
+      <div class="form-row">
+        <label>Categoria</label>
+        <select id="f-cat-m">
+          <option>Moradia</option>
+          <option>Utilidades</option>
+          <option>Cartão</option>
+          <option>Educação</option>
+          <option>Saúde</option>
+          <option>Outro</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Pago por</label>
+        <select id="f-conta-m">
+          <option value="">— selecione —</option>
+          <option>Cesar</option>
+          <option>Nubank</option>
+          <option>BB Rafa</option>
+          <option>BB Pablo</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-grid2">
+      <div class="form-row">
+        <label>Status</label>
+        <select id="f-status-m">
+          <option>Pendente</option>
+          <option>Pago</option>
+          <option>Atrasado</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Data do Pix do Cesar</label>
+        <input type="date" id="f-pix-m" />
+        <div class="form-hint">Deixe em branco se ainda não recebeu</div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <label>Observação</label>
+      <input type="text" id="f-obs-m" placeholder="Opcional..." />
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal()">Cancelar</button>
+      <button class="btn primary" onclick="save()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const hoje = new Date();
+let editId = null;
+
+// --- Seletores de mês/ano ---
+const selMes = document.getElementById('sel-mes');
+const selAno = document.getElementById('sel-ano');
+MESES.forEach((m,i) => {
+  const o = document.createElement('option');
+  o.value = i; o.textContent = m;
+  if (i === hoje.getMonth()) o.selected = true;
+  selMes.appendChild(o);
+});
+for (let y = hoje.getFullYear()-1; y <= hoje.getFullYear()+2; y++) {
+  const o = document.createElement('option');
+  o.value = y; o.textContent = y;
+  if (y === hoje.getFullYear()) o.selected = true;
+  selAno.appendChild(o);
+}
+selMes.onchange = render;
+selAno.onchange = render;
+
+function getMesAno() {
+  return { mes: parseInt(selMes.value), ano: parseInt(selAno.value) };
+}
+
+// --- Dados ---
+function loadData() {
+  return JSON.parse(localStorage.getItem('contas_v2') || 'null') || [
+    { id:1, desc:'Aluguel', dia:1, valor:2500, cat:'Moradia', conta:'BB Rafa', status:'Pago', pix:'', obs:'' },
+    { id:2, desc:'Condomínio', dia:5, valor:350, cat:'Moradia', conta:'BB Rafa', status:'Pago', pix:'2025-06-05', obs:'' },
+    { id:3, desc:'Conta de luz', dia:10, valor:180, cat:'Utilidades', conta:'Nubank', status:'Pago', pix:'', obs:'' },
+    { id:4, desc:'Internet', dia:12, valor:120, cat:'Utilidades', conta:'Nubank', status:'Pendente', pix:'', obs:'' },
+    { id:5, desc:'Plano de saúde', dia:15, valor:890, cat:'Saúde', conta:'BB Pablo', status:'Pendente', pix:'', obs:'' },
+    { id:6, desc:'Cartão Nubank', dia:20, valor:1200, cat:'Cartão', conta:'Nubank', status:'Pendente', pix:'', obs:'' },
+    { id:7, desc:'Escola', dia:25, valor:980, cat:'Educação', conta:'BB Rafa', status:'Pendente', pix:'', obs:'' },
+  ];
+}
+let contas = loadData();
+function persist() { localStorage.setItem('contas_v2', JSON.stringify(contas)); }
+
+// --- Formatações ---
+function brl(v) { return 'R$ ' + Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2,maximumFractionDigits:2}); }
+function fmtDate(s) { if (!s) return ''; const [y,m,d] = s.split('-'); return `${d}/${m}/${y.slice(2)}`; }
+
+function contaClass(c) {
+  return 'conta-' + (c||'').replace(' ','');
+}
+
+function gcalUrl(conta, mes, ano) {
+  const d = String(conta.dia).padStart(2,'0');
+  const m = String(mes+1).padStart(2,'0');
+  const dt = `${ano}${m}${d}`;
+  const dtEnd = `${ano}${m}${String(Math.min(conta.dia+1,28)).padStart(2,'0')}`;
+  const t = encodeURIComponent(`Pagar: ${conta.desc} (${brl(conta.valor)})`);
+  const det = encodeURIComponent(`Conta: ${conta.conta||'—'}\nValor: ${brl(conta.valor)}\nCategoria: ${conta.cat}`);
+  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${t}&dates=${dt}/${dtEnd}&details=${det}`;
+}
+
+// --- Render ---
+function render() {
+  const { mes, ano } = getMesAno();
+  const fStatus = document.getElementById('f-status').value;
+  const fCat = document.getElementById('f-cat').value;
+  const fConta = document.getElementById('f-conta').value;
+
+  let lista = contas.slice().sort((a,b) => a.dia - b.dia);
+  if (fStatus) lista = lista.filter(c => c.status === fStatus);
+  if (fCat) lista = lista.filter(c => c.cat === fCat);
+  if (fConta) lista = lista.filter(c => c.conta === fConta);
+
+  // Totais sempre sobre todos (sem filtro)
+  let total=0, pagas=0, pend=0, pixTotal=0, cPagas=0, cPend=0, cPix=0;
+  contas.forEach(c => {
+    const v = parseFloat(c.valor)||0;
+    total += v;
+    if (c.status==='Pago') { pagas += v; cPagas++; }
+    if (c.status==='Pendente'||c.status==='Atrasado') { pend += v; cPend++; }
+    if (c.pix) { pixTotal += v; cPix++; }
+  });
+  document.getElementById('sum-total').textContent = brl(total);
+  document.getElementById('sum-count').textContent = contas.length + ' conta' + (contas.length===1?'':'s');
+  document.getElementById('sum-pagas').textContent = brl(pagas);
+  document.getElementById('sum-pagas-count').textContent = cPagas + ' paga' + (cPagas===1?'':'s');
+  document.getElementById('sum-pend').textContent = brl(pend);
+  document.getElementById('sum-pend-count').textContent = cPend + ' pendente' + (cPend===1?'':'s');
+  document.getElementById('sum-pix').textContent = brl(pixTotal);
+  document.getElementById('sum-pix-count').textContent = cPix + ' recebido' + (cPix===1?'':'s');
+
+  const tbody = document.getElementById('tbody');
+  if (!lista.length) {
+    tbody.innerHTML = `<tr><td colspan="9" class="empty">Nenhuma conta encontrada</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = lista.map(c => `
+    <tr>
+      <td class="dia">dia ${String(c.dia).padStart(2,'0')}</td>
+      <td>
+        <div class="desc-main">${esc(c.desc)}</div>
+        ${c.obs ? `<div class="desc-obs">${esc(c.obs)}</div>` : ''}
+      </td>
+      <td class="hide-sm"><span class="badge badge-${c.cat}">${c.cat}</span></td>
+      <td class="valor">${brl(c.valor)}</td>
+      <td><span class="conta-tag ${contaClass(c.conta)}">${c.conta||'—'}</span></td>
+      <td><span class="status-dot status-${c.status}">${c.status}</span></td>
+      <td>${c.pix
+        ? `<span class="pix-tag pix-ok">✓ ${fmtDate(c.pix)}</span>`
+        : `<span class="pix-tag pix-wait">Aguardando</span>`}</td>
+      <td class="hide-sm"><a class="gcal-btn" href="${gcalUrl(c, mes, ano)}" target="_blank" title="Criar no Google Calendar">📅 cal</a></td>
+      <td style="white-space:nowrap;">
+        <button class="action-btn" onclick="edit(${c.id})" title="Editar">✏️</button>
+        <button class="action-btn del" onclick="del(${c.id})" title="Excluir">🗑</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// --- Modal ---
+function openModal(id) {
+  editId = id || null;
+  document.getElementById('modal-title').textContent = id ? 'Editar conta' : 'Nova conta';
+  if (id) {
+    const c = contas.find(x => x.id === id);
+    document.getElementById('f-desc').value = c.desc;
+    document.getElementById('f-dia').value = c.dia;
+    document.getElementById('f-valor').value = c.valor;
+    document.getElementById('f-cat-m').value = c.cat;
+    document.getElementById('f-conta-m').value = c.conta||'';
+    document.getElementById('f-status-m').value = c.status;
+    document.getElementById('f-pix-m').value = c.pix||'';
+    document.getElementById('f-obs-m').value = c.obs||'';
+  } else {
+    ['f-desc','f-dia','f-valor','f-pix-m','f-obs-m'].forEach(i => document.getElementById(i).value='');
+    document.getElementById('f-cat-m').value = 'Moradia';
+    document.getElementById('f-conta-m').value = '';
+    document.getElementById('f-status-m').value = 'Pendente';
+  }
+  document.getElementById('overlay').classList.add('open');
+  document.getElementById('f-desc').focus();
+}
+
+function closeModal() { document.getElementById('overlay').classList.remove('open'); }
+function overlayClick(e) { if (e.target === document.getElementById('overlay')) closeModal(); }
+
+function save() {
+  const desc = document.getElementById('f-desc').value.trim();
+  const dia = parseInt(document.getElementById('f-dia').value);
+  const valor = parseFloat(document.getElementById('f-valor').value);
+  if (!desc) { toast('Preencha a descrição'); return; }
+  if (!dia || dia < 1 || dia > 31) { toast('Dia inválido (1–31)'); return; }
+  if (!valor || valor <= 0) { toast('Informe o valor'); return; }
+
+  const item = {
+    id: editId || Date.now(),
+    desc,
+    dia,
+    valor,
+    cat: document.getElementById('f-cat-m').value,
+    conta: document.getElementById('f-conta-m').value,
+    status: document.getElementById('f-status-m').value,
+    pix: document.getElementById('f-pix-m').value || '',
+    obs: document.getElementById('f-obs-m').value.trim(),
+  };
+
+  if (editId) {
+    const idx = contas.findIndex(c => c.id === editId);
+    contas[idx] = item;
+    toast('Conta atualizada!');
+  } else {
+    contas.push(item);
+    toast('Conta adicionada!');
+  }
+  persist();
+  closeModal();
+  render();
+}
+
+function edit(id) { openModal(id); }
+
+function del(id) {
+  const c = contas.find(x => x.id === id);
+  if (!confirm(`Remover "${c.desc}"?`)) return;
+  contas = contas.filter(x => x.id !== id);
+  persist();
+  render();
+  toast('Conta removida');
+}
+
+// --- Toast ---
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+render();
+</script>
+</body>
+</html>
