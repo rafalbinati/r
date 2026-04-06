@@ -280,6 +280,7 @@
     <div class="tab" onclick="showTab('exames', this)">Exames prioritários</div>
     <div class="tab" onclick="showTab('neuro2', this)">Neuroplasticidade</div>
     <div class="tab" onclick="showTab('nutrientes', this)">Nutrientes</div>
+    <div class="tab" onclick="showTab('exames-lab', this)">Exames laboratoriais</div>
   </div>
 
   <!-- ===== VISÃO GERAL ===== -->
@@ -802,6 +803,179 @@
     </div>
   </div>
 
+  <!-- ===== EXAMES LABORATORIAIS ===== -->
+  <div id="exames-lab" class="section">
+
+    <style>
+      .lab-alert-high { background: #fde8e8; border-left: 3px solid #c0392b; border-radius: 0 var(--radius-md) var(--radius-md) 0; padding: 8px 12px; margin-bottom: 6px; font-size: 13px; color: #7a1a1a; }
+      .lab-alert-warn { background: #fdf0d5; border-left: 3px solid #b26b00; border-radius: 0 var(--radius-md) var(--radius-md) 0; padding: 8px 12px; margin-bottom: 6px; font-size: 13px; color: #6b3e00; }
+      .lab-alert-ok { background: #e8f5d8; border-left: 3px solid #2d7d1f; border-radius: 0 var(--radius-md) var(--radius-md) 0; padding: 8px 12px; margin-bottom: 6px; font-size: 13px; color: #1a4a0f; }
+      .lab-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+      .lab-table th { font-weight: 500; color: var(--text2); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; padding: 6px 8px; border-bottom: 1px solid var(--border); text-align: left; }
+      .lab-table td { padding: 8px 8px; border-bottom: 1px solid var(--border); color: var(--text2); vertical-align: middle; }
+      .lab-table tr:last-child td { border-bottom: none; }
+      .lab-table td:first-child { color: var(--text); font-weight: 500; }
+      .val-high { color: #c0392b; font-weight: 600; }
+      .val-low { color: #185fa5; font-weight: 600; }
+      .val-warn { color: #b26b00; font-weight: 600; }
+      .val-ok { color: #2d7d1f; font-weight: 500; }
+      .trend-up { color: #c0392b; }
+      .trend-down { color: #185fa5; }
+      .trend-stable { color: #2d7d1f; }
+      .ref-badge { font-size: 10px; color: var(--text3); background: var(--surface2); padding: 1px 5px; border-radius: 3px; }
+      .add-exam-box { background: var(--surface2); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-top: 1.5rem; }
+      .add-exam-box h3 { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 12px; }
+      .form-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+      .form-row input, .form-row select { font-size: 13px; padding: 6px 10px; border: 1px solid var(--border2); border-radius: var(--radius-md); background: var(--surface); color: var(--text); width: 100%; }
+      .add-btn { font-size: 13px; padding: 7px 16px; border-radius: var(--radius-md); border: 1px solid var(--border2); background: var(--text); color: var(--bg); cursor: pointer; margin-top: 6px; }
+      .add-btn:hover { opacity: 0.85; }
+      .section-label { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.8px; margin: 1.5rem 0 8px; }
+      @media (max-width: 560px) { .form-row { grid-template-columns: 1fr; } }
+    </style>
+
+    <!-- ALERTAS PRINCIPAIS -->
+    <div class="lab-alert-high"><strong>🔴 Prolactina elevada:</strong> Jan/26: 68,1 → Mar/26: 42,4 ng/mL (ref. até 26,6). Caiu mas ainda bem acima. Investigar causa com médico — hipotireoidismo, estresse, medicamento ou adenoma hipofisário.</div>
+    <div class="lab-alert-high"><strong>🔴 TSH em tendência ascendente:</strong> Jul/25: 3,63 → Out/25: 5,19 → Jan/26: 3,82 → Mar/26: 4,99. Oscilando e subindo. Com predisposição genética a Hashimoto, monitorar de perto.</div>
+    <div class="lab-alert-high"><strong>🔴 Estradiol muito baixo e caindo:</strong> Jul/25: 138,1 → Out/25: 43,3 → Jan/26: 19,0 → Mar/26: 13 pg/mL. Queda expressiva — confirma hipoestrogenismo / perimenopausa avançada.</div>
+    <div class="lab-alert-warn"><strong>🟠 Ferritina subindo:</strong> Jan/26: 24,3 → Mar/26: 64,3 ng/mL. Aumento relevante em 2 meses. Com hemocromatose genética MÉDIO-ALTO, monitorar ferritina + transferrina.</div>
+    <div class="lab-alert-warn"><strong>🟠 HDL caiu:</strong> Jan/26: 85 → Mar/26: 47 mg/dL. Queda expressiva. Pode estar relacionada à queda de estradiol (estrogênio protege HDL).</div>
+    <div class="lab-alert-warn"><strong>🟠 Vitamina D estável mas insuficiente para seu perfil:</strong> Jan/26: 45,0 → Mar/26: 43,4 ng/mL. Adequado para população geral, mas com VDR genético comprometido, idealmente acima de 60 ng/mL.</div>
+    <div class="lab-alert-ok"><strong>🟢 Pontos positivos:</strong> Glicose estável (81→83), HbA1c excelente (4,4%), insulina baixa (3,9), função renal perfeita, fígado saudável (TGP 7, TGO 12, GGT 11), B12 estável (~500), PCR 1,04 (baixo), fibrinogênio normal.</div>
+
+    <!-- TABELA HORMONAL -->
+    <div class="section-label">Hormônios</div>
+    <div class="axis-card" style="padding: 0.75rem 1rem; overflow-x: auto;">
+      <table class="lab-table">
+        <thead><tr><th>Exame</th><th>Jul/25</th><th>Out/25</th><th>Jan/26</th><th>Mar/26</th><th>Referência</th><th>Tendência</th></tr></thead>
+        <tbody>
+          <tr><td>Estradiol (pg/mL)</td><td>138,1</td><td>43,3</td><td class="val-warn">19,0</td><td class="val-high">13,0</td><td class="ref-badge">19,5–144 (fol.)</td><td class="trend-down">↓↓ queda</td></tr>
+          <tr><td>Prolactina (ng/mL)</td><td>—</td><td>52,8</td><td class="val-high">68,1</td><td class="val-high">42,4</td><td class="ref-badge">até 26,6</td><td class="trend-down">↓ melhorou mas alto</td></tr>
+          <tr><td>TSH (microUI/mL)</td><td>3,63</td><td>5,19</td><td>3,82</td><td class="val-warn">4,99</td><td class="ref-badge">0,48–5,60</td><td class="trend-up">↑ oscilando alto</td></tr>
+          <tr><td>T4 livre (ng/dL)</td><td>1,14</td><td>1,35</td><td>1,19</td><td>1,23</td><td class="ref-badge">0,89–1,61</td><td class="trend-stable">→ estável</td></tr>
+          <tr><td>Testosterona total (ng/dL)</td><td>22</td><td>31</td><td>18</td><td>20</td><td class="ref-badge">12–60</td><td class="trend-stable">→ normal</td></tr>
+          <tr><td>Testosterona livre (ng/dL)</td><td>—</td><td>—</td><td>0,15</td><td>0,15</td><td class="ref-badge">0,08–1,11</td><td class="trend-stable">→ normal</td></tr>
+          <tr><td>SHBG (nmol/L)</td><td>—</td><td>—</td><td>99,5</td><td>107,5</td><td class="ref-badge">21,8–157,7</td><td class="trend-up">↑ subindo</td></tr>
+          <tr><td>Insulina (microUI/mL)</td><td>8,6</td><td>4,5</td><td>3,9</td><td>3,9</td><td class="ref-badge">3,0–25,0</td><td class="trend-stable val-ok">→ ótimo</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- TABELA METABÓLICA -->
+    <div class="section-label">Metabólico e glicemia</div>
+    <div class="axis-card" style="padding: 0.75rem 1rem; overflow-x: auto;">
+      <table class="lab-table">
+        <thead><tr><th>Exame</th><th>Jul/25</th><th>Out/25</th><th>Jan/26</th><th>Mar/26</th><th>Referência</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Glicose (mg/dL)</td><td>79</td><td>90</td><td>81</td><td>83</td><td class="ref-badge">60–99</td><td class="val-ok">✓ ótimo</td></tr>
+          <tr><td>HbA1c (%)</td><td>—</td><td>—</td><td>—</td><td class="val-ok">4,4</td><td class="ref-badge">&lt; 5,7</td><td class="val-ok">✓ excelente</td></tr>
+          <tr><td>Colesterol total (mg/dL)</td><td>171</td><td>196</td><td>140</td><td>149</td><td class="ref-badge">&lt; 190</td><td class="val-ok">✓ normal</td></tr>
+          <tr><td>HDL (mg/dL)</td><td>64</td><td>84</td><td>85</td><td class="val-warn">47</td><td class="ref-badge">&gt; 40</td><td class="trend-down">↓ caiu muito</td></tr>
+          <tr><td>LDL (mg/dL)</td><td>—</td><td>96</td><td class="val-ok">32,8</td><td>84</td><td class="ref-badge">&lt; 100</td><td class="val-ok">✓ ótimo</td></tr>
+          <tr><td>Triglicerídeos (mg/dL)</td><td>—</td><td>80</td><td>111</td><td>86</td><td class="ref-badge">&lt; 150</td><td class="val-ok">✓ normal</td></tr>
+          <tr><td>PCR (mg/L)</td><td>—</td><td>—</td><td>—</td><td>1,04</td><td class="ref-badge">&lt; 3,0</td><td class="val-ok">✓ baixo</td></tr>
+          <tr><td>Fibrinogênio (mg/dL)</td><td>—</td><td>—</td><td>—</td><td>267</td><td class="ref-badge">200–400</td><td class="val-ok">✓ normal</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- TABELA VITAMINAS E FERRO -->
+    <div class="section-label">Vitaminas, ferro e função orgânica</div>
+    <div class="axis-card" style="padding: 0.75rem 1rem; overflow-x: auto;">
+      <table class="lab-table">
+        <thead><tr><th>Exame</th><th>Jul/25</th><th>Out/25</th><th>Jan/26</th><th>Mar/26</th><th>Referência</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Vitamina D 25(OH) (ng/mL)</td><td>29,2</td><td>35,5</td><td>45,0</td><td class="val-warn">43,4</td><td class="ref-badge">20–60 (ideal &gt;50)</td><td class="trend-stable">→ subiu mas ainda baixo pro perfil</td></tr>
+          <tr><td>Vitamina B12 (pg/mL)</td><td>365</td><td>440</td><td>500</td><td>496</td><td class="ref-badge">172–890</td><td class="val-ok">✓ estável</td></tr>
+          <tr><td>Ferritina (ng/mL)</td><td>—</td><td>—</td><td class="val-warn">24,3</td><td class="val-warn">64,3</td><td class="ref-badge">10–271</td><td class="trend-up">↑ subiu — monitorar</td></tr>
+          <tr><td>Creatinina (mg/dL)</td><td>1,02</td><td>—</td><td>0,97</td><td>0,82</td><td class="ref-badge">0,50–1,10</td><td class="val-ok">✓ ótimo</td></tr>
+          <tr><td>Ureia (mg/dL)</td><td>25</td><td>—</td><td>28</td><td>21,4</td><td class="ref-badge">15–44</td><td class="val-ok">✓ normal</td></tr>
+          <tr><td>TGP/ALT (U/L)</td><td>11</td><td>—</td><td>11</td><td>7</td><td class="ref-badge">&lt; 34</td><td class="val-ok">✓ ótimo</td></tr>
+          <tr><td>TGO/AST (U/L)</td><td>22</td><td>—</td><td>10</td><td>12</td><td class="ref-badge">&lt; 33</td><td class="val-ok">✓ ótimo</td></tr>
+          <tr><td>GGT (U/L)</td><td>12</td><td>—</td><td>9</td><td>11</td><td class="ref-badge">&lt; 38</td><td class="val-ok">✓ ótimo</td></tr>
+          <tr><td>Cortisol salivar manhã (nmol/L)</td><td>—</td><td>—</td><td>—</td><td>16,5</td><td class="ref-badge">&lt; 20,3</td><td class="val-ok">✓ normal</td></tr>
+          <tr><td>Cortisol salivar tarde (nmol/L)</td><td>—</td><td>—</td><td>—</td><td>2,0</td><td class="ref-badge">&lt; 6,9</td><td class="val-ok">✓ normal</td></tr>
+          <tr><td>Cortisol salivar noite (nmol/L)</td><td>—</td><td>—</td><td>—</td><td>2,0</td><td class="ref-badge">&lt; 7,6</td><td class="val-ok">✓ normal</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- HEMOGRAMA -->
+    <div class="section-label">Hemograma</div>
+    <div class="axis-card" style="padding: 0.75rem 1rem; overflow-x: auto;">
+      <table class="lab-table">
+        <thead><tr><th>Exame</th><th>Jan/26</th><th>Mar/26</th><th>Referência</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Hemácias (milhões/mm³)</td><td>4,40</td><td>4,14</td><td class="ref-badge">3,8–4,8</td><td class="val-ok">✓ normal</td></tr>
+          <tr><td>Hemoglobina (g/dL)</td><td>13,1</td><td>12,5</td><td class="ref-badge">12,0–16,0</td><td class="val-ok">✓ normal</td></tr>
+          <tr><td>Hematócrito (%)</td><td>39,5</td><td class="val-warn">35,1</td><td class="ref-badge">36,0–46,0</td><td class="trend-down">↓ levemente baixo</td></tr>
+          <tr><td>Leucócitos (/mm³)</td><td>5.700</td><td>5.920</td><td class="ref-badge">4.000–11.000</td><td class="val-ok">✓ normal</td></tr>
+          <tr><td>Plaquetas (/mm³)</td><td>291.000</td><td>298.000</td><td class="ref-badge">150.000–450.000</td><td class="val-ok">✓ normal</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- EXAMES PENDENTES -->
+    <div class="section-label">Exames importantes ainda pendentes</div>
+    <div class="axis-card">
+      <ul class="rec-list">
+        <li><strong>Homocisteína sérica</strong> — prioritário, nunca foi dosada</li>
+        <li><strong>T3 livre</strong> — nunca foi dosado, crítico dado TSH alto e predisposição genética</li>
+        <li><strong>Anti-TPO + anti-tireoglobulina</strong> — para confirmar/descartar Hashimoto</li>
+        <li><strong>G6PD atividade enzimática</strong> — nunca foi dosado, urgente</li>
+        <li><strong>25(OH)D</strong> — já sendo monitorado, continuar</li>
+        <li><strong>Transferrina + saturação</strong> — monitorar junto com ferritina que está subindo</li>
+        <li><strong>Progesterona + FSH</strong> — para mapeamento completo da perimenopausa</li>
+        <li><strong>Vitamina B6 (P-5-P)</strong> — nunca dosada, cofator crítico para seu perfil</li>
+        <li><strong>Macroprolactina</strong> — o próprio laudo de Mar/26 sugere investigar, dado prolactina ainda alta</li>
+      </ul>
+    </div>
+
+    <!-- CAMPO DE REGISTRO MANUAL -->
+    <div class="add-exam-box">
+      <h3>Registrar novo exame manualmente</h3>
+      <div class="form-row">
+        <select id="exam-name">
+          <option value="">Selecione o exame...</option>
+          <option>Homocisteína</option>
+          <option>T3 livre</option>
+          <option>Anti-TPO</option>
+          <option>G6PD</option>
+          <option>Vitamina D</option>
+          <option>Ferritina</option>
+          <option>Transferrina</option>
+          <option>Prolactina</option>
+          <option>TSH</option>
+          <option>T4 livre</option>
+          <option>Estradiol</option>
+          <option>Progesterona</option>
+          <option>FSH</option>
+          <option>Vitamina B12</option>
+          <option>Vitamina B6</option>
+          <option>Glicose</option>
+          <option>HbA1c</option>
+          <option>Insulina</option>
+          <option>Colesterol total</option>
+          <option>HDL</option>
+          <option>LDL</option>
+          <option>Triglicerídeos</option>
+          <option>PCR</option>
+          <option>Hemoglobina</option>
+          <option>Outro</option>
+        </select>
+        <input type="text" id="exam-value" placeholder="Resultado (ex: 45,2 ng/mL)" />
+        <input type="date" id="exam-date" />
+      </div>
+      <div class="form-row">
+        <input type="text" id="exam-ref" placeholder="Referência (opcional)" />
+        <input type="text" id="exam-note" placeholder="Observação (opcional)" />
+        <div></div>
+      </div>
+      <button class="add-btn" onclick="addExam()">+ Adicionar ao registro</button>
+      <div id="exam-list" style="margin-top: 14px;"></div>
+    </div>
+
+  </div>
+
   <!-- FOOTER -->
   <div class="footer">
     <p><strong>Aviso importante:</strong> Este documento é uma análise interpretativa de predisposições genéticas e não substitui avaliação médica. Os resultados indicam tendências populacionais — não são diagnósticos individuais. Todas as recomendações devem ser discutidas com profissional de saúde habilitado antes de qualquer mudança de conduta. Gerado com auxílio de Claude AI (Anthropic) · Abril 2026.</p>
@@ -816,6 +990,53 @@ function showTab(id, el) {
   document.getElementById(id).classList.add('active');
   el.classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+var examRecords = JSON.parse(localStorage.getItem('rafaela_exams') || '[]');
+renderExams();
+
+function addExam() {
+  var name = document.getElementById('exam-name').value;
+  var value = document.getElementById('exam-value').value;
+  var date = document.getElementById('exam-date').value;
+  var ref = document.getElementById('exam-ref').value;
+  var note = document.getElementById('exam-note').value;
+  if (!name || !value || !date) { alert('Preencha ao menos: exame, resultado e data.'); return; }
+  examRecords.unshift({ name, value, date, ref, note, id: Date.now() });
+  localStorage.setItem('rafaela_exams', JSON.stringify(examRecords));
+  document.getElementById('exam-name').value = '';
+  document.getElementById('exam-value').value = '';
+  document.getElementById('exam-date').value = '';
+  document.getElementById('exam-ref').value = '';
+  document.getElementById('exam-note').value = '';
+  renderExams();
+}
+
+function deleteExam(id) {
+  examRecords = examRecords.filter(function(e) { return e.id !== id; });
+  localStorage.setItem('rafaela_exams', JSON.stringify(examRecords));
+  renderExams();
+}
+
+function renderExams() {
+  var el = document.getElementById('exam-list');
+  if (!el) return;
+  if (examRecords.length === 0) { el.innerHTML = '<p style="font-size:12px;color:var(--text3);margin-top:8px;">Nenhum exame registrado ainda.</p>'; return; }
+  var html = '<table style="width:100%;border-collapse:collapse;font-size:12px;margin-top:8px;">';
+  html += '<thead><tr style="border-bottom:1px solid var(--border)"><th style="padding:4px 6px;text-align:left;color:var(--text3);font-weight:500;">Data</th><th style="padding:4px 6px;text-align:left;color:var(--text3);font-weight:500;">Exame</th><th style="padding:4px 6px;text-align:left;color:var(--text3);font-weight:500;">Resultado</th><th style="padding:4px 6px;text-align:left;color:var(--text3);font-weight:500;">Ref.</th><th style="padding:4px 6px;text-align:left;color:var(--text3);font-weight:500;">Obs.</th><th></th></tr></thead><tbody>';
+  examRecords.forEach(function(e) {
+    var d = e.date ? e.date.split('-').reverse().join('/') : '';
+    html += '<tr style="border-bottom:0.5px solid var(--border)">';
+    html += '<td style="padding:5px 6px;color:var(--text2);">' + d + '</td>';
+    html += '<td style="padding:5px 6px;color:var(--text);font-weight:500;">' + e.name + '</td>';
+    html += '<td style="padding:5px 6px;color:var(--text);">' + e.value + '</td>';
+    html += '<td style="padding:5px 6px;color:var(--text3);">' + (e.ref || '—') + '</td>';
+    html += '<td style="padding:5px 6px;color:var(--text2);">' + (e.note || '—') + '</td>';
+    html += '<td style="padding:5px 6px;"><button onclick="deleteExam(' + e.id + ')" style="font-size:11px;border:none;background:none;color:var(--text3);cursor:pointer;">✕</button></td>';
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  el.innerHTML = html;
 }
 </script>
 </body>
