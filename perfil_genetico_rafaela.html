@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perfil Genético — Rafaela Albinati Oliveira</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f9f8f6;
+    --surface: #ffffff;
+    --surface2: #f3f2ef;
+    --border: rgba(0,0,0,0.10);
+    --border2: rgba(0,0,0,0.18);
+    --text: #1a1a18;
+    --text2: #5a5a56;
+    --text3: #999993;
+    --radius-md: 8px;
+    --radius-lg: 14px;
+    --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a18;
+      --surface: #252522;
+      --surface2: #2e2e2b;
+      --border: rgba(255,255,255,0.10);
+      --border2: rgba(255,255,255,0.18);
+      --text: #f0efe8;
+      --text2: #a8a89f;
+      --text3: #666660;
+    }
+    .badge-alto { background: #4a1515; color: #f09595; }
+    .badge-medio-alto { background: #3a2a0a; color: #fac775; }
+    .badge-medio { background: #0d2640; color: #85b7eb; }
+    .badge-normal { background: #1a2e0a; color: #97c459; }
+    .badge-baixo { background: #1e1a40; color: #afa9ec; }
+    .p1 { background: #4a1515; color: #f09595; }
+    .p2 { background: #3a2a0a; color: #fac775; }
+    .p3 { background: #1a2e0a; color: #97c459; }
+    .tag { background: #2e2e2b; color: #a8a89f; border-color: rgba(255,255,255,0.10); }
+    .exam-card { background: #2e2e2b; }
+    .stat { background: #2e2e2b; }
+    .tab { background: #252522; color: #a8a89f; border-color: rgba(255,255,255,0.12); }
+    .tab.active { background: #2e2e2b; color: #f0efe8; border-color: rgba(255,255,255,0.25); }
+    .axis-card { background: #252522; border-color: rgba(255,255,255,0.10); }
+    .axis-card:hover { border-color: rgba(255,255,255,0.22); }
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .page {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 4rem;
+  }
+
+  /* HEADER */
+  .header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.75rem;
+  }
+  .header-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  .header h1 { font-size: 22px; font-weight: 600; color: var(--text); letter-spacing: -0.3px; }
+  .header-meta { font-size: 13px; color: var(--text2); margin-top: 4px; }
+  .header-logo { font-size: 11px; color: var(--text3); text-align: right; line-height: 1.5; }
+
+  /* SUMMARY GRID */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 1.75rem;
+  }
+  .stat {
+    background: var(--surface2);
+    border-radius: var(--radius-md);
+    padding: 14px 12px;
+    text-align: center;
+  }
+  .stat-num { font-size: 26px; font-weight: 600; }
+  .stat-num.red { color: #c0392b; }
+  .stat-num.amber { color: #b26b00; }
+  .stat-num.green { color: #2d7d1f; }
+  .stat-label { font-size: 11px; color: var(--text2); margin-top: 3px; }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+  .tab {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 7px 15px;
+    border-radius: 20px;
+    border: 1px solid var(--border2);
+    background: var(--surface);
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .tab:hover { background: var(--surface2); color: var(--text); }
+  .tab.active {
+    background: var(--text);
+    color: var(--bg);
+    border-color: var(--text);
+  }
+
+  /* SECTIONS */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* AXIS CARD */
+  .axis-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+    transition: border-color 0.15s;
+  }
+  .axis-card:hover { border-color: var(--border2); }
+  .axis-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .axis-title { font-size: 15px; font-weight: 600; color: var(--text); }
+  .axis-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .axis-body { font-size: 13.5px; color: var(--text2); line-height: 1.65; }
+  .axis-body strong { color: var(--text); font-weight: 600; }
+
+  /* BADGES */
+  .badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .badge-alto { background: #fde8e8; color: #a32d2d; }
+  .badge-medio-alto { background: #fdf0d5; color: #854f0b; }
+  .badge-medio { background: #e3eefb; color: #185fa5; }
+  .badge-normal { background: #e8f5d8; color: #3b6d11; }
+  .badge-baixo { background: #eeecfe; color: #3c3489; }
+
+  /* TAGS */
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .tag {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--surface2);
+    color: var(--text2);
+    border: 1px solid var(--border);
+  }
+
+  /* DIVIDER */
+  .divider { height: 1px; background: var(--border); margin: 12px 0; }
+
+  /* REC LIST */
+  .rec-list { list-style: none; padding: 0; }
+  .rec-list li {
+    font-size: 13px;
+    color: var(--text2);
+    padding: 6px 0 6px 20px;
+    position: relative;
+    line-height: 1.55;
+    border-bottom: 1px solid var(--border);
+  }
+  .rec-list li:last-child { border-bottom: none; }
+  .rec-list li::before { content: "→"; position: absolute; left: 0; color: var(--text3); }
+  .rec-list li strong { color: var(--text); font-weight: 600; }
+
+  /* EXAMS GRID */
+  .exams-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .exam-card {
+    background: var(--surface2);
+    border-radius: var(--radius-md);
+    padding: 10px 12px;
+  }
+  .exam-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .exam-why { font-size: 11px; color: var(--text2); line-height: 1.5; }
+
+  /* PRIORITY BADGES */
+  .priority-badge {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 3px;
+    font-weight: 600;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .p1 { background: #fde8e8; color: #a32d2d; }
+  .p2 { background: #fdf0d5; color: #854f0b; }
+  .p3 { background: #e8f5d8; color: #3b6d11; }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--surface2);
+    border-left: 3px solid var(--border2);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--text2);
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+  .callout strong { color: var(--text); }
+
+  /* FOOTER */
+  .footer {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text3);
+    line-height: 1.7;
+  }
+
+  @media (max-width: 560px) {
+    .summary-grid { grid-template-columns: repeat(2, 1fr); }
+    .exams-grid { grid-template-columns: 1fr; }
+    .header-top { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <h1>Perfil Genético — Rafaela Albinati Oliveira</h1>
+        <div class="header-meta">42 anos · Sexo F · Código ANC3519 · Exame 26/02/2026</div>
+      </div>
+      <div class="header-logo">Neurogen / Anaclingene<br>Análise integrada Claude AI<br>Abril 2026</div>
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="summary-grid">
+    <div class="stat"><div class="stat-num red">6</div><div class="stat-label">marcadores ALTO</div></div>
+    <div class="stat"><div class="stat-num amber">28+</div><div class="stat-label">marcadores MÉDIO-ALTO</div></div>
+    <div class="stat"><div class="stat-num green">5</div><div class="stat-label">eixos prioritários</div></div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('visao', this)">Visão geral</div>
+    <div class="tab" onclick="showTab('neuro', this)">Sistema nervoso</div>
+    <div class="tab" onclick="showTab('metabolico', this)">Metabólico</div>
+    <div class="tab" onclick="showTab('imune', this)">Imune & pele</div>
+    <div class="tab" onclick="showTab('hormonal', this)">Hormonal & ossos</div>
+    <div class="tab" onclick="showTab('oxidativo', this)">Oxidativo & detox</div>
+    <div class="tab" onclick="showTab('dieta', this)">Dieta & exercício</div>
+    <div class="tab" onclick="showTab('exames', this)">Exames prioritários</div>
+  </div>
+
+  <!-- ===== VISÃO GERAL ===== -->
+  <div id="visao" class="section active">
+    <div class="callout"><strong>Como ler este painel:</strong> Os resultados são predisposições genéticas, não diagnósticos. Cada eixo abaixo cruza múltiplos genes confirmando o mesmo padrão — quanto mais genes apontam na mesma direção, mais relevante é o achado. Use as abas acima para aprofundar cada tema.</div>
+
+    <div class="axis-card">
+      <div class="axis-header">
+        <div><div class="axis-title">Eixo 1 — Sistema nervoso de alta sensibilidade</div><div class="axis-sub">Neurotransmissores · Sono · Cognição · Comportamento</div></div>
+        <span class="badge badge-alto">Prioritário</span>
+      </div>
+      <div class="axis-body">Serotonina (receptores) ALTO + noradrenalina MÉDIO-ALTO + COMT baixo + MAOA alto. Seu sistema nervoso é de <strong>alta performance e alta sensibilidade</strong>: processa mais, sente mais, demora mais para "desligar" após estresse. Traços de neuroatipicidade confirmados por múltiplos genes.</div>
+      <div class="tags"><span class="tag">MAOA alto</span><span class="tag">COMT baixo</span><span class="tag">HTR2A alto</span><span class="tag">BDNF</span><span class="tag">TEA leve</span><span class="tag">TDAH leve</span><span class="tag">Ansiedade social</span><span class="tag">Bruxismo</span></div>
+    </div>
+
+    <div class="axis-card">
+      <div class="axis-header">
+        <div><div class="axis-title">Eixo 2 — Metilação e homocisteína comprometidas</div><div class="axis-sub">MTHFR · SAMe · CBS · Folato · B12</div></div>
+        <span class="badge badge-alto">Prioritário</span>
+      </div>
+      <div class="axis-body">MTHFR C677T MÉDIO-ALTO + homocisteína elevada confirmada em 4 genes + CBS médio-alto + SAMe médio-alto. Seu ciclo de metilação funciona com eficiência reduzida, impactando <strong>produção de glutationa, humor, saúde cardiovascular e óssea</strong>.</div>
+      <div class="tags"><span class="tag">MTHFR C677T</span><span class="tag">Homocisteína elevada</span><span class="tag">SAMe</span><span class="tag">CBS</span><span class="tag">MTRR</span><span class="tag">SLC19A1</span></div>
+    </div>
+
+    <div class="axis-card">
+      <div class="axis-header">
+        <div><div class="axis-title">Eixo 3 — Estresse oxidativo elevado</div><div class="axis-sub">Glutationa · SOD1/2 · G6PD · Detox hepático</div></div>
+        <span class="badge badge-alto">Prioritário</span>
+      </div>
+      <div class="axis-body">Estresse oxidativo ALTO confirmado por 8+ genes. Demanda de glutationa ALTO. G6PD ALTO = hemácias vulneráveis ao estresse oxidativo. <strong>A cadeia crítica: metila menos → produz menos glutationa → acumula mais oxidação.</strong></div>
+      <div class="tags"><span class="tag">Glutationa ALTO</span><span class="tag">G6PD ALTO</span><span class="tag">SOD1/2 médio-alto</span><span class="tag">Alumínio sensível</span><span class="tag">Chumbo sensível</span><span class="tag">PNLA3</span></div>
+    </div>
+
+    <div class="axis-card">
+      <div class="axis-header">
+        <div><div class="axis-title">Eixo 4 — Risco metabólico</div><div class="axis-sub">Diabetes tipo 2 · Obesidade · Insulina · Lipídios</div></div>
+        <span class="badge badge-alto">Prioritário</span>
+      </div>
+      <div class="axis-body">Diabetes tipo 2 ALTO confirmado por 5+ genes via mecanismos diferentes. Obesidade ALTO por 4+ genes. Porém: <strong>exercício físico é sua alavanca mais poderosa</strong> — melhora sensibilidade à insulina MÉDIO-ALTO confirmada por 3 genes independentes.</div>
+      <div class="tags"><span class="tag">TCF7L2</span><span class="tag">IRS1</span><span class="tag">AKT1</span><span class="tag">FTO</span><span class="tag">PPARG</span><span class="tag">LIPC</span><span class="tag">CDKAL1</span></div>
+    </div>
+
+    <div class="axis-card">
+      <div class="axis-header">
+        <div><div class="axis-title">Eixo 5 — Imunidade, pele e histamina</div><div class="axis-sub">Autoimunidade · Dermatite · Intestino · Histamina</div></div>
+        <span class="badge badge-medio-alto">Atenção</span>
+      </div>
+      <div class="axis-body">HLA-DQ4 ALTO + Hashimoto MÉDIO-ALTO + dermatite atópica ALTO (5 genes) + intolerância à histamina MÉDIO-ALTO (enzima DAO reduzida). Sistema imune com <strong>tendência inflamatória e autoimune</strong>. Bifidobacterium ALTO = boa resposta a probióticos.</div>
+      <div class="tags"><span class="tag">HLA-DQ4</span><span class="tag">Hashimoto</span><span class="tag">FLG alto</span><span class="tag">Parabenos alto (4 genes)</span><span class="tag">Histamina DAO</span><span class="tag">IL-6R</span><span class="tag">IL-23R</span></div>
+    </div>
+  </div>
+
+  <!-- ===== SISTEMA NERVOSO ===== -->
+  <div id="neuro" class="section">
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">Neurotransmissores</div></div><span class="badge badge-alto">ALTO</span></div>
+      <div class="axis-body">
+        <strong>Serotonina (receptores/sinalização) ALTO:</strong> alta sensibilidade às variações — humor, apetite e sono respondem intensamente a desequilíbrios.<br><br>
+        <strong>Noradrenalina MÉDIO-ALTO + COMT baixo:</strong> noradrenalina e adrenalina são metabolizadas mais lentamente — você sente o estresse por mais tempo após o evento.<br><br>
+        <strong>MAOA alto + COMT baixo juntos:</strong> combinação que gera pico intenso de resposta ao estresse e queda também mais intensa. Amplifica reatividade emocional.
+      </div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li><strong>Evitar cafeína após 13h</strong> — metaboliza rápido (ADORA2A ALTO) mas ainda perturba o sono pelo efeito ansiolítico residual</li>
+        <li><strong>Rotina de sono fixa</strong> é a intervenção mais impactante para humor e ansiedade no seu perfil</li>
+        <li><strong>L-teanina:</strong> predisposição genética ALTA a se beneficiar (NAF1 + PNLA3) — discutir com médico/nutricionista</li>
+        <li>Evitar situações de alta carga emocional sem recuperação planejada — seu sistema demora mais para "resetar"</li>
+        <li>Meditação, respiração e técnicas de regulação do sistema nervoso autônomo têm boa evidência para esse perfil</li>
+      </ul>
+    </div>
+
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">Sono</div></div><span class="badge badge-medio-alto">MÉDIO-ALTO</span></div>
+      <div class="axis-body">Maior necessidade de horas de sono + distúrbio do sono MÉDIO-ALTO + sonolência matinal MÉDIO-ALTO. <strong>Receptor de melatonina BAIXO:</strong> suplemento provavelmente não funciona bem para você. Insônia relacionada à cafeína MÉDIO-ALTO. Cronotipo intermediário (adaptável).</div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li><strong>Higiene de sono rigorosa</strong> é mais eficaz que melatonina no seu caso genético</li>
+        <li>Horário fixo de dormir e acordar — mesmo fins de semana</li>
+        <li>Reduzir luz azul (telas) a partir das 20h — óculos bloqueadores ou modo noturno</li>
+        <li>Temperatura do quarto fresca (18-20°C) melhora qualidade do sono</li>
+        <li>Cortar cafeína após 13h (para você é mais crítico que para a maioria)</li>
+      </ul>
+    </div>
+
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">Perfil cognitivo e traços neurocognitivos</div></div><span class="badge badge-alto">Alta capacidade</span></div>
+      <div class="axis-body">
+        <strong>Superdotação cognitiva:</strong> confirmada por 4 genes (BDNF rs6265, COMT rs4680, NTRK2 rs1187326, WWC1 rs17070145). Memória de longo prazo lógica MÉDIO-ALTO.<br><br>
+        <strong>Traços de neuroatipicidade</strong> confirmados por genes independentes: TEA leve (MAOA rs6323, OXTR), TDAH leve (BDNF, HTR2A, DRD4, SLC6A3), ansiedade social (RGS2 rs4606), bruxismo (HTR2A rs6313). Perfeccionismo MÉDIO-NORMAL (FYN rs706895).<br><br>
+        <strong>Nota importante:</strong> nenhum desses marcadores é diagnóstico. São predisposições que formam um estilo cognitivo específico — alta capacidade, alta sensibilidade, pensamento profundo, preferência por autonomia.
+      </div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li>Hiperosmia (olfato aumentado) MÉDIO-NORMAL — atenção a ambientes com odores fortes, perfumes intensos</li>
+        <li>Memória visuoespacial BAIXO — prefira listas, anotações escritas e referências visuais estruturadas</li>
+        <li>Bruxismo: avaliar com dentista se há sinais (desgaste, dor mandibular); estresse amplifica</li>
+        <li>Ambientes de trabalho com autonomia, baixo ruído sensorial e espaço para foco profundo favorecem seu perfil</li>
+        <li>BDNF é estimulado por exercício — mais um motivo para manter atividade física regular</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== METABÓLICO ===== -->
+  <div id="metabolico" class="section">
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">Risco metabólico — diabetes tipo 2 e obesidade</div></div><span class="badge badge-alto">ALTO</span></div>
+      <div class="axis-body">
+        Confirmado por 5+ genes via mecanismos diferentes: <strong>IRS1</strong> (resistência à insulina), <strong>CDKAL1</strong> (células β pancreáticas), <strong>TCF7L2</strong> (via Wnt/insulina), <strong>AKT1</strong> (via PI3K-AKT), <strong>PPARG</strong> (adipogênese), <strong>FTO</strong> (circuitos hipotalâmicos de saciedade).<br><br>
+        <strong>A boa notícia:</strong> esses genes respondem fortemente a intervenções de estilo de vida. Não é destino — é sinal de alerta para prevenção ativa.
+      </div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li><strong>Exercício é sua principal medicina metabólica</strong> — melhora sensibilidade à insulina MÉDIO-ALTO confirmada por 3 genes (LIPC, PPM1K, IRS1)</li>
+        <li>Dieta hiperproteica é sua melhor estratégia de peso (confirmada por 5+ genes: TCF7L2, PPARG, FTO, TCF4, CDCA3)</li>
+        <li>Fibras alimentares MÉDIO-ALTO de benefício — leguminosas, vegetais, aveia, chia</li>
+        <li>Restrição calórica funciona especialmente para gordura abdominal no seu caso (FTO + TCF7L2)</li>
+        <li>Monitorar glicemia em jejum e HbA1c anualmente com médico</li>
+        <li>Carboidratos complexos funcionam melhor que simples — quinoa, batata doce, leguminosas</li>
+      </ul>
+    </div>
+
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">Metilação e homocisteína</div></div><span class="badge badge-medio-alto">MÉDIO-ALTO</span></div>
+      <div class="axis-body">MTHFR C677T reduz eficiência da conversão de folato em forma ativa. Homocisteína elevada confirmada em 4 genes independentes (MTHFR, CBS, GAD1, NOS3). Isso impacta: produção de glutationa, síntese de neurotransmissores, saúde cardiovascular e óssea, risco trombótico.</div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li>Pedir ao médico: <strong>homocisteína sérica, B12, folato eritrocitário, B6</strong></li>
+        <li>Preferir <strong>metilfolato</strong> (forma ativa) ao invés de ácido fólico comum quando suplementar</li>
+        <li>Fontes de betaína: beterraba, espinafre, quinoa, gérmen de trigo</li>
+        <li>Fontes de folato: folhas verdes escuras, leguminosas, brócolis, aspargo</li>
+        <li>Evitar álcool — destrói folato e eleva homocisteína diretamente</li>
+        <li>B12 adequada é essencial — absorção moderada (FUT2 MÉDIO-NORMAL)</li>
+      </ul>
+    </div>
+
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">Saúde hepática</div></div><span class="badge badge-medio-alto">Atenção</span></div>
+      <div class="axis-body">PNLA3 (adiponutrina — esteatose hepática não alcoólica) + hemocromatose MÉDIO-ALTO (HFE) + biotransformação fase II MÉDIO-ALTO. Fígado com demanda aumentada de detox e risco de acúmulo de ferro.</div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li>Pedir ao médico: <strong>ferritina + transferrina + saturação de transferrina</strong></li>
+        <li>Não tomar suplemento de ferro sem indicação e dosagem laboratorial</li>
+        <li>Evitar álcool e medicamentos hepatotóxicos desnecessários</li>
+        <li>Cúrcuma, alcachofra e alimentos amargos apoiam função hepática</li>
+        <li>Doação de sangue pode ser discutida com médico se hemocromatose confirmada</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== IMUNE & PELE ===== -->
+  <div id="imune" class="section">
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">Autoimunidade e inflamação</div></div><span class="badge badge-alto">ALTO</span></div>
+      <div class="axis-body">
+        <strong>HLA-DQ4 ALTO</strong> — marcador de suscetibilidade autoimune. <strong>Hashimoto MÉDIO-ALTO</strong> — risco moderado de tireoidite autoimune. DII/colite ulcerativa MÉDIO-ALTO confirmada por múltiplos genes imunológicos (IL-23R, IL-10RB, IL-12B, TCF4, ATG16L1). Sistema Th17 hiperativo.<br><br>
+        <strong>Ponto positivo:</strong> Bifidobacterium ALTO — predisposição genética a microbiota protetora e boa resposta a probióticos.
+      </div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li>Pedir ao médico: <strong>TSH + T4 livre + T3 livre + anti-TPO + anti-tireoglobulina</strong> (Hashimoto pode ser subclínico)</li>
+        <li>Probióticos com <strong>Bifidobacterium</strong> + prebióticos (fibras, fermentados) — seu perfil genético responde bem</li>
+        <li>Anti-inflamatórios alimentares: cúrcuma com pimenta preta, ômega-3, vegetais coloridos, azeite extravirgem</li>
+        <li>Monitorar sintomas intestinais especialmente em períodos de estresse elevado</li>
+        <li>Quercetina (maçã, cebola, alcaparra) tem evidência para modulação Th17/inflamação</li>
+        <li>Fermentados naturais: kefir, iogurte natural, kimchi (se tolerar histamina)</li>
+      </ul>
+    </div>
+
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">Intolerância à histamina</div></div><span class="badge badge-medio-alto">MÉDIO-ALTO</span></div>
+      <div class="axis-body">Enzima DAO (AOC1) com atividade reduzida — você degrada histamina alimentar mais lentamente. Intolerância confirmada também por SLC2A14 e GAD1. Sulfitos (SUOX) MÉDIO-ALTO. Glutamato (MSG) MÉDIO-NORMAL.</div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li><strong>Histamina alta:</strong> vinho tinto, espumante, cerveja, queijos curados, embutidos, atum/sardinha em lata, conservas, chucrute, vinagre, chocolate</li>
+        <li><strong>Histaminoliberadores:</strong> morango, tomate, clara de ovo (seu perfil é MÉDIO-ALTO), abacaxi, frutas cítricas em excesso</li>
+        <li><strong>Sulfitos (E220-228):</strong> rótulos de vinhos, sucos industriais, frutas secas, embutidos, camarão industrializado</li>
+        <li>Glutamato (MSG): temperos prontos, sopas industriais, shoyu em excesso, snacks ultraprocessados</li>
+        <li>Não eliminar tudo de uma vez — observar sintomas individualmente com diário alimentar</li>
+      </ul>
+    </div>
+
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">Pele e barreira cutânea</div></div><span class="badge badge-alto">ALTO</span></div>
+      <div class="axis-body">Dermatite atópica ALTO confirmada por 5 genes independentes: FLG (filagrina — barreira cutânea frágil), IL-6R, LEP (leptina), ZNF365, RTEL1. Dermatite de contato ALTO. Parabenos ALTO confirmado por 4 genes (NAF1, FLG, TGFB1, ZNF365).</div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li><strong>Eliminar parabenos dos cosméticos</strong> — verificar rótulos: methylparaben, ethylparaben, propylparaben, butylparaben</li>
+        <li><strong>Alumínio:</strong> trocar desodorante com alumínio por alternativas; preferir panelas de aço inox, cerâmica ou ferro fundido</li>
+        <li>Hidratação da pele reforçada — barreira mais frágil perde água transepidérmica mais facilmente</li>
+        <li>Atenção a níquel (bijuterias, cintos), formaldeído (alguns esmaltes), fragrâncias sintéticas</li>
+        <li>Sabonetes e produtos com pH equilibrado (4.5-5.5) protegem melhor a barreira</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== HORMONAL & OSSOS ===== -->
+  <div id="hormonal" class="section">
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">Tireoide</div></div><span class="badge badge-medio-alto">MÉDIO-ALTO</span></div>
+      <div class="axis-body">
+        <strong>Conversão T4→T3 MÉDIO-ALTO:</strong> seu organismo pode converter menos T4 (forma de depósito) em T3 (forma ativa). Exames padrão medem TSH e T4 — o T3 livre pode estar baixo mesmo com TSH "normal".<br><br>
+        <strong>Hashimoto MÉDIO-ALTO:</strong> risco de tireoidite autoimune que pode ser subclínica por anos antes de alterar TSH.
+      </div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li>Pedir ao médico: TSH + T4 livre + <strong>T3 livre</strong> + <strong>anti-TPO</strong> + anti-tireoglobulina</li>
+        <li>Selênio apoia conversão T4→T3 — fontes: castanha-do-pará (1-2/dia), peixe, ovo</li>
+        <li>Zinco também necessário para função tireoidiana — sementes de abóbora, carne vermelha magra</li>
+        <li>Em caso de Hashimoto confirmado, glúten pode agravar em algumas pessoas (avaliar com médico)</li>
+        <li>Iodo: nem muito pouco nem em excesso — evitar suplementação sem indicação médica</li>
+      </ul>
+    </div>
+
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">Hormônios femininos — perimenopausa</div></div><span class="badge badge-medio-alto">MÉDIO-ALTO</span></div>
+      <div class="axis-body">
+        <strong>Progesterona BAIXO</strong> — tendência genética a níveis menores, que se soma à queda natural dos 40+. Pode amplificar oscilações de humor, insônia e sensibilidade.<br><br>
+        <strong>SOP MÉDIO-ALTO</strong> — ovário policístico tem overlap com resistência à insulina (seu eixo metabólico). <strong>Aromatase MÉDIO-NORMAL</strong> — balanço estrogênio/andrógeno levemente alterado.
+      </div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li>Avaliar com ginecologista: progesterona sérica, FSH, LH (mapa da perimenopausa)</li>
+        <li>Sono e exercício regulares são os maiores moduladores naturais de progesterona</li>
+        <li>Reduzir açúcar e ultraprocessados ajuda a regular SOP via resistência à insulina</li>
+        <li>Fitoestrógenos (linhaça, soja fermentada) podem ajudar — discutir com médico no contexto hormonal completo</li>
+        <li>Magnésio (adequado no seu perfil via dieta) apoia equilíbrio hormonal e sono</li>
+      </ul>
+    </div>
+
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">Saúde óssea</div></div><span class="badge badge-medio-alto">MÉDIO-ALTO</span></div>
+      <div class="axis-body">Densidade mineral óssea MÉDIO-ALTO para valores mais baixos (ESR1 + SHBG). Fraturas MÉDIO-ALTO (ESR1 rs2234693). VDR MÉDIO-ALTO = receptor de vitamina D menos eficiente (precisa de níveis séricos mais altos para obter mesmo efeito). L-lisina MÉDIO-NORMAL = maior demanda de colágeno. Progesterona baixa agrava.</div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li>Pedir: <strong>25(OH)D</strong> — manter vitamina D no topo do range normal (50-80 ng/mL), dado VDR comprometido</li>
+        <li><strong>Musculação com carga</strong> é a intervenção mais eficaz para densidade óssea — estimula osteoblastos mecanicamente</li>
+        <li>Cálcio via dieta: laticínios (se tolerar), sardinha com osso, tahine, brócolis, couve</li>
+        <li>Vitamina K2 (MK-7) direciona cálcio para ossos — fontes: natto, queijo gouda, gemas</li>
+        <li>Considerar densitometria óssea (DXA) com médico, especialmente pela perimenopausa</li>
+        <li>L-lisina alimentar: carnes magras, leguminosas, quinoa, ovos — importante para síntese de colágeno</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== OXIDATIVO & DETOX ===== -->
+  <div id="oxidativo" class="section">
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">Estresse oxidativo e glutationa</div></div><span class="badge badge-alto">ALTO</span></div>
+      <div class="axis-body">
+        Estresse oxidativo ALTO confirmado por 8+ genes independentes (SOD1, SOD2, SLC2A14, GSTP1, EPHX1, IL-6, HFE, CETP). Demanda de glutationa ALTO.<br><br>
+        <strong>G6PD ALTO</strong> — deficiência de glicose-6-fosfato desidrogenase: hemácias são mais vulneráveis ao estresse oxidativo. Alguns medicamentos, alimentos e situações podem desencadear hemólise. <strong>Este dado deve ser discutido com médico com prioridade.</strong>
+      </div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li><strong>Discutir G6PD com médico</strong> — existe lista de medicamentos contraindicados (alguns antibióticos, antimaláricos, AAS em doses altas)</li>
+        <li>Antioxidantes na dieta: frutas coloridas (mirtilo, uva, romã), vegetais verde-escuros, azeite, nozes, cacau 70%+</li>
+        <li>Vitamina C (alimentos): kiwi, acerola, pimentão vermelho, brócolis — apoia regeneração de glutationa</li>
+        <li>NAC (N-acetilcisteína, precursor de glutationa): discutir com médico/nutricionista</li>
+        <li>Exercício moderado estimula defesas antioxidantes endógenas — excessivo aumenta oxidação</li>
+        <li>Evitar tabagismo ativo ou passivo — amplifica o estresse oxidativo consideravelmente</li>
+      </ul>
+    </div>
+
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">Metais pesados e toxinas</div></div><span class="badge badge-medio-alto">MÉDIO-ALTO</span></div>
+      <div class="axis-body">Alumínio MÉDIO-ALTO confirmado por 5 genes (CETP, IL-12B, IL-10RB, CLU, CETP). Chumbo MÉDIO-ALTO. Mercúrio BAIXO (positivo — menos vulnerável). Sulfitos MÉDIO-ALTO (SUOX). Parabenos ALTO (pele — 4 genes). Sensibilidade a conservantes em geral aumentada.</div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li><strong>Alumínio:</strong> trocar desodorante com alumínio; preferir panelas de aço, cerâmica ou ferro fundido; evitar embalagens de alumínio com alimentos ácidos (sucos, tomate)</li>
+        <li><strong>Chumbo:</strong> atenção a tintas antigas, cerâmicas artesanais vidradas, água de canos antigos</li>
+        <li><strong>Sulfitos (E220-228):</strong> ler rótulos em vinhos, sucos, frutas secas, embutidos, camarão industrial</li>
+        <li><strong>Parabenos:</strong> verificar ingredientes de cosméticos — methylparaben, ethylparaben, propylparaben, butylparaben</li>
+        <li>BPA: preferir embalagens de vidro ou aço; evitar esquentar comida em plástico</li>
+      </ul>
+    </div>
+
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">Detox hepático e metabolismo de fármacos</div></div><span class="badge badge-medio-alto">MÉDIO-ALTO</span></div>
+      <div class="axis-body">Biotransformação hepática fase II MÉDIO-ALTO + CYP450 (fase I) MÉDIO-NORMAL + SULT2A1 MÉDIO-ALTO. Você pode ter respostas diferentes (mais ou menos intensas) a alguns medicamentos. ABCB1 (P-glicoproteína) MÉDIO-ALTO — pode afetar absorção de certos fármacos.</div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li>Informar médico sobre predisposição a metabolismo hepático diferenciado antes de prescrições</li>
+        <li>Evitar automedicação e polifarmácia — especialmente anti-inflamatórios crônicos</li>
+        <li>Álcool: mesmo com tolerância normal (ALDH2 BAIXO — boa notícia), hepatotoxicidade aumentada no seu perfil</li>
+        <li>Toranja (grapefruit) inibe CYP3A4 — evitar com medicamentos metabolizados por essa via</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== DIETA & EXERCÍCIO ===== -->
+  <div id="dieta" class="section">
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">Estratégia alimentar para o seu perfil</div></div><span class="badge badge-medio-alto">Personalizada</span></div>
+      <div class="axis-body">Cruzando todos os painéis, sua melhor abordagem é: <strong>dieta hiperproteica, rica em antioxidantes, anti-inflamatória, baixa em histamina e histaminoliberadores, sem parabenos e sulfitos, atenta ao ferro e à metilação.</strong></div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li><strong>Proteínas prioritárias:</strong> frango, peixe branco (menor histamina), leguminosas cozidas, ovo inteiro (observar tolerância à clara)</li>
+        <li><strong>Gorduras boas:</strong> azeite extravirgem, abacate, sementes de abóbora e girassol (zinco, magnésio, triptofano), nozes, sardinha fresca</li>
+        <li><strong>Antioxidantes:</strong> mirtilo, morango, brócolis, espinafre, beterraba, cúrcuma com pimenta preta, romã, uva escura</li>
+        <li><strong>Metilação:</strong> folhas verdes escuras (espinafre, rúcula), beterraba, quinoa, lentilha, ovos, aspargo</li>
+        <li><strong>Prebióticos:</strong> banana verde, aveia, alho, cebola, aspargo, alcachofra — alimentam Bifidobacterium</li>
+        <li><strong>Carboidratos:</strong> quinoa, batata doce, arroz integral, leguminosas — evitar refinados e açúcar livre</li>
+        <li><strong>Lactose:</strong> predisposição MÉDIO-NORMAL — preferir iogurte natural e kefir (menos lactose + probióticos)</li>
+        <li><strong>Limitar:</strong> álcool, ultraprocessados, embutidos, queijos muito curados, shoyu em excesso, frituras</li>
+        <li><strong>Ferro:</strong> não suplementar sem exame; preferir fontes alimentares moderadas e monitorar ferritina</li>
+      </ul>
+    </div>
+
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">Exercício físico</div></div><span class="badge badge-medio-alto">Alta resposta genética</span></div>
+      <div class="axis-body">Capacidade aeróbica MÉDIO-ALTO + massa muscular MÉDIO-ALTO + exercício melhora insulina MÉDIO-ALTO (3 genes). <strong>Para você, exercício é simultaneamente: medicina metabólica, proteção óssea, antidepressivo natural (estimula BDNF) e ansiolítico.</strong></div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li><strong>Musculação com carga progressiva 2-3x/semana:</strong> prioridade para saúde óssea, metabolismo e massa muscular</li>
+        <li><strong>Aeróbico moderado 3x/semana:</strong> caminhada rápida, bike, natação — estimula BDNF e sensibilidade à insulina</li>
+        <li>Recuperação adequada é essencial — estresse oxidativo aumenta com excesso de treino</li>
+        <li>Exercício matinal favorece controle glicêmico e ritmo circadiano</li>
+        <li>Começar devagar se sedentária — progressão gradual evita lesão e abandono</li>
+        <li>Suscetibilidade óssea a fraturas MÉDIO-ALTO: atenção ao treino de impacto (usar calçado adequado)</li>
+      </ul>
+    </div>
+
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">Suplementos a discutir com médico/nutricionista</div></div><span class="badge badge-medio">Sob orientação</span></div>
+      <div class="axis-body">Esta lista é baseada no perfil genético — nenhum suplemento deve ser iniciado sem avaliação profissional, pois doses e formas importam muito no seu caso.</div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li><strong>Metilfolato (L-5-MTHF):</strong> forma ativa de folato — prioritário dado MTHFR C677T</li>
+        <li><strong>Vitamina B12 (metilcobalamina):</strong> forma ativa — absorção moderada (FUT2)</li>
+        <li><strong>Vitamina D3 + K2:</strong> VDR comprometido — manter 25(OH)D entre 50-80 ng/mL</li>
+        <li><strong>L-teanina:</strong> predisposição genética alta a se beneficiar (NAF1, PNLA3) — relaxamento sem sedação</li>
+        <li><strong>NAC (N-acetilcisteína):</strong> precursor de glutationa — demanda ALTO no seu perfil</li>
+        <li><strong>Magnésio (glicinato ou malato):</strong> apoia sono, humor, metabolismo e saúde óssea</li>
+        <li><strong>Probiótico com Bifidobacterium:</strong> alta resposta genética confirmada por 3 genes</li>
+        <li><strong>Vitamina B6 (P-5-P):</strong> cofator essencial para MAOA, CBS, síntese de neurotransmissores</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== EXAMES ===== -->
+  <div id="exames" class="section">
+    <div class="callout">Lista organizada por prioridade clínica, baseada nos cruzamentos genéticos. Leve para o médico e informe sobre o painel genético realizado.</div>
+
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">Urgentes — discutir na próxima consulta</div></div><span class="badge badge-alto">Urgente</span></div>
+      <div class="exams-grid">
+        <div class="exam-card">
+          <div class="exam-name">Homocisteína sérica <span class="priority-badge p1">urgente</span></div>
+          <div class="exam-why">Confirmada elevada por 4+ genes independentes — risco cardiovascular, neurológico e trombótico</div>
+        </div>
+        <div class="exam-card">
+          <div class="exam-name">T3 livre + anti-TPO <span class="priority-badge p1">urgente</span></div>
+          <div class="exam-why">Hashimoto e conversão T4→T3 comprometida podem estar subclínicos com TSH aparentemente normal</div>
+        </div>
+        <div class="exam-card">
+          <div class="exam-name">G6PD — atividade enzimática <span class="priority-badge p1">urgente</span></div>
+          <div class="exam-why">G6PD ALTO no painel — alguns medicamentos são contraindicados e médico precisa saber</div>
+        </div>
+        <div class="exam-card">
+          <div class="exam-name">B12 sérica + folato <span class="priority-badge p1">urgente</span></div>
+          <div class="exam-why">MTHFR C677T + metilação comprometida — cofatores críticos que direcionam tratamento</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">Importantes — solicitar em breve</div></div><span class="badge badge-medio-alto">Importante</span></div>
+      <div class="exams-grid">
+        <div class="exam-card">
+          <div class="exam-name">25(OH)D — vitamina D <span class="priority-badge p2">importante</span></div>
+          <div class="exam-why">VDR menos eficiente — manter no topo do range normal (50-80 ng/mL)</div>
+        </div>
+        <div class="exam-card">
+          <div class="exam-name">Ferritina + transferrina <span class="priority-badge p2">importante</span></div>
+          <div class="exam-why">Hemocromatose MÉDIO-ALTO — risco de acúmulo silencioso de ferro</div>
+        </div>
+        <div class="exam-card">
+          <div class="exam-name">Glicemia em jejum + HbA1c <span class="priority-badge p2">importante</span></div>
+          <div class="exam-why">Diabetes tipo 2 ALTO — rastrear e monitorar anualmente</div>
+        </div>
+        <div class="exam-card">
+          <div class="exam-name">Anti-tireoglobulina <span class="priority-badge p2">importante</span></div>
+          <div class="exam-why">Complementa anti-TPO no diagnóstico de Hashimoto</div>
+        </div>
+        <div class="exam-card">
+          <div class="exam-name">Vitamina B6 (P-5-P) <span class="priority-badge p2">importante</span></div>
+          <div class="exam-why">Cofator crítico para MAOA, CBS e síntese de neurotransmissores</div>
+        </div>
+        <div class="exam-card">
+          <div class="exam-name">Lipidograma completo <span class="priority-badge p2">importante</span></div>
+          <div class="exam-why">Hipercolesterolemia familiar MÉDIO-NORMAL + CETP + LIPC</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">Eletivos — programar com médico</div></div><span class="badge badge-normal">Eletivo</span></div>
+      <div class="exams-grid">
+        <div class="exam-card">
+          <div class="exam-name">Progesterona + FSH + LH <span class="priority-badge p3">eletivo</span></div>
+          <div class="exam-why">Progesterona geneticamente baixa + perimenopausa + SOP — mapa hormonal completo</div>
+        </div>
+        <div class="exam-card">
+          <div class="exam-name">Densitometria óssea (DXA) <span class="priority-badge p3">eletivo</span></div>
+          <div class="exam-why">Densidade óssea MÉDIO-ALTO + fratura + progesterona baixa + perimenopausa</div>
+        </div>
+        <div class="exam-card">
+          <div class="exam-name">PCR ultrassensível <span class="priority-badge p3">eletivo</span></div>
+          <div class="exam-why">Marcador de inflamação sistêmica — relevante no perfil autoimune e metabólico</div>
+        </div>
+        <div class="exam-card">
+          <div class="exam-name">Zinco + Selênio sérico <span class="priority-badge p3">eletivo</span></div>
+          <div class="exam-why">Cofatores para tireoide, imunidade e defesas antioxidantes SOD</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <p><strong>Aviso importante:</strong> Este documento é uma análise interpretativa de predisposições genéticas e não substitui avaliação médica. Os resultados indicam tendências populacionais — não são diagnósticos individuais. Todas as recomendações devem ser discutidas com profissional de saúde habilitado antes de qualquer mudança de conduta. Gerado com auxílio de Claude AI (Anthropic) · Abril 2026.</p>
+  </div>
+
+</div>
+
+<script>
+function showTab(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
