@@ -268,6 +268,43 @@
     <div class="stat"><div class="stat-num green">5</div><div class="stat-label">eixos prioritários</div></div>
   </div>
 
+  <!-- PAINEL DE DATAS -->
+  <div id="datas-panel" style="background:var(--surface2);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:12px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+      <div style="font-size:13px;font-weight:600;color:var(--text);">📅 Datas importantes — edite aqui e tudo se atualiza</div>
+      <button onclick="toggleDatas()" id="datas-toggle-btn" style="font-size:11px;padding:4px 12px;border:1px solid var(--border2);border-radius:var(--radius-md);background:var(--surface);color:var(--text2);cursor:pointer;">Mostrar/ocultar</button>
+    </div>
+    <div id="datas-content">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-bottom:12px;">
+        <div>
+          <label style="font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;display:block;margin-bottom:3px;">Data da cirurgia</label>
+          <input type="date" id="data-cirurgia" style="font-size:13px;padding:6px 10px;border:1px solid var(--border2);border-radius:var(--radius-md);background:var(--surface);color:var(--text);width:100%;" onchange="recalcularDatas()">
+        </div>
+        <div>
+          <label style="font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;display:block;margin-bottom:3px;">Suspender Mounjaro (21 dias antes)</label>
+          <input type="date" id="data-mounjaro" style="font-size:13px;padding:6px 10px;border:1px solid var(--border2);border-radius:var(--radius-md);background:#fde8e8;color:var(--text);width:100%;" readonly>
+        </div>
+        <div>
+          <label style="font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;display:block;margin-bottom:3px;">Suspender Ômega-3 + Prímula (10 dias antes)</label>
+          <input type="date" id="data-omega" style="font-size:13px;padding:6px 10px;border:1px solid var(--border2);border-radius:var(--radius-md);background:#fdf0d5;color:var(--text);width:100%;" readonly>
+        </div>
+        <div>
+          <label style="font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;display:block;margin-bottom:3px;">Suspender Saw Palmetto + Creatina (7 dias antes)</label>
+          <input type="date" id="data-saw" style="font-size:13px;padding:6px 10px;border:1px solid var(--border2);border-radius:var(--radius-md);background:#fdf0d5;color:var(--text);width:100%;" readonly>
+        </div>
+        <div>
+          <label style="font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;display:block;margin-bottom:3px;">Retomar Mounjaro (7 dias após)</label>
+          <input type="date" id="data-mounjaro-volta" style="font-size:13px;padding:6px 10px;border:1px solid var(--border2);border-radius:var(--radius-md);background:#e8f5d8;color:var(--text);width:100%;" readonly>
+        </div>
+        <div>
+          <label style="font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;display:block;margin-bottom:3px;">Retomar todos suplementos (após liberação médica)</label>
+          <input type="date" id="data-suple-volta" style="font-size:13px;padding:6px 10px;border:1px solid var(--border2);border-radius:var(--radius-md);background:#e8f5d8;color:var(--text);width:100%;" readonly>
+        </div>
+      </div>
+      <div id="datas-alerta" style="font-size:12px;color:var(--text2);background:var(--surface);border-radius:var(--radius-md);padding:8px 12px;display:none;"></div>
+    </div>
+  </div>
+
   <!-- TABS -->
   <div class="tabs">
     <div class="tab active" onclick="showTab('visao', this)">Visão geral</div>
@@ -1354,7 +1391,19 @@
       <ul class="rec-list">
         <li><strong>Ferritina</strong> — verificar nível antes da cirurgia. Se baixa, fazer soro de ferro IV pré-op. Sangramento menstrual intenso pode ter reduzido desde Mar/26</li>
         <li><strong>Vitamina D</strong> — 43,4 ng/mL em Mar/26. Injeção feita em Abr/26 — verificar se subiu. Vitamina D adequada melhora cicatrização e imunidade pós-op</li>
-        <li><strong>Suspender medicamentos</strong> — confirmar com médica quais suspender: Mounjaro (geralmente suspende 1 semana antes), cabergolina, espironolactona, suplementos</li>
+        <li><strong>Suspender ANTES DA CIRURGIA — datas calculadas automaticamente no painel de datas acima:</strong>
+          <ul style="margin-top:8px;padding-left:16px;">
+            <li><strong>Mounjaro (Tirzepatida) — 21 dias antes</strong> — retarda esvaziamento gástrico, aumenta risco de aspiração na anestesia. Retomar 7 dias após conforme orientação do endócrino</li>
+            <li><strong>Ômega-3 — 10 dias antes</strong> — efeito anticoagulante leve</li>
+            <li><strong>Evening Primrose (Prímula) — 10 dias antes</strong> — efeito anticoagulante leve. Iniciar após recuperação</li>
+            <li><strong>Saw Palmetto — 7 dias antes</strong> — leve efeito anticoagulante</li>
+            <li><strong>Creatina — 7 dias antes</strong> — pode aumentar creatinina sérica e interferir em exames pré-op</li>
+            <li><strong>Espironolactona — confirmar com médica</strong> — diurético, pode afetar eletrólitos no perioperatório</li>
+            <li><strong>Cabergolina — confirmar com médica</strong> — avaliar se suspende ou mantém</li>
+            <li><strong>Vitamina C, Magnésio, Biotina, Complexo B, Meta Mucil</strong> — geralmente manter, confirmar com cirurgião</li>
+            <li><strong>Puran T4 — NÃO suspender</strong> — manter até o dia da cirurgia</li>
+          </ul>
+        </li>
         <li><strong>Estresse oxidativo ALTO</strong> — manter antioxidantes até onde permitido. Vitamina C pré-op tem evidência para melhorar cicatrização</li>
         <li><strong>Prolactina ainda elevada</strong> — cabergolina em curso. Quanto mais normalizada estiver, melhor o estado hormonal para a cirurgia</li>
       </ul>
@@ -1434,9 +1483,14 @@ if (!medRecords) {
     { id: 12, name: 'Acompanhamento — Nódulos tireoidianos', type: 'med', dose: 'TIRADS 3 (múltiplos) e TIRADS 4 (1 nódulo)', time: 'Ultrassom a cada 6 meses', start: '2026-04-06', status: 'ativo', effect: 'Punção aspirativa (PAAF) dos maiores já realizada — resultado benigno/sem malignidade. TSH 4,99 (alto) estimula nódulos — Puran T4 iniciado também com objetivo de manter TSH mais controlado. Próximo ultrassom: agendar em ~6 meses do último. Solicitar com classificação TIRADS.', stars: 0 },
     { id: 16, name: 'Acompanhamento — Hérnia de disco L4-L5', type: 'med', dose: 'Diagnóstico aos 27 anos', time: 'Acompanhamento conforme sintomas', start: '2008-01-01', status: 'ativo', effect: 'Hérnia de disco L4-L5 diagnosticada aos 27 anos. Explica o T-score menor em L4 (1,0) na densitometria de Abr/2026 — alteração estrutural local causa variação de leitura, não representa real perda óssea. Densitometria deve ser interpretada pelos valores L1-L3 (T-score 3,2) que são as vértebras sem alteração. IMPORTANTE: informar ao cirurgião da histerectomia vaginal — posicionamento cirúrgico na litotomia prolongada pode impactar a coluna. Comunicar também ao anestesista.', stars: 0 },
     { id: 13, name: 'Acompanhamento — Ferritina / Menstruação intensa', type: 'med', dose: 'Soro de ferro IV conforme necessidade', time: 'Monitorar ferritina regularmente', start: '2026-01-08', status: 'ativo', effect: 'Ferritina cronicamente baixa por sangramento menstrual intenso. Sobe apenas com reposição IV (fez em Jan/26: ferritina foi de 24,3 para 64,3). Investigar causa do sangramento intenso — ultrassom transvaginal agendado para essa semana. Possíveis causas: mioma, pólipo, adenomiose.', stars: 0 },
+    { id: 20, name: 'Creatina Monohidratada 100% Pura — Vitafor', type: 'sup', dose: '3-5g (1 colher medidora)', time: 'Qualquer horário — todo dia inclusive sem treino', start: '2026-04-11', status: 'ativo', effect: 'Tem em casa — iniciar. Benefícios para o perfil: protege massa muscular durante perda de peso com Mounjaro (gordura 19,5% — manter), melhora cognição (TDAH leve + COMT baixo), energia celular (estresse oxidativo ALTO consome ATP), recuperação pós-histerectomia. Beber bastante água — creatina puxa água para células musculares. Monohidratada 100% pura é a melhor forma disponível.', stars: 0 },
+    { id: 19, name: 'Vitamina C Bioroots — 1000mg', type: 'sup', dose: '1 comprimido (1000mg)', time: 'Com refeição principal', start: '2026-04-11', status: 'aguardando', effect: 'Aprovado — comprar. Ingredientes limpos: sem parabenos, vegano, sem glúten. Ácido ascórbico puro. Benefícios para o perfil: antioxidante (estresse oxidativo ALTO), síntese de colágeno (degradação MÉDIO-ALTO), regenera glutationa, absorção de ferro (ferritina cronicamente baixa). ATENÇÃO pré-cirurgia: sem necessidade de suspender, mas informar equipe.', stars: 0 },
+    { id: 18, name: 'Ômega-3 — 990mg EPA + 660mg DHA', type: 'sup', dose: '1 cápsula (1650mg EPA+DHA total)', time: 'Com refeição mais gordurosa — almoço ou jantar', start: '2026-04-11', status: 'ativo', effect: 'Tem em casa — iniciar. Dose excelente para o perfil. Benefícios: anti-inflamatório (inflamação ALTO), neuroprotetor (BDNF + neuroplasticidade ALTO), ajuda HDL que caiu (85→47), barreira cutânea, qualidade do fio capilar. ATENÇÃO pré-cirurgia: suspender 7-10 dias antes da histerectomia — leve efeito anticoagulante.', stars: 0 },
+    { id: 17, name: 'Evening Primrose — Óleo de Prímula Sports Research', type: 'sup', dose: '1 cápsula (1300mg / GLA 120mg)', time: 'Com refeição', start: '2026-04-11', status: 'ativo', effect: 'Tem em casa — iniciar. Ingredientes limpos: gelatina, glicerina vegetal, água purificada. GLA (ômega-6 anti-inflamatório): apoia barreira cutânea (TEWL ALTO + dermatite ALTO), qualidade do fio capilar, equilíbrio hormonal na perimenopausa. ATENÇÃO pré-cirurgia: suspender 7-10 dias antes junto com ômega-3.', stars: 0 },
+    { id: 16, name: 'Meta Mucil Plantago Ovata — Psyllium', type: 'sup', dose: 'Conforme embalagem', time: 'Longe das refeições e dos outros suplementos', start: '2026-04-11', status: 'ativo', effect: 'Tem em casa — iniciar. Psyllium (fibra solúvel): alimenta Bifidobacterium (painel ALTO — boa resposta a probióticos), controle glicêmico (retarda absorção de açúcar), ajuda HDL baixo, saciedade (complementa Mounjaro). Beber bastante água junto. Tomar longe de outros suplementos pois pode reduzir absorção.', stars: 0 },
     { id: 15, name: 'Exame agendado — G6PD', type: 'inj', dose: 'Dosagem de atividade enzimática de G6PD (eritrócitos)', time: 'Amanhã — Abril/2026', start: '2026-04-07', status: 'ativo', effect: 'Solicitar como: Dosagem de atividade enzimática de G6PD (Glicose-6-Fosfato Desidrogenase) — eritrócitos. Urgente pois alguns medicamentos são contraindicados em deficiência de G6PD. Painel genético marcou G6PD ALTO — confirmar com dosagem enzimática real. Atenção: resultado pode ser falsamente normal após hemólise recente (não é o caso). Registrar resultado aqui quando chegar.', stars: 0 },
     { id: 14, name: 'Ultrassom Transvaginal — 07/04/2026', type: 'inj', dose: 'Magnus Imagens Médicas · Dra. Edilia P. Reis T. Menecucci', time: '07/04/2026', start: '2026-04-07', status: 'ativo', effect: 'MIOMAS UTERINOS CONFIRMADOS — 4 nódulos intramurais: (1) 2,5x1,5cm FIGO 4 parede posterior; (2) 2,0x1,8cm FIGO 3 parede anterior tocando endométrio; (3) 1,0x0,9cm FIGO 3 parede posterior tocando endométrio; (4) 1,0cm FIGO 4 parede anterior. Útero globoso aumentado 10,1x7,1x6,8cm vol.260cm³ (normal ~80-100cm³). Endométrio 10,4mm — espessura a monitorar com estradiol baixo. Ovários normais. Ovário ESQUERDO com CORPO LÚTEO — ovulação confirmada! Fundo de saco livre. IMPORTANTE: miomas são causa do sangramento intenso e ferritina cronicamente baixa. São estrogênio-dependentes — discutir com ginecologista antes de iniciar reposição estrogênica pois podem crescer. Corpo lúteo confirma que hiperprolactinemia é a causa da supressão hormonal, não falência ovariana.', stars: 0 },
-    { id: 11, name: 'Mounjaro (Tirzepatida)', type: 'inj', dose: '1,6mg (concentração 1mg/4ml)', time: 'Semanal', start: '2025-12-01', status: 'ativo', effect: 'Em uso há 4 meses. Chegou a 2mg, reduzido para 1,6mg de manutenção. Efeitos colaterais no início (náuseas), hoje sem efeitos. HbA1c 4,4% e insulina 3,9 — excelente controle glicêmico. Agonista duplo GIP/GLP-1, muito alinhado ao perfil genético (IRS1, TCF7L2, AKT1). Atenção: menstruação intensa → ferritina cronicamente baixa, repor ferro IV quando necessário. HDL caiu de 85→47 possivelmente relacionado à perda de peso — monitorar.', stars: 4 },
+    { id: 11, name: 'Mounjaro (Tirzepatida)', type: 'inj', dose: '1,6mg (concentração 1mg/4ml)', time: 'Semanal', start: '2025-12-01', status: 'ativo', effect: 'Em uso há 4 meses. Chegou a 2mg, reduzido para 1,6mg de manutenção. Efeitos colaterais no início (náuseas), hoje sem efeitos. HbA1c 4,4% e insulina 3,9 — excelente controle glicêmico. Agonista duplo GIP/GLP-1, muito alinhado ao perfil genético (IRS1, TCF7L2, AKT1). Atenção: menstruação intensa → ferritina cronicamente baixa, repor ferro IV quando necessário. HDL caiu de 85→47 possivelmente relacionado à perda de peso — monitorar. PRÉ-CIRURGIA: suspender 21 dias antes da histerectomia — retarda esvaziamento gástrico e aumenta risco de aspiração na anestesia.', stars: 4 },
     { id: 10, name: 'Injeção B12 + Vitamina D', type: 'inj', dose: 'Dose única', time: 'Aplicada em quarta-feira', start: '2026-04-02', status: 'ativo', effect: 'Dose de ataque. Dosar vitamina D em 60-90 dias.', stars: 0 }
   ];
   localStorage.setItem('rafaela_meds', JSON.stringify(medRecords));
