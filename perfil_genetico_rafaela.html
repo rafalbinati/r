@@ -283,6 +283,9 @@
     <div class="tab" onclick="showTab('nutrientes', this)">Nutrientes</div>
     <div class="tab" onclick="showTab('exames-lab', this)">Exames laboratoriais</div>
     <div class="tab" onclick="showTab('medicamentos', this)">Medicamentos</div>
+    <div class="tab" onclick="showTab('farmacos', this)">Farmacogenômica</div>
+    <div class="tab" onclick="showTab('pele', this)">Pele & cabelo</div>
+    <div class="tab" onclick="showTab('cirurgia', this)">Pré-cirurgia</div>
   </div>
 
   <!-- ===== VISÃO GERAL ===== -->
@@ -889,6 +892,7 @@
     <div class="lab-alert-high"><strong>🔴 Miomas uterinos — ultrassom 07/04/2026:</strong> 4 nódulos intramurais confirmados (maiores: 2,5cm FIGO4 e 2,0cm FIGO3 tocando endométrio). Útero aumentado 260cm³ (normal ~100cm³). <strong>Esta é a causa do sangramento intenso e ferritina cronicamente baixa.</strong> Miomas são estrogênio-dependentes — discutir com ginecologista antes de reposição estrogênica. Corpo lúteo no ovário esquerdo = ovulação recente confirmada = não é falência ovariana.</div>
     <div class="lab-alert-ok"><strong>🟢 Ovários normais — sem SOP visível.</strong> Corpo lúteo no ovário esquerdo confirma ovulação recente. O hipoestrogenismo é por supressão hipotalâmica (hiperprolactinemia), não por falência ovariana.</div>
     <div class="lab-alert-ok"><strong>🟢 Hashimoto descartado!</strong> Anti-TPO 6,6 e anti-tireoglobulina 1,3 — ambos negativos. O TSH alto tem outra causa (provavelmente perimenopausa + deficiência de T4).</div>
+    <div class="lab-alert-ok"><strong>🟢 Densitometria óssea — 08/04/2026: NORMAL!</strong> T-score coluna 3,2 · Fêmur colo 0,4 · Fêmur total 1,6. Resultado melhor que o esperado dado perfil genético. Repetir em 2 anos.</div>
     <div class="lab-alert-ok"><strong>🟢 Alumínio sérico &lt; 1,0 mcg/L</strong> — sem acúmulo detectável apesar da sensibilidade genética. Boas práticas de prevenção estão funcionando.</div>
     <div class="lab-alert-ok"><strong>🟢 Pontos positivos:</strong> Glicose ótima (81→83), HbA1c excelente (4,4%), insulina baixa (3,9), função renal perfeita, fígado muito saudável (TGP 7, TGO 12, GGT 11), B12 estável (~496-500), PCR 1,04, fibrinogênio normal, cortisol com ritmo circadiano preservado.</div>
 
@@ -1128,6 +1132,221 @@
     </div>
   </div>
 
+
+  <!-- ===== FARMACOGENÔMICA ===== -->
+  <div id="farmacos" class="section">
+    <div class="callout"><strong>Farmacogenômica — medicamentos com resposta alterada no seu organismo.</strong> Baseado no seu perfil genético (CYP450, COMT, VKORC1, HLA e outros). Mostre esta aba para qualquer médico antes de prescrições, especialmente em internações e cirurgias. Não é contraindicação absoluta — é sinal de que doses e escolhas precisam ser individualizadas.</div>
+
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">🔴 Crítico — anestesia e dor cirúrgica</div><div class="axis-sub">Informar anestesista ANTES da histerectomia</div></div><span class="badge badge-alto">Urgente</span></div>
+      <div class="axis-body">Esses medicamentos são frequentemente usados em cirurgias e pós-operatório. Seu metabolismo está alterado — doses padrão podem ser ineficazes ou causar efeitos inesperados.</div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li><strong>Fentanila</strong> — opioide muito usado em anestesia geral. Metabolismo alterado via CYP3A4. Informar anestesista — pode precisar de dose ajustada ou opioide alternativo</li>
+        <li><strong>Sufentanil</strong> — anestesia/sedação profunda. CYP3A4. Mesma situação</li>
+        <li><strong>Oxicodona</strong> — opioide pós-op. CYP3A4 e CYP3A5 alterados</li>
+        <li><strong>Buprenorfina</strong> — opioide alternativo. Também na lista — não é substituto seguro automático</li>
+        <li><strong>Alprazolam, Clonazepam, Lorazepam, Oxazepam</strong> — benzodiazepínicos usados em pré-anestesia e sedação. Todos com resposta alterada</li>
+        <li><strong>Eszopiclona</strong> — indutor de sono perioperatório. Resposta alterada</li>
+      </ul>
+    </div>
+
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">🔴 Não usar — sem efeito ou reação grave</div></div><span class="badge badge-alto">Contraindicado</span></div>
+      <div class="axis-body">Esses medicamentos ou não fazem efeito no seu organismo ou podem causar reações graves por variantes HLA específicas.</div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li><strong>Cetoconazol</strong> — antifúngico. Sem efeito adequado ou toxicidade no seu perfil. Usar antifúngicos alternativos</li>
+        <li><strong>Carbamazepina</strong> — anticonvulsivante. Risco de reação cutânea grave (Síndrome de Stevens-Johnson) por HLA-B*1502 e HLA-A*3101. <strong>Contraindicação forte</strong></li>
+      </ul>
+    </div>
+
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">🟠 Atenção — uso comum com resposta alterada</div><div class="axis-sub">Informar sempre ao prescrever</div></div><span class="badge badge-medio-alto">Atenção</span></div>
+      <div class="axis-body">Medicamentos frequentemente prescritos que têm metabolismo alterado no seu organismo. Não são contraindicados, mas precisam de atenção na dose e monitoramento.</div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li><strong>Omeprazol, Lansoprazol, Pantoprazol, Dexlansoprazol</strong> — IBPs muito comuns. Metabolismo alterado — podem ser menos eficazes ou acumular. Atenção se prescritos no pós-op</li>
+        <li><strong>Varfarina</strong> — anticoagulante. CYP2C9, CYP4F2, VKORC1 afetados — dose padrão pode ser muito alta ou baixa. Requer monitoramento intenso de INR</li>
+        <li><strong>Metformina</strong> — primeira linha para diabetes tipo 2, mas está na lista. Discutir alternativas com médico dado seu perfil</li>
+        <li><strong>Metilfenidato</strong> — TDAH. Resposta alterada via COMT e ADRA2A — faz sentido dado seu perfil neurocognitivo</li>
+        <li><strong>Trazodona</strong> — antidepressivo/sono. Aparece duas vezes na lista — resposta imprevisível</li>
+        <li><strong>Quetiapina</strong> — sedativo/antipsicótico. Resposta alterada</li>
+        <li><strong>Saxagliptina</strong> — antidiabético. Alternativa à metformina também comprometida</li>
+        <li><strong>Atorvastatina</strong> — estatina para colesterol. Metabolismo alterado — pode causar miopatia ou ser ineficaz</li>
+        <li><strong>Ciclosporina, Sirolimo</strong> — imunossupressores. Relevante em contexto cirúrgico ou autoimune</li>
+        <li><strong>Metotrexato</strong> — imunossupressor. Resposta alterada</li>
+        <li><strong>Buspirona, Clonidina, Guanfacina</strong> — ansiolíticos e moduladores do SNC. Todos com resposta alterada</li>
+        <li><strong>Ticagrelor, Vorapaxar</strong> — antiagregantes plaquetários. Relevante em contexto cardiovascular futuro</li>
+        <li><strong>Peginterferon alfa-2a e 2b</strong> — imunomoduladores. Resposta alterada</li>
+        <li><strong>Anfetamina, Dexanfetamina, Dexmetilfenidato, Lisdexanfetamina</strong> — estimulantes. Todos via COMT — resposta imprevisível dado perfil dopaminérgico</li>
+      </ul>
+    </div>
+
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">Como usar esta informação</div></div><span class="badge badge-normal">Orientação</span></div>
+      <div class="axis-body">Esta lista não substitui avaliação médica. É uma ferramenta de alerta para personalização de tratamentos.</div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li>Em qualquer internação ou cirurgia, <strong>mostrar esta aba ao anestesista e cirurgião</strong> antes do procedimento</li>
+        <li>Em consultas médicas, mencionar que tem painel farmacogenômico — muitos médicos ainda não conhecem mas respeitam quando apresentado</li>
+        <li>Guardar o laudo genético original (Neurogen/Anaclingene) para referência completa</li>
+        <li>Antes de qualquer novo medicamento, verificar se está nesta lista</li>
+        <li>Farmácias de manipulação podem ajustar doses baseadas em farmacogenômica — mencionar ao farmacêutico</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== PELE & CABELO ===== -->
+  <div id="pele" class="section">
+    <div class="callout"><strong>Painel completo de pele, cabelo e envelhecimento cutâneo.</strong> Seu perfil mostra alta sensibilidade cutânea com múltiplos marcadores relevantes. A boa notícia: a maioria é altamente modulável por cuidados e estilo de vida.</div>
+
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">Queda de cabelo — múltiplas causas simultâneas agora</div></div><span class="badge badge-alto">ALTO</span></div>
+      <div class="axis-body">Queda de cabelo/alopecia ALTO geneticamente + alopecia androgenética MÉDIO-ALTO. Mas no seu caso atual há múltiplas causas sobrepostas que explicam a queda e afinamento que está sentindo.</div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li><strong>Predisposição genética ALTO</strong> — base de maior vulnerabilidade ao folículo</li>
+        <li><strong>Estradiol 13 pg/mL</strong> — hipoestrogenismo severo inibe crescimento capilar diretamente</li>
+        <li><strong>Prolactina elevada (42-68)</strong> — hiperprolactinemia causa queda difusa</li>
+        <li><strong>Ferritina cronicamente baixa</strong> — ferritina baixa é causa major de queda em mulheres mesmo com hemoglobina normal</li>
+        <li><strong>Nextella recente</strong> — parada de anticoncepcional pode causar eflúvio telógeno 2-3 meses após</li>
+        <li><strong>Mounjaro</strong> — perda de peso rápida pode causar queda difusa temporária</li>
+        <li><strong>Saw Palmetto que já toma</strong> — boa escolha para alopecia androgenética</li>
+        <li>Quando prolactina normalizar e estradiol se recuperar — queda tende a melhorar. Discutir minoxidil tópico com dermatologista como suporte enquanto isso</li>
+      </ul>
+    </div>
+
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">Pele — sensibilidade e barreiras comprometidas</div></div><span class="badge badge-alto">ALTO</span></div>
+      <div class="axis-body">Barreira cutânea (TEWL) ALTO + inflamação cutânea IL-1 ALTO + dermatite atópica ALTO + dermatite de contato ALTO. Pele estruturalmente mais permeável e inflamatória.</div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li><strong>Parabenos ALTO (4 genes)</strong> — eliminar de cosméticos. Verificar: methylparaben, ethylparaben, propylparaben, butylparaben</li>
+        <li><strong>Triclosan MÉDIO-ALTO</strong> — novo dado. Presente em sabonetes antibacterianos, pastas de dente. Preferir produtos sem triclosan</li>
+        <li><strong>Hidratação obrigatória</strong> — barreira TEWL ALTO significa perda de água transepidérmica aumentada. Hidratante diário sem fragrância e sem parabenos</li>
+        <li><strong>Protetor solar diário</strong> — sensibilidade à luz MÉDIO-NORMAL + lentigos MÉDIO-ALTO + melasma ALTO. FPS 50+ obrigatório</li>
+        <li>Preferir produtos com ceramidas — seu painel de ceramidas é BAIXO (positivo — barreira preservada) mas barreira TEWL é ALTO</li>
+      </ul>
+    </div>
+
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">Pigmentação — melasma e vitiligo</div></div><span class="badge badge-alto">ALTO</span></div>
+      <div class="axis-body">Melasma ALTO + vitiligo generalizado ALTO + vitiligo MÉDIO-ALTO. Dois extremos opostos de pigmentação com predisposição genética alta — ambos de componente autoimune/inflamatório.</div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li><strong>Melasma:</strong> protetor solar FPS 50+ é o tratamento mais importante. Evitar calor facial excessivo. Discutir com dermatologista se aparecer hiperpigmentação facial persistente</li>
+        <li><strong>Vitiligo:</strong> componente autoimune — conecta com HLA-DQ4 e IL-1 ALTO. Se aparecer manchas brancas, avaliar com dermatologista precocemente</li>
+        <li>Bronzeamento MÉDIO-ALTO — você bronzeia facilmente mas isso não protege — continue com protetor mesmo bronzeada</li>
+      </ul>
+    </div>
+
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">Colágeno e envelhecimento cutâneo</div></div><span class="badge badge-medio-alto">MÉDIO-ALTO</span></div>
+      <div class="axis-body">Degradação do colágeno MÉDIO-ALTO + flacidez cervical MÉDIO-ALTO + efeito bulldog MÉDIO-ALTO + glicação AGE MÉDIO-ALTO. Tendência a perda de firmeza e envelhecimento facial moderadamente aumentada.</div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li><strong>Queloides MÉDIO-ALTO</strong> — importante para cirurgia! Informar cirurgião — tendência a cicatrização exuberante</li>
+        <li><strong>L-lisina</strong> — sua necessidade é MÉDIO-NORMAL geneticamente — cofator essencial para síntese de colágeno</li>
+        <li><strong>Vitamina C ALTO</strong> — essencial para síntese de colágeno. Fontes: acerola, kiwi, pimentão</li>
+        <li><strong>Proteção solar</strong> — UV é o maior acelerador de degradação de colágeno</li>
+        <li><strong>Glicação (AGE) MÉDIO-ALTO</strong> — açúcar danifica colágeno. HbA1c 4,4% excelente — continuar controlando glicemia</li>
+        <li>Retinol tópico tem evidência para estimular colágeno — discutir com dermatologista</li>
+      </ul>
+    </div>
+
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">Telômeros e envelhecimento biológico</div></div><span class="badge badge-alto">ALTO</span></div>
+      <div class="axis-body">Telômeros encurtamento ALTO + envelhecimento biológico ALTO. Conecta com NAF1 já registrado. Estresse oxidativo alto acelera encurtamento telomérico — é uma das razões pelas quais antioxidantes são tão importantes no seu perfil.</div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li><strong>Exercício aeróbico regular</strong> — comprovadamente aumenta atividade da telomerase e preserva comprimento telomérico</li>
+        <li><strong>Sono de qualidade</strong> — privação de sono acelera encurtamento telomérico</li>
+        <li><strong>Estresse crônico</strong> — cortisol elevado cronicamente encurta telômeros. Gestão de estresse não é opcional no seu caso</li>
+        <li><strong>Antioxidantes</strong> — vitamina C, E, CoQ10, NAC — todos ALTO no seu painel — protegem DNA e telômeros do estresse oxidativo</li>
+        <li><strong>Não fumar</strong> — tabagismo é o maior acelerador de encurtamento telomérico conhecido</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== PRÉ-CIRURGIA ===== -->
+  <div id="cirurgia" class="section">
+    <div class="callout"><strong>Informações críticas para a histerectomia vaginal.</strong> Leve este painel para a consulta com o especialista. Todos os itens abaixo são baseados no seu perfil genético e histórico clínico e devem ser comunicados à equipe cirúrgica.</div>
+
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">🔴 Informar obrigatoriamente ao anestesista</div></div><span class="badge badge-alto">Crítico</span></div>
+      <div class="axis-body">Esses dados afetam diretamente a escolha e dose dos medicamentos usados na anestesia e pós-op imediato.</div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li><strong>G6PD comprometido (painel genético ALTO)</strong> — aguardando dosagem enzimática. Alguns medicamentos usados em cirurgia são contraindicados. Resultado do exame de amanhã deve ser levado</li>
+        <li><strong>Farmacogenômica — Fentanila, Sufentanil, Oxicodona, Buprenorfina</strong> — opioides com metabolismo alterado. Doses padrão podem ser ineficazes ou excessivas</li>
+        <li><strong>Benzodiazepínicos — Alprazolam, Clonazepam, Lorazepam, Oxazepam</strong> — todos com resposta alterada. Informar se usados no pré-anestésico</li>
+        <li><strong>IBPs — Omeprazol, Pantoprazol, Lansoprazol</strong> — comumente prescritos no pós-op. Metabolismo alterado no seu perfil</li>
+        <li><strong>Varfarina</strong> — se precisar de anticoagulação pós-op, dose padrão pode ser perigosa. CYP2C9/VKORC1 alterados</li>
+      </ul>
+    </div>
+
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">🔴 Informar obrigatoriamente ao cirurgião</div></div><span class="badge badge-alto">Crítico</span></div>
+      <div class="axis-body">Dados que afetam técnica cirúrgica, posicionamento e cuidados pós-operatórios.</div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li><strong>Queloides MÉDIO-ALTO</strong> — tendência a cicatrização exuberante. Pode influenciar tipo de fio de sutura e cuidados pós-op internos</li>
+        <li><strong>Púrpura pós-transfusional MÉDIO-ALTO (ITGB3/HPA)</strong> — se precisar de transfusão de sangue, risco de trombocitopenia imune. Equipe deve ter protocolo específico</li>
+        <li><strong>Hérnia de disco L4-L5</strong> — diagnosticada aos 27 anos. Posição de litotomia prolongada pode pressionar coluna. Solicitar suporte lombar adequado no posicionamento</li>
+        <li><strong>Dermatite de contato ALTO + parabenos ALTO</strong> — atenção a materiais cirúrgicos, adesivos, antissépticos com triclosan ou parabenos</li>
+        <li><strong>Inflamação cutânea IL-1 ALTO</strong> — cicatrização pode ser mais inflamatória. Monitorar área operada no pós-op</li>
+      </ul>
+    </div>
+
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">🟠 Pré-operatório — otimizar antes da cirurgia</div></div><span class="badge badge-medio-alto">Importante</span></div>
+      <div class="axis-body">Condições que podem ser otimizadas antes da cirurgia para melhorar resultado e recuperação.</div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li><strong>Ferritina</strong> — verificar nível antes da cirurgia. Se baixa, fazer soro de ferro IV pré-op. Sangramento menstrual intenso pode ter reduzido desde Mar/26</li>
+        <li><strong>Vitamina D</strong> — 43,4 ng/mL em Mar/26. Injeção feita em Abr/26 — verificar se subiu. Vitamina D adequada melhora cicatrização e imunidade pós-op</li>
+        <li><strong>Suspender medicamentos</strong> — confirmar com médica quais suspender: Mounjaro (geralmente suspende 1 semana antes), cabergolina, espironolactona, suplementos</li>
+        <li><strong>Estresse oxidativo ALTO</strong> — manter antioxidantes até onde permitido. Vitamina C pré-op tem evidência para melhorar cicatrização</li>
+        <li><strong>Prolactina ainda elevada</strong> — cabergolina em curso. Quanto mais normalizada estiver, melhor o estado hormonal para a cirurgia</li>
+      </ul>
+    </div>
+
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">🟢 Pós-operatório — cuidados específicos para seu perfil</div></div><span class="badge badge-normal">Pós-op</span></div>
+      <div class="axis-body">Seu perfil genético sugere alguns cuidados adicionais no pós-operatório além dos padrão.</div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li><strong>Restrição de movimentos de coluna</strong> — hérnia L4-L5. Evitar flexão brusca e esforço lombar nas primeiras semanas</li>
+        <li><strong>Monitorar cicatriz interna</strong> — queloides MÉDIO-ALTO. Informar qualquer dor ou endurecimento incomum na região</li>
+        <li><strong>Ferritina pós-op</strong> — dosar 4-6 semanas após cirurgia. Sem menstruação, ferritina tende a subir naturalmente — monitorar para não acumular dado hemocromatose genética</li>
+        <li><strong>Sono e recuperação</strong> — sistema nervoso altamente plástico e sensível. Priorizar sono de qualidade no pós-op acelera recuperação</li>
+        <li><strong>Ovários preservados</strong> — produção hormonal continua. Monitorar estradiol, FSH e prolactina 3 meses após para ver recuperação do eixo</li>
+        <li><strong>Cabelo</strong> — cirurgia é estresse físico e pode piorar queda temporariamente (eflúvio telógeno pós-cirúrgico). Esperar 3-6 meses para avaliar se queda piorou</li>
+        <li><strong>Reintrodução de suplementos</strong> — retomar complexo de metilação, magnésio e ômega-3 assim que liberar ingestão oral. Aceleram recuperação tecidual</li>
+      </ul>
+    </div>
+
+    <div class="axis-card">
+      <div class="axis-header"><div><div class="axis-title">📋 Lista de medicamentos em uso para levar</div></div><span class="badge badge-medio">Levar impresso</span></div>
+      <div class="axis-body">Lista completa atual para entregar na internação.</div>
+      <div class="divider"></div>
+      <ul class="rec-list">
+        <li><strong>Puran T4</strong> 25mcg — ao acordar (iniciado ~29/03/2026)</li>
+        <li><strong>Cabergolina</strong> 0,25mg — semanal/quinta (iniciada ~03/04/2026)</li>
+        <li><strong>Espironolactona</strong> 50mg — manhã</li>
+        <li><strong>Mounjaro (Tirzepatida)</strong> 1,6mg — semanal (4 meses de uso)</li>
+        <li><strong>Saw Palmetto + Zinco Quelado + Biotina</strong> — manhã</li>
+        <li><strong>Benfotiamina + P-5-P + Metilcobalamina + Metilfolato</strong> — manhã</li>
+        <li><strong>Mulungu + L-Teanina</strong> — noite</li>
+        <li><strong>Melatonina</strong> 5mg — noite</li>
+        <li><strong>Magnésio Bisglicinato</strong> 200mg — noite</li>
+        <li><strong>Progesterona Gynpro</strong> 100mg — aguardando iniciar no dia 15 do ciclo</li>
+        <li>Injeção de B12 + Vitamina D — dose única aplicada em ~02/04/2026</li>
+      </ul>
+    </div>
+  </div>
+
   <!-- FOOTER -->
   <div class="footer">
     <p><strong>Aviso importante:</strong> Este documento é uma análise interpretativa de predisposições genéticas e não substitui avaliação médica. Os resultados indicam tendências populacionais — não são diagnósticos individuais. Todas as recomendações devem ser discutidas com profissional de saúde habilitado antes de qualquer mudança de conduta. Gerado com auxílio de Claude AI (Anthropic) · Abril 2026.</p>
@@ -1165,6 +1384,7 @@ if (!medRecords) {
     { id: 8, name: 'Espironolactona', type: 'med', dose: '50mg', time: 'Dia', start: '2026-03-17', status: 'ativo', effect: 'Em uso há ~20 dias.', stars: 0 },
     { id: 9, name: 'Benfotiamina + Piridoxal Fosfato + Metilcobalamina + Metilfolato', type: 'sup', dose: '100mg + 15mg + 1mg + 1mg', time: 'Dia', start: '2026-03-17', status: 'ativo', effect: 'Complexo de metilação — excelente indicação dado MTHFR C677T e predisposição a homocisteína elevada.', stars: 0 },
     { id: 12, name: 'Acompanhamento — Nódulos tireoidianos', type: 'med', dose: 'TIRADS 3 (múltiplos) e TIRADS 4 (1 nódulo)', time: 'Ultrassom a cada 6 meses', start: '2026-04-06', status: 'ativo', effect: 'Punção aspirativa (PAAF) dos maiores já realizada — resultado benigno/sem malignidade. TSH 4,99 (alto) estimula nódulos — Puran T4 iniciado também com objetivo de manter TSH mais controlado. Próximo ultrassom: agendar em ~6 meses do último. Solicitar com classificação TIRADS.', stars: 0 },
+    { id: 16, name: 'Acompanhamento — Hérnia de disco L4-L5', type: 'med', dose: 'Diagnóstico aos 27 anos', time: 'Acompanhamento conforme sintomas', start: '2008-01-01', status: 'ativo', effect: 'Hérnia de disco L4-L5 diagnosticada aos 27 anos. Explica o T-score menor em L4 (1,0) na densitometria de Abr/2026 — alteração estrutural local causa variação de leitura, não representa real perda óssea. Densitometria deve ser interpretada pelos valores L1-L3 (T-score 3,2) que são as vértebras sem alteração. IMPORTANTE: informar ao cirurgião da histerectomia vaginal — posicionamento cirúrgico na litotomia prolongada pode impactar a coluna. Comunicar também ao anestesista.', stars: 0 },
     { id: 13, name: 'Acompanhamento — Ferritina / Menstruação intensa', type: 'med', dose: 'Soro de ferro IV conforme necessidade', time: 'Monitorar ferritina regularmente', start: '2026-01-08', status: 'ativo', effect: 'Ferritina cronicamente baixa por sangramento menstrual intenso. Sobe apenas com reposição IV (fez em Jan/26: ferritina foi de 24,3 para 64,3). Investigar causa do sangramento intenso — ultrassom transvaginal agendado para essa semana. Possíveis causas: mioma, pólipo, adenomiose.', stars: 0 },
     { id: 15, name: 'Exame agendado — G6PD', type: 'inj', dose: 'Dosagem de atividade enzimática de G6PD (eritrócitos)', time: 'Amanhã — Abril/2026', start: '2026-04-07', status: 'ativo', effect: 'Solicitar como: Dosagem de atividade enzimática de G6PD (Glicose-6-Fosfato Desidrogenase) — eritrócitos. Urgente pois alguns medicamentos são contraindicados em deficiência de G6PD. Painel genético marcou G6PD ALTO — confirmar com dosagem enzimática real. Atenção: resultado pode ser falsamente normal após hemólise recente (não é o caso). Registrar resultado aqui quando chegar.', stars: 0 },
     { id: 14, name: 'Ultrassom Transvaginal — 07/04/2026', type: 'inj', dose: 'Magnus Imagens Médicas · Dra. Edilia P. Reis T. Menecucci', time: '07/04/2026', start: '2026-04-07', status: 'ativo', effect: 'MIOMAS UTERINOS CONFIRMADOS — 4 nódulos intramurais: (1) 2,5x1,5cm FIGO 4 parede posterior; (2) 2,0x1,8cm FIGO 3 parede anterior tocando endométrio; (3) 1,0x0,9cm FIGO 3 parede posterior tocando endométrio; (4) 1,0cm FIGO 4 parede anterior. Útero globoso aumentado 10,1x7,1x6,8cm vol.260cm³ (normal ~80-100cm³). Endométrio 10,4mm — espessura a monitorar com estradiol baixo. Ovários normais. Ovário ESQUERDO com CORPO LÚTEO — ovulação confirmada! Fundo de saco livre. IMPORTANTE: miomas são causa do sangramento intenso e ferritina cronicamente baixa. São estrogênio-dependentes — discutir com ginecologista antes de iniciar reposição estrogênica pois podem crescer. Corpo lúteo confirma que hiperprolactinemia é a causa da supressão hormonal, não falência ovariana.', stars: 0 },
