@@ -303,7 +303,7 @@ const DEFAULT_BILLS=[
   {desc:"Uso Unimed",           dia:10, valor:750.00,   conta:"",        recorrente:"sempre"},
   {desc:"Terapeuta Cris",       dia:10, valor:500.00,   conta:"",        recorrente:"sempre"},
   {desc:"Aluguel Sala",         dia:12, valor:600.00,   conta:"",        recorrente:"sempre"},
-  {desc:"Psicólogo Pablo",      dia:15, valor:1350.00,  conta:"BB Pablo",recorrente:"sempre"},
+  {desc:"Psicólogo Pablo",      dia:15, valor:1350.00,  conta:"",        recorrente:"sempre"},
   {desc:"Cartão Sant",          dia:21, valor:2500.00,  conta:"",        recorrente:"sempre"},
   {desc:"Faxineira (quinzena)", dia:25, valor:800.00,   conta:"",        recorrente:"sempre"},
   {desc:"Psicóloga",            dia:25, valor:2600.00,  conta:"",        recorrente:"sempre"},
@@ -319,30 +319,25 @@ let pixSelected=new Set();
 
 const getKey=(y,m)=>`contas_${y}_${m}`;
 const getUrl=()=>localStorage.getItem('sheets_url')||'';
-
-function saveUrl(){
-  const url=document.getElementById('sheetUrl').value.trim();
-  localStorage.setItem('sheets_url',url);
-  showToast('URL salva!','success');
-  syncAll();
-}
-
+function saveUrl(){localStorage.setItem('sheets_url',document.getElementById('sheetUrl').value.trim());showToast('URL salva!','success');}
 function loadData(y,m){const r=localStorage.getItem(getKey(y,m));return r?JSON.parse(r):null;}
 function saveData(y,m,d){localStorage.setItem(getKey(y,m),JSON.stringify(d));}
+
+// Normaliza valor antigo 'sim' para 'sempre'
 function nRec(v){return(!v||v==='sim')?'sempre':v;}
 
 function seedMonth(y,m,src){
   const bills=src||DEFAULT_BILLS;
   const s=bills.map((b,i)=>({
     id:`${y}_${m}_${i}_${Date.now()}${Math.random().toString(36).slice(2,5)}`,
-    desc:b.desc,dia:b.dia,valor:b.valor,valorOverride:null,
-    conta:b.conta||'',obs:b.obs||'',
+    desc:b.desc, dia:b.dia, valor:b.valor, valorOverride:null,
+    conta:b.conta||'', obs:b.obs||'',
     recorrente:nRec(b.recorrente),
-    mesesTotal:b.mesesTotal||null,mesesRestantes:b.mesesRestantes||null,
-    parcelaAtual:b.parcelaAtual||null,parcelaTotal:b.parcelaTotal||null,
-    status:'pendente',pixDate:'',
+    mesesTotal:b.mesesTotal||null, mesesRestantes:b.mesesRestantes||null,
+    parcelaAtual:b.parcelaAtual||null, parcelaTotal:b.parcelaTotal||null,
+    status:'pendente', pixDate:'',
   }));
-  saveData(y,m,s);return s;
+  saveData(y,m,s); return s;
 }
 function ensureMonth(y,m){const d=loadData(y,m);return d||seedMonth(y,m);}
 function seedFullYear(y){for(let m=0;m<12;m++)if(!loadData(y,m))seedMonth(y,m);}
@@ -415,7 +410,7 @@ function renderTable(data){
       ${pixMode?`<td class="cb-col"><input type="checkbox" class="row-cb" data-id="${item.id}" ${pixSelected.has(item.id)?'checked':''} onchange="toggleCb('${item.id}',this.checked)"></td>`:''}
       <td><strong>${esc(item.desc)}</strong>${recTag}${item.obs?`<br><span style="color:var(--muted);font-size:11px">${esc(item.obs)}</span>`:''}</td>
       <td><span class="dia-chip ${dc}">dia&nbsp;${item.dia}</span></td>
-      <td><span style="font-weight:600">${fmt(val)}</span>${hasOv?`<br><span style="color:#ccc;font-size:10px;text-decoration:line-through">${fmt(item.valor)}</span>`:''}</td>
+      <td><span style="font-weight:600">${fmt(val)}</span></td>
       <td class="hide-mobile">${contaBadge(item.conta)}</td>
       <td><span class="badge ${item.status}">${item.status}</span></td>
       <td class="hide-mobile">${item.pixDate?`<span class="pix-date">✓ ${fmtDate(item.pixDate)}</span>`:`<span class="no-pix">aguardando</span>`}</td>
@@ -500,31 +495,41 @@ function saveItem(){
   const parcelaAtual=rec==='parcela'?parseInt(document.getElementById('fParcelaAtual').value)||1:null;
   const parcelaTotal=rec==='parcela'?parseInt(document.getElementById('fParcelaTotal').value)||1:null;
   const data=loadData(currentYear,currentMonth);
+
   if(editingId){
     const item=data.find(i=>i.id===editingId);
     if(item){
-      item.desc=desc;item.dia=dia;
-      item.valorOverride=(valor!==item.valor)?valor:null;
+      item.desc=desc; item.dia=dia;
+      item.valor=valor;        // atualiza direto, sem guardar anterior
+      item.valorOverride=null; // nunca mostra valor antigo
       item.conta=document.getElementById('fConta').value;
       item.status=document.getElementById('fStatus').value;
       item.pixDate=document.getElementById('fPixDate').value;
       item.obs=document.getElementById('fObs').value.trim();
-      item.recorrente=rec;item.mesesTotal=mesesTotal;
+      item.recorrente=rec; item.mesesTotal=mesesTotal;
       item.mesesRestantes=rec==='meses'?(item.mesesRestantes||mesesTotal):null;
-      item.parcelaAtual=parcelaAtual;item.parcelaTotal=parcelaTotal;
+      item.parcelaAtual=parcelaAtual; item.parcelaTotal=parcelaTotal;
     }
-    saveData(currentYear,currentMonth,data);closeModal('moItem');render();
-    showToast('Conta atualizada!','success');pushToSheet(currentYear,currentMonth,data);return;
+    saveData(currentYear,currentMonth,data);
+    closeModal('moItem'); render();
+    showToast('Conta atualizada!','success');
+    pushToSheet(currentYear,currentMonth,data);
+    return;
   }
+
+  // Nova conta
   const newItem={
-    id:`new_${Date.now()}`,desc,dia,valor,valorOverride:null,
+    id:`new_${Date.now()}`, desc, dia, valor, valorOverride:null,
     conta:document.getElementById('fConta').value,
     status:document.getElementById('fStatus').value,
     pixDate:document.getElementById('fPixDate').value,
     obs:document.getElementById('fObs').value.trim(),
-    recorrente:rec,mesesTotal,mesesRestantes:mesesTotal,parcelaAtual,parcelaTotal,
+    recorrente:rec, mesesTotal, mesesRestantes:mesesTotal,
+    parcelaAtual, parcelaTotal,
   };
-  data.push(newItem);saveData(currentYear,currentMonth,data);
+  data.push(newItem);
+  saveData(currentYear,currentMonth,data);
+
   if(rec==='parcela'&&parcelaAtual&&parcelaTotal&&parcelaAtual<parcelaTotal){
     const rem=parcelaTotal-parcelaAtual;
     for(let p=1;p<=rem;p++){
@@ -532,20 +537,25 @@ function saveItem(){
       if(tm>11){ty+=Math.floor(tm/12);tm=tm%12;}
       const fd=ensureMonth(ty,tm);
       fd.push({...newItem,id:`parc_${ty}_${tm}_${Date.now()}_${p}`,status:'pendente',pixDate:'',parcelaAtual:parcelaAtual+p});
-      saveData(ty,tm,fd);pushToSheet(ty,tm,fd);
+      saveData(ty,tm,fd); pushToSheet(ty,tm,fd);
     }
-    showToast(`Lançado em ${rem} mês(es) à frente!`,'info');
-  }else if(rec==='meses'&&mesesTotal>1){
+    showToast(`📦 Lançado em ${rem} mês(es) à frente!`,'info');
+  } else if(rec==='meses'&&mesesTotal>1){
     for(let p=1;p<mesesTotal;p++){
       let tm=currentMonth+p,ty=currentYear;
       if(tm>11){ty+=Math.floor(tm/12);tm=tm%12;}
       const fd=ensureMonth(ty,tm);
       fd.push({...newItem,id:`mes_${ty}_${tm}_${Date.now()}_${p}`,status:'pendente',pixDate:'',mesesRestantes:mesesTotal-p});
-      saveData(ty,tm,fd);pushToSheet(ty,tm,fd);
+      saveData(ty,tm,fd); pushToSheet(ty,tm,fd);
     }
-    showToast(`Lançado nos próximos ${mesesTotal-1} mês(es)!`,'info');
-  }else{showToast('Conta adicionada!','success');}
-  closeModal('moItem');render();pushToSheet(currentYear,currentMonth,data);
+    showToast(`📅 Lançado nos próximos ${mesesTotal-1} mês(es)!`,'info');
+  } else {
+    // sempre, nao — salva normalmente
+    showToast('Conta adicionada!','success');
+  }
+
+  closeModal('moItem'); render();
+  pushToSheet(currentYear,currentMonth,data);
 }
 
 function openPropModal(){
@@ -700,72 +710,28 @@ function changeMonth(d){
 }
 function changeYear(d){currentYear+=d;exitPix();seedFullYear(currentYear);render();}
 
-// ── SHEETS: escrita via no-cors POST ─────────────────────────────
-function pushToSheet(y,m,data){
+async function pushToSheet(y,m,data){
   const url=getUrl();if(!url)return;
-  fetch(url,{
-    method:'POST',
-    mode:'no-cors',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({action:'write',year:y,month:m,data})
-  }).then(()=>{
+  try{
+    await fetch(url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'write',year:y,month:m,data})});
     document.getElementById('syncStatus').textContent='✓ '+new Date().toLocaleTimeString('pt-BR');
-  }).catch(()=>{
-    document.getElementById('syncStatus').textContent='⚠ erro';
-  });
+  }catch{document.getElementById('syncStatus').textContent='⚠ erro';}
 }
-
-// ── SHEETS: leitura via JSONP (resolve CORS) ──────────────────────
-function jsonpFetch(url,cb){
-  const name='_cb_'+Date.now();
-  const script=document.createElement('script');
-  const timer=setTimeout(()=>{
-    delete window[name];
-    if(script.parentNode)script.parentNode.removeChild(script);
-    cb(new Error('timeout'),null);
-  },10000);
-  window[name]=(data)=>{
-    clearTimeout(timer);
-    delete window[name];
-    if(script.parentNode)script.parentNode.removeChild(script);
-    cb(null,data);
-  };
-  script.onerror=()=>{
-    clearTimeout(timer);
-    delete window[name];
-    if(script.parentNode)script.parentNode.removeChild(script);
-    cb(new Error('script error'),null);
-  };
-  script.src=url+'&callback='+name;
-  document.body.appendChild(script);
-}
-
-function syncAll(){
+async function syncAll(){
   const url=getUrl();
   if(!url){showToast('Configure a URL do Apps Script!','error');return;}
   document.getElementById('syncStatus').textContent='⟳ sincronizando…';
-  const readUrl=`${url}?action=read&year=${currentYear}&month=${currentMonth}`;
-  jsonpFetch(readUrl,(err,json)=>{
-    if(err){
-      showToast('Erro ao conectar. Usando dados locais.','error');
-      document.getElementById('syncStatus').textContent='⚠ erro';
-      return;
-    }
-    if(json&&json.data&&json.data.length>0){
-      saveData(currentYear,currentMonth,json.data);
-      render();
-      showToast('Dados carregados do Sheets!','success');
-    }else{
-      showToast('Sheets sem dados para este mês.','');
-    }
+  try{
+    const res=await fetch(`${url}?action=read&year=${currentYear}&month=${currentMonth}`);
+    const json=await res.json();
+    if(json&&json.data&&json.data.length>0){saveData(currentYear,currentMonth,json.data);render();showToast('Dados carregados!','success');}
+    else showToast('Sheets sem dados para este mês.','');
     document.getElementById('syncStatus').textContent='✓ '+new Date().toLocaleTimeString('pt-BR');
-  });
+  }catch{showToast('Erro ao conectar.','error');document.getElementById('syncStatus').textContent='⚠ erro';}
 }
 
 seedFullYear(currentYear);
 render();
-// Tenta sincronizar automaticamente ao carregar
-if(getUrl()) syncAll();
 </script>
 </body>
 </html>
