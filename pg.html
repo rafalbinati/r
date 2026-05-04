@@ -209,14 +209,14 @@ input[type=checkbox].row-cb{width:16px;height:16px;cursor:pointer;accent-color:v
           <option value="nao">1&#xFE0F;&#x20E3; Só este mês</option>
         </select>
       </div>
-      <div id="wrapMeses" style="display:none">
+      <div id="recMesesBox" style="display:none">
         <div class="fr" style="margin:0">
           <label>Quantos meses no total?</label>
           <input type="number" id="fMesesTotal" min="1" placeholder="ex: 6" oninput="updateMesesHint()"/>
           <div class="hint" id="mesesHint"></div>
         </div>
       </div>
-      <div id="wrapParcela" style="display:none">
+      <div id="recParcelaBox" style="display:none">
         <div class="fgrid">
           <div class="fr" style="margin:0"><label>Parcela atual</label><input type="number" id="fParcelaAtual" min="1" placeholder="1"/></div>
           <div class="fr" style="margin:0"><label>Total de parcelas</label><input type="number" id="fParcelaTotal" min="1" placeholder="12"/></div>
@@ -446,8 +446,8 @@ function deleteItem(id){
 
 function onRecChange(){
   const v=document.getElementById('fRecorrente').value;
-  document.getElementById('wrapMeses').style.display=v==='meses'?'':'none';
-  document.getElementById('wrapParcela').style.display=v==='parcela'?'':'none';
+  document.getElementById('recMesesBox').style.display  =v==='meses'   ?'':'none';
+  document.getElementById('recParcelaBox').style.display=v==='parcela' ?'':'none';
   updateMesesHint();
 }
 function updateMesesHint(){
