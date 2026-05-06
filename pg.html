@@ -254,7 +254,14 @@ input[type=checkbox].row-cb{width:16px;height:16px;cursor:pointer;accent-color:v
     </div>
     <div class="mact">
       <button class="bcancel" onclick="closeModal('moProp')">Cancelar</button>
-      <button class="bsave" onclick="runPropagate()" style="background:var(--blue);">Propagar agora</button>
+      <button class="bsave" onclick="runPropagate()" style="background:var(--blue);">Propagar para este mês</button>
+    </div>
+    <div style="border-top:1px solid var(--border);margin-top:14px;padding-top:14px;">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.6px;font-weight:600;">🔁 Propagar para todos os meses</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Pega as recorrentes do mês atual e adiciona em <strong>todos os meses restantes do ano</strong> que ainda não as têm.</div>
+      <button onclick="runPropagateAll()" style="width:100%;background:var(--green-bg);border:1px solid #8cc8a8;color:var(--green);padding:9px;border-radius:7px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;">
+        ♾️ Propagar para todos os meses do ano
+      </button>
     </div>
     <div style="border-top:1px solid var(--border);margin-top:16px;padding-top:14px;">
       <div style="font-size:11px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.6px;font-weight:600;">&#x1F9F9; Limpeza</div>
@@ -659,6 +666,63 @@ function runPropagate(){
   const merged=[...destData,...toAdd];
   saveData(ty,tm,merged);pushToSheet(ty,tm,merged);closeModal('moProp');
   showToast(`✅ ${toAdd.length} conta(s) adicionada(s) em ${MONTHS_FULL[tm]} ${ty}!`,'success');
+}
+
+function runPropagateAll(){
+  const tipo = document.getElementById('fPropTipo').value;
+  const srcData = loadData(currentYear, currentMonth) || [];
+  const source  = tipo==='todas' ? srcData : srcData.filter(i => nRec(i.recorrente)!=='nao');
+
+  if(source.length===0){
+    showToast('Nenhuma conta recorrente encontrada no mês atual.','error');
+    return;
+  }
+
+  let totalAdded = 0;
+  let totalMonths = 0;
+
+  // propaga para todos os meses restantes do ano atual + próximo ano
+  for(let delta=1; delta<=23; delta++){
+    let tm = currentMonth + delta;
+    let ty = currentYear;
+    if(tm > 11){ ty += Math.floor(tm/12); tm = tm%12; }
+    // para no final do próximo ano
+    if(ty > currentYear + 1) break;
+
+    const destData = ensureMonth(ty, tm);
+    const destKeys = new Set(destData.map(propKey));
+
+    const toAdd = source
+      .filter(b => !destKeys.has(propKey(b)))
+      .filter(b => {
+        const r = nRec(b.recorrente);
+        if(r==='parcela' && b.parcelaTotal && b.parcelaAtual >= b.parcelaTotal) return false;
+        if(r==='meses'   && b.mesesRestantes !== null && b.mesesRestantes - delta <= 0) return false;
+        return true;
+      })
+      .map((b,i) => ({
+        ...b,
+        id: `propall_${ty}_${tm}_${i}_${Date.now()}`,
+        status: 'pendente', pixDate: '', valorOverride: null,
+        parcelaAtual:    nRec(b.recorrente)==='parcela' && b.parcelaAtual ? b.parcelaAtual + delta : b.parcelaAtual,
+        mesesRestantes:  nRec(b.recorrente)==='meses'   && b.mesesRestantes ? b.mesesRestantes - delta : b.mesesRestantes,
+      }));
+
+    if(toAdd.length > 0){
+      const merged = [...destData, ...toAdd];
+      saveData(ty, tm, merged);
+      pushToSheet(ty, tm, merged);
+      totalAdded  += toAdd.length;
+      totalMonths++;
+    }
+  }
+
+  closeModal('moProp');
+  if(totalAdded === 0){
+    showToast('Todos os meses já estão atualizados! ✨','success');
+  } else {
+    showToast(`♾️ ${totalAdded} lançamento(s) adicionado(s) em ${totalMonths} mês(es)!`,'success');
+  }
 }
 function cleanDuplicates(){
   const data=loadData(currentYear,currentMonth);if(!data){showToast('Sem dados.','error');return;}
