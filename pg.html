@@ -486,6 +486,7 @@ function closeModal(id){document.getElementById(id).classList.remove('open');edi
 document.querySelectorAll('.mo').forEach(el=>{el.addEventListener('click',e=>{if(e.target===e.currentTarget)el.classList.remove('open');});});
 
 function saveItem(){
+  try{
   const desc=document.getElementById('fDesc').value.trim();
   const dia=parseInt(document.getElementById('fDia').value);
   const valor=parseFloat(document.getElementById('fValor').value);
@@ -494,7 +495,7 @@ function saveItem(){
   const mesesTotal=rec==='meses'?parseInt(document.getElementById('fMesesTotal').value)||1:null;
   const parcelaAtual=rec==='parcela'?parseInt(document.getElementById('fParcelaAtual').value)||1:null;
   const parcelaTotal=rec==='parcela'?parseInt(document.getElementById('fParcelaTotal').value)||1:null;
-  const data=loadData(currentYear,currentMonth);
+  const data=ensureMonth(currentYear,currentMonth);  // nunca null
 
   if(editingId){
     const item=data.find(i=>i.id===editingId);
@@ -556,6 +557,7 @@ function saveItem(){
 
   closeModal('moItem'); render();
   pushToSheet(currentYear,currentMonth,data);
+  }catch(e){showToast('Erro ao salvar: '+e.message,'error');console.error(e);}
 }
 
 function openPropModal(){
