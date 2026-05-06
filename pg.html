@@ -474,9 +474,59 @@ function toggleStatus(id){
   saveData(currentYear,currentMonth,data);render();pushToSheet(currentYear,currentMonth,data);
 }
 function deleteItem(id){
-  if(!confirm('Excluir esta conta?'))return;
-  const data=loadData(currentYear,currentMonth).filter(i=>i.id!==id);
-  saveData(currentYear,currentMonth,data);render();pushToSheet(currentYear,currentMonth,data);
+  const data = loadData(currentYear, currentMonth);
+  const item = data.find(i=>i.id===id);
+  if(!item) return;
+
+  // Pergunta se quer apagar só aqui ou em todos os meses
+  const choice = confirm(
+    `Excluir "${item.desc}"?\n\n` +
+    `OK = Só este mês (${MONTHS_FULL[currentMonth]})\n` +
+    `Cancelar = Ver opção de apagar em TODOS os meses`
+  );
+
+  if(choice){
+    // apaga só no mês atual
+    const updated = data.filter(i=>i.id!==id);
+    saveData(currentYear,currentMonth,updated);
+    render();
+    pushToSheet(currentYear,currentMonth,updated);
+    showToast('Conta excluída!','success');
+  } else {
+    // pergunta se quer apagar em todos
+    const allMonths = confirm(
+      `Apagar "${item.desc}" em TODOS os meses?\n\n` +
+      `(Remove de qualquer mês onde exista uma conta com esse mesmo nome e dia ${item.dia})\n\n` +
+      `OK = Apagar em todos os meses\n` +
+      `Cancelar = Não fazer nada`
+    );
+    if(!allMonths) return;
+    deleteInAllMonths(item);
+  }
+}
+
+function deleteInAllMonths(item){
+  const key = propKey(item); // desc + dia
+  let totalRemoved = 0;
+  let totalMonths  = 0;
+
+  for(let y = currentYear-1; y <= currentYear+2; y++){
+    for(let m = 0; m < 12; m++){
+      const d = loadData(y, m);
+      if(!d) continue;
+      const before = d.length;
+      const cleaned = d.filter(i => propKey(i) !== key);
+      if(cleaned.length < before){
+        saveData(y, m, cleaned);
+        pushToSheet(y, m, cleaned);
+        totalRemoved += before - cleaned.length;
+        totalMonths++;
+      }
+    }
+  }
+
+  render();
+  showToast(`🗑️ "${item.desc}" removida de ${totalMonths} mês(es)!`, 'success');
 }
 
 function onRecChange(){
